@@ -1,0 +1,16 @@
+## .NET
+bin/
+obj/
+*.user
+
+## Node
+node_modules/
+
+## Tailwind output (generated during build)
+RSD.Web/wwwroot/css/app.min.css
+
+## IDE
+.vs/
+.vscode/
+*.swp
+.DS_Store

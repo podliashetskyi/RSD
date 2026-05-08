@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "devDependencies": {
+    "tailwindcss": "^3.4",
+    "flowbite": "^2.5"
+  }
+}

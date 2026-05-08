@@ -1,0 +1,63 @@
+<section class="bg-white py-section-y px-5 lg:px-section-x">
+    <div class="max-w-screen-xl mx-auto flex flex-col gap-section-gap">
+        <SectionHeader BadgeLabel="Testimonials"
+                       Heading="What Our Clients Say"
+                       Description="Client trust and satisfaction is our top priority" />
+
+        <div id="testimonials-carousel" class="relative w-full" data-carousel="slide">
+            <div class="relative h-[320px] overflow-hidden">
+                @for (var idx = 0; idx < TestimonialGroups.Count; idx++)
+                {
+                    var group = TestimonialGroups[idx];
+                    var isActive = idx == 0;
+                    <div class="@CarouselItemClass(isActive) duration-700 ease-in-out absolute inset-0" data-carousel-item="@(isActive ? "active" : null)">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            @foreach (var t in group)
+                            {
+                                <article class="relative flex flex-col gap-5 bg-white border border-line rounded-base p-6 overflow-hidden">
+                                    <span aria-hidden="true" class="absolute top-2 right-4 text-line text-display-xl font-serif leading-none select-none">99</span>
+                                    <div class="flex items-center pb-4 border-b border-line-subtle relative">
+                                        <div class="flex gap-1" aria-label="5 stars">
+                                            @for (var i = 0; i < 5; i++)
+                                            {
+                                                <svg class="w-4 h-4 text-cyan-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                </svg>
+                                            }
+                                        </div>
+                                    </div>
+                                    <h3 class="text-ink text-body-lg font-semibold relative">@t.Title</h3>
+                                    <p class="text-ink-soft text-body-sm leading-relaxed flex-1 relative">@t.Quote</p>
+                                    <div class="flex items-center gap-2 pt-6 border-t border-line-subtle relative">
+                                        <img src="@t.AvatarSrc" alt="@t.Name" class="w-8 h-8 rounded-full object-cover" />
+                                        <div>
+                                            <p class="text-ink text-body font-medium leading-none">@t.Name</p>
+                                            <p class="text-ink-soft text-body-sm mt-1.5">@t.Role</p>
+                                        </div>
+                                    </div>
+                                </article>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <button type="button"
+                    class="absolute top-1/2 -left-4 lg:-left-8 -translate-y-1/2 z-30 flex items-center justify-center w-10 h-10 rounded-full bg-white border border-line shadow-sm hover:bg-line-subtle transition-colors"
+                    data-carousel-prev
+                    aria-label="Previous testimonials">
+                <svg class="w-5 h-5 text-ink-soft" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+            <button type="button"
+                    class="absolute top-1/2 -right-4 lg:-right-8 -translate-y-1/2 z-30 flex items-center justify-center w-10 h-10 rounded-full bg-white border border-line shadow-sm hover:bg-line-subtle transition-colors"
+                    data-carousel-next
+                    aria-label="Next testimonials">
+                <svg class="w-5 h-5 text-ink-soft" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+        </div>
+    </div>
+</section>

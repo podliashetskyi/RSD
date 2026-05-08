@@ -1,0 +1,62 @@
+<nav class="bg-white px-4 lg:px-section-x py-4 relative">
+    <div class="max-w-screen-xl mx-auto flex items-center justify-between gap-8">
+        <a href="/" class="flex items-center shrink-0" aria-label="RSD home">
+            <img src="images/logo.svg" alt="RSD" width="65" height="32" class="h-8 w-auto" />
+        </a>
+
+        <div class="hidden lg:flex lg:items-center lg:gap-2">
+            <NavLink href="/services" class="nav-link">Services</NavLink>
+            <NavLink href="/products" class="nav-link">Products</NavLink>
+            <NavLink href="/cases" class="nav-link">Cases</NavLink>
+            <NavLink href="/about" class="nav-link inline-flex items-center gap-1">
+                About Us
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </NavLink>
+            <NavLink href="/contact" class="nav-link">Contact</NavLink>
+            <NavLink href="/blog" class="nav-link">Blog</NavLink>
+        </div>
+
+        <div class="hidden lg:block">
+            <Button Href="/contact" Variant="ButtonVariant.Primary" Size="ButtonSize.Lg">Start Project</Button>
+        </div>
+
+        <button @onclick="ToggleMenu" type="button"
+                class="inline-flex items-center p-2 text-ink-soft rounded-lg lg:hidden hover:bg-line-subtle"
+                aria-expanded="@(_isMenuOpen ? "true" : "false")"
+                aria-controls="mobile-menu"
+                aria-label="Toggle navigation menu">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                @if (_isMenuOpen)
+                {
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                }
+                else
+                {
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                }
+            </svg>
+        </button>
+    </div>
+
+    @if (_isMenuOpen)
+    {
+        <div id="mobile-menu" class="lg:hidden absolute top-full left-0 right-0 bg-white border-b border-line z-50 p-4 flex flex-col gap-2">
+            <NavLink href="/services" class="nav-link">Services</NavLink>
+            <NavLink href="/products" class="nav-link">Products</NavLink>
+            <NavLink href="/cases" class="nav-link">Cases</NavLink>
+            <NavLink href="/about" class="nav-link inline-flex items-center gap-1">
+                About Us
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </NavLink>
+            <NavLink href="/contact" class="nav-link">Contact</NavLink>
+            <NavLink href="/blog" class="nav-link">Blog</NavLink>
+            <div class="pt-2">
+                <Button Href="/contact" Variant="ButtonVariant.Primary" Size="ButtonSize.Lg">Start Project</Button>
+            </div>
+        </div>
+    }
+</nav>
