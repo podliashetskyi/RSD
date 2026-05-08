@@ -1,5 +1,6 @@
 #pragma warning disable S1144, S4487, S2933
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RSD.Web.Components.Sections.Home;
 
@@ -23,6 +24,9 @@ public partial class TestimonialsCarouselSection
             new("Logistics ROI in months", "\"Their ML pipeline started saving us money inside the first 90 days.\"", "images/avatars/avatar-michael-7be0d3.png", "Michael Chen", "Founder, LogiTrans"),
         ],
     ];
+
+    private static readonly IReadOnlyList<TestimonialEntry> AllTestimonials =
+        TestimonialGroups.SelectMany(g => g).ToList();
 
     private static string CarouselItemClass(bool isActive) => isActive ? "block" : "hidden";
 }
