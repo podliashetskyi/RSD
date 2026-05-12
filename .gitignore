@@ -9,6 +9,12 @@ node_modules/
 ## Tailwind output (generated during build)
 RSD.Web/wwwroot/css/app.min.css
 
+## Editor-uploaded media (Docker volume target; never committed)
+RSD.Web/wwwroot/uploads/
+
+## Local environment overrides (secrets, bootstrap creds)
+.env
+
 ## IDE
 .vs/
 .vscode/
