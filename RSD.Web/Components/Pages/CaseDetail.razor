@@ -1,0 +1,33 @@
+@page "/cases/{Slug}"
+@using RSD.Web.Components.Sections.Detail
+@using RSD.Web.Components.Sections.Shared
+
+@if (string.Equals(Slug, "healthcare-plus", StringComparison.OrdinalIgnoreCase))
+{
+    <PageTitle>HealthCare+ Case Study — RSD</PageTitle>
+
+    <HeroSection ImageSrc="images/cases/healthcare-plus/hero.png" />
+    <IdentityBar BackHref="/cases"
+                 Title="HealthCare+"
+                 Subtitle="Healthcare"
+                 CtaText="Get Estimate"
+                 CtaHref="/contact" />
+    <MetaCard Badges="@MetaBadges"
+              Title="HealthCare+"
+              Description="HealthCare+ is a next-generation telemedicine platform that connects patients with healthcare providers through secure video consultations, integrates with IoT health devices, and maintains comprehensive electronic medical records."
+              Tags="@MetaTags" />
+    <TwoColumnTextSection LeftHeading="The Challenge"
+                          LeftBody="Building a HIPAA-compliant platform that seamlessly integrates with various IoT health monitoring devices while ensuring data security and real-time synchronization."
+                          RightHeading="Our Solution"
+                          RightBody="We developed a Flutter-based cross-platform application with a robust backend on AWS. Custom integrations were built for popular health devices, and all data handling followed strict HIPAA guidelines." />
+    <BulletListCard Heading="Results"
+                    Items="@Results"
+                    HeadingSize="BulletListHeadingSize.Large"
+                    WithShadow="true" />
+    <TechPillsCard Heading="Technologies Used" Pills="@TechPills" />
+    <CtaSection Heading="Want to Build Something Similar?"
+                Description="Let's discuss how we can help bring your project to life"
+                PrimaryButtonText="Get Estimate"
+                PrimaryButtonHref="/contact"
+                SecondaryButtonText="" />
+}

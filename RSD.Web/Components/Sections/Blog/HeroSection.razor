@@ -1,0 +1,39 @@
+<section class="bg-white pt-12 lg:pt-24 px-4 lg:px-section-x">
+    <div class="max-w-screen-xl mx-auto flex flex-col items-center gap-8 lg:gap-[42px]">
+        <div class="flex flex-col items-center gap-4 text-center max-w-[576px]">
+            <h1 class="text-ink text-[30px] lg:text-[36px] font-semibold leading-[1.25] tracking-[-0.9px]">
+                Blog: Inspiration &amp; Insights
+            </h1>
+            <p class="text-ink-soft text-body lg:text-[18px] leading-6 lg:leading-7">
+                A collection of the latest insights, product enhancements,
+                important bugfixes and more.
+            </p>
+        </div>
+
+        <div class="w-full flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
+            <div class="relative w-full lg:w-[397px] lg:shrink-0">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <img src="images/blog/icon-search.svg" alt="" class="w-4 h-4" />
+                </span>
+                <input type="text"
+                       placeholder="Type to search articles..."
+                       aria-label="Search articles"
+                       class="w-full bg-[#f9fafb] border border-line rounded-full pl-10 pr-4 py-2.5 text-body-sm text-ink-soft placeholder:text-[#6a7282] shadow-sm" />
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3 lg:justify-end">
+                @for (var i = 0; i < FilterChips.Count; i++)
+                {
+                    var chip = FilterChips[i];
+                    var active = i == 0;
+                    <button type="button"
+                            class="@(active
+                                ? "inline-flex items-center bg-brand-950 text-white text-body-sm font-medium h-7 px-3 rounded-[12px]"
+                                : "inline-flex items-center bg-[#f9fafb] border border-line text-ink text-body-sm font-medium h-7 px-3 rounded-[12px] hover:bg-line-subtle")">
+                        @chip
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</section>

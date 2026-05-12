@@ -1,0 +1,6 @@
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 1440 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="SVG" opacity="0.2">
+<path id="Vector" d="M100 200C233.333 133.333 366.667 133.333 500 200C633.333 266.667 766.667 250 900 150" stroke="var(--stroke-0, #3AC0FF)" stroke-dasharray="1 1"/>
+<path id="Vector_2" d="M50 350C183.333 283.333 316.667 283.333 450 350C583.333 416.667 716.667 400 850 300" stroke="var(--stroke-0, #3AC0FF)" stroke-dasharray="0.35 1"/>
+</g>
+</svg>

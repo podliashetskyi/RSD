@@ -8,6 +8,15 @@
     }
 
     .nav-link.active {
-        @apply text-ink font-medium;
+        @apply text-ink;
+    }
+
+    .toc-link.is-active {
+        @apply text-cyan-700 font-semibold relative;
+    }
+
+    .toc-link.is-active::before {
+        content: "";
+        @apply absolute -left-4 top-1 bottom-1 w-1.5 bg-cyan-700 rounded-full;
     }
 }

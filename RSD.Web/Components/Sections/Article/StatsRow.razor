@@ -1,0 +1,17 @@
+<div id="@Id" class="flex flex-col gap-8 items-center scroll-mt-24">
+    @if (!string.IsNullOrEmpty(Heading))
+    {
+        <h2 class="text-ink text-[28px] lg:text-[36px] font-bold leading-9 tracking-[-0.9px] text-center">@Heading</h2>
+    }
+    <div class="w-full border-y border-line py-8 lg:py-12">
+        <div class="flex flex-col lg:flex-row gap-8 lg:gap-6 items-center justify-around max-w-3xl mx-auto">
+            @foreach (var s in Items)
+            {
+                <div class="flex flex-col items-center text-center gap-1">
+                    <p class="text-ink text-[36px] font-semibold leading-9 tracking-[-0.9px]">@s.Number</p>
+                    <p class="text-ink-soft text-body-lg leading-7">@s.Label</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

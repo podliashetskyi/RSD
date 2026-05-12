@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="56" height="64" viewBox="0 0 56 64">
+    <defs>
+        <pattern id="hex" patternUnits="userSpaceOnUse" width="56" height="64">
+            <path d="M28 1L55 16V48L28 63L1 48V16L28 1Z" stroke="#F3F4F6" stroke-width="1" fill="none" />
+            <path d="M0 32L27 47L0 64Z" stroke="#F3F4F6" stroke-width="1" fill="none" />
+            <path d="M56 32L29 47L56 64Z" stroke="#F3F4F6" stroke-width="1" fill="none" />
+            <path d="M0 0L27 16L0 32Z" stroke="#F3F4F6" stroke-width="1" fill="none" />
+            <path d="M56 0L29 16L56 32Z" stroke="#F3F4F6" stroke-width="1" fill="none" />
+        </pattern>
+    </defs>
+    <rect width="56" height="64" fill="url(#hex)" />
+</svg>

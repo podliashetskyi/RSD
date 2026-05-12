@@ -1,0 +1,13 @@
+<section class="hidden lg:block bg-white pt-12 px-4 lg:px-section-x">
+    <div class="max-w-screen-xl mx-auto">
+        <article class="bg-white border border-line rounded-base p-8 flex flex-col gap-8">
+            <h3 class="text-ink text-[36px] font-bold leading-9 tracking-[-0.4px]">@Heading</h3>
+            <div class="flex flex-wrap gap-10 items-start">
+                @foreach (var t in Pills)
+                {
+                    <span class="inline-flex items-center justify-center h-10 px-2 py-1 bg-surface-subtle border border-line rounded-[12px] text-ink-faint text-body-sm font-medium">@t</span>
+                }
+            </div>
+        </article>
+    </div>
+</section>

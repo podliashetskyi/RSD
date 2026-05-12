@@ -1,0 +1,40 @@
+<section class="bg-white py-14 lg:py-section-y px-4 lg:px-section-x">
+    <div class="max-w-screen-xl mx-auto flex flex-col gap-16 items-center">
+        <div class="flex flex-col gap-4 items-center max-w-[672px]">
+            <h2 class="text-ink text-[30px] lg:text-[48px] font-bold lg:font-semibold tracking-[-0.8px] lg:tracking-[-0.4px] text-center leading-9">Our Management</h2>
+            <p class="text-ink-soft text-body-lg leading-7 text-center">
+                Our management team works with developers, and marketers to create great digital experiences.
+            </p>
+            <a href="#" class="hidden lg:inline-flex items-center gap-1.5 text-[#136eb3] text-body-sm font-medium leading-5 hover:underline">
+                Work with us
+                <img src="images/about/social/icon-arrow-right.svg" alt="" aria-hidden="true" class="size-4" />
+            </a>
+        </div>
+
+        <div class="flex flex-col lg:flex-row lg:flex-wrap gap-8 items-stretch lg:items-start w-full">
+            @foreach (var m in Managers)
+            {
+                <div class="w-full lg:flex-1 lg:min-w-px h-[450px] lg:h-[478px] bg-white border border-line rounded-base shadow-sm overflow-hidden flex flex-col">
+                    <div class="flex-1 min-h-0 relative">
+                        <img src="@m.PhotoSrc" alt="@m.Name" class="absolute inset-0 w-full h-full object-cover" />
+                    </div>
+                    <div class="flex flex-col gap-5 items-center p-6">
+                        <div class="flex flex-col gap-2.5 items-center text-center w-full">
+                            <p class="text-ink text-body-lg font-semibold leading-none">@m.Name</p>
+                            <p class="text-ink-soft text-body leading-none">@m.Role</p>
+                        </div>
+                        <div class="w-full h-px bg-gradient-to-r from-line-subtle/50 via-line to-line-subtle/50" aria-hidden="true"></div>
+                        <div class="flex gap-4 items-center justify-center w-full">
+                            @foreach (var icon in SocialIcons)
+                            {
+                                <a href="#" aria-label="@icon.Label" class="inline-flex">
+                                    <img src="@icon.Src" alt="" aria-hidden="true" class="size-5" />
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

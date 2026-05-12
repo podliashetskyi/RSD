@@ -1,0 +1,11 @@
+<section class="bg-white pt-8 lg:pt-12 px-4 lg:px-section-x">
+    <div class="max-w-screen-xl mx-auto flex flex-col lg:flex-row gap-6 items-stretch justify-center">
+        @foreach (var m in Items)
+        {
+            <article class="flex-1 lg:max-w-[288px] bg-white border border-line rounded-base shadow-sm p-6 flex flex-col items-center justify-center gap-3 text-center">
+                <h4 class="text-ink text-[18px] font-bold leading-7 tracking-[-0.45px]">@m.Headline</h4>
+                <p class="text-ink-soft text-body-sm leading-5 max-w-[240px]">@m.Description</p>
+            </article>
+        }
+    </div>
+</section>

@@ -1,0 +1,59 @@
+<section class="bg-white pt-8 lg:pt-section-y px-4 lg:px-section-x">
+    <div class="max-w-screen-xl mx-auto">
+        <article class="bg-surface-subtle border border-line rounded-base overflow-hidden p-6 lg:p-12 flex flex-col gap-6">
+            <div class="flex flex-col gap-4 items-start">
+                @if (Badges.Count > 0)
+                {
+                    <div class="flex items-center gap-3 flex-wrap">
+                        @foreach (var b in Badges)
+                        {
+                            @if (string.IsNullOrEmpty(b.BgClass))
+                            {
+                                <span class="text-ink-soft text-body-sm">@b.Text</span>
+                            }
+                            else
+                            {
+                                <span class="@b.BgClass @b.TextClass text-body font-medium leading-4 px-3 py-1 rounded-full">@b.Text</span>
+                            }
+                        }
+                    </div>
+                }
+                <h1 class="text-ink text-[30px] lg:text-[36px] font-bold leading-[1.1] tracking-[-0.9px]">@Title</h1>
+                @if (!string.IsNullOrEmpty(Subtitle))
+                {
+                    <p class="text-ink-soft text-body-lg font-medium leading-7">@Subtitle</p>
+                }
+                <p class="text-ink-soft text-body leading-6">@Description</p>
+                @if (Tags.Count > 0)
+                {
+                    <div class="flex flex-wrap gap-3">
+                        @foreach (var tag in Tags)
+                        {
+                            <span class="inline-flex items-center bg-[#f9fafb] border border-line h-6 px-2 py-1 rounded-[12px] text-ink text-body-sm font-medium leading-4">@tag</span>
+                        }
+                    </div>
+                }
+            </div>
+            @if (!string.IsNullOrEmpty(PrimaryText))
+            {
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <Button Href="@PrimaryHref" Variant="ButtonVariant.Primary" TrailingArrow="true" AdditionalClasses="w-full sm:w-auto">
+                        @if (!string.IsNullOrEmpty(PrimaryTextMobile) && PrimaryTextMobile != PrimaryText)
+                        {
+                            <span class="lg:hidden">@PrimaryTextMobile</span>
+                            <span class="hidden lg:inline">@PrimaryText</span>
+                        }
+                        else
+                        {
+                            @PrimaryText
+                        }
+                    </Button>
+                    @if (!string.IsNullOrEmpty(SecondaryText))
+                    {
+                        <Button Href="@SecondaryHref" Variant="ButtonVariant.Outline" AdditionalClasses="w-full sm:w-auto">@SecondaryText</Button>
+                    }
+                </div>
+            }
+        </article>
+    </div>
+</section>

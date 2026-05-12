@@ -1,0 +1,83 @@
+@page "/services/{Slug}"
+@using RSD.Web.Components.Sections.Article
+@using RSD.Web.Components.Sections.Detail
+@using RSD.Web.Components.Sections.Shared
+
+@if (string.Equals(Slug, "cloud-solutions", StringComparison.OrdinalIgnoreCase))
+{
+    <PageTitle>Cloud Infrastructure Scaling — RSD</PageTitle>
+
+    <HeroSection ImageSrc="images/services/cloud-solutions/hero.png" />
+    <ArticleHeaderSection BackHref="/services"
+                          CategoryText="Development"
+                          DateText="December 10, 2024"
+                          ReadTime="12 min"
+                          Title="Cloud Infrastructure Scaling"
+                          Subtitle="We help businesses transition from monolithic architectures to agile, scalable cloud solutions that grow with your user base."
+                          AuthorName="David Chen"
+                          AuthorRole="Head of Design"
+                          AuthorAvatarSrc="images/avatars/avatar-david.png" />
+    <ArticleBodySection TocItems="@TocItems">
+        <h2 id="innovation-in-cloud" class="text-ink text-[28px] lg:text-[36px] font-bold leading-9 tracking-[-0.9px] scroll-mt-24">Pioneering Innovation in Cloud Infrastructure.</h2>
+        <p class="text-ink-soft text-body-lg leading-7">
+            To stay competitive, businesses must leverage cloud native platforms. We help our clients transition from legacy systems to agile, cost-effective environments that drive sustainable growth.
+        </p>
+        <p class="text-ink-soft text-body-lg leading-7">
+            We implemented a full-scale migration to microservices, allowing for independent scaling and faster deployment cycles. Thanks to our efforts, we successfully integrated a modern CRM system, which contributed to 20% business growth within just three months. Our team took on the responsibility of developing a brand-new project from the ground up for a client based in Canada.
+        </p>
+
+        <FeaturedImageSection ImageSrc="images/services/cloud-solutions/featured.png" />
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <p class="text-ink-soft text-body leading-6">
+                Our team took on the responsibility of developing a brand-new project from the ground up for a client based in Canada. The main challenge was a monolithic architecture where a single failure <a href="#" class="text-cyan-600 underline">could bring</a> down the entire ecosystem, especially during seasonal high-traffic periods.
+            </p>
+            <p class="text-ink-soft text-body leading-6">
+                We implemented a full-scale migration to microservices, allowing for independent scaling and faster deployment cycles. Thanks to our efforts, we successfully integrated a modern <a href="#" class="text-cyan-600 underline">CRM system</a>, which contributed to 20% business growth within just three months.
+            </p>
+        </div>
+
+        <ArticleSubsection Id="key-features"
+                           Heading="Key Features"
+                           Subheading="Designing for User Experience"
+                           SubheadingBody="Good UI/UX design"
+                           Items="@KeyFeaturesUX"
+                           Style="ArticleListStyle.CheckIcon" />
+        <ArticleSubsection Subheading="UI/UX Design Strategy"
+                           SubheadingBody="Typography and layout are more than just aesthetics — it's about readability, hierarchy, and intuitive user flow."
+                           Items="@KeyFeaturesDesign"
+                           Style="ArticleListStyle.CheckIcon" />
+
+        <StatsRow Id="our-recommendation"
+                  Heading="Our Recommendation"
+                  Items="@RecommendationStats" />
+
+        <ArticleSubsection Id="scaling-effectively"
+                           Heading="How to Scale Effectively"
+                           Subheading="Designing for User Experience"
+                           SubheadingBody="Good UI/UX design"
+                           Items="@ScalingEffectively"
+                           Style="ArticleListStyle.Disc" />
+        <ArticleSubsection Id="implementation-roadmap"
+                           Heading="Implementation Roadmap"
+                           Subheading="Typography and layout are more than just aesthetics — it's about readability, hierarchy, and intuitive user flow."
+                           Items="@ImplementationRoadmap"
+                           Style="ArticleListStyle.Numbered" />
+    </ArticleBodySection>
+
+    <GallerySection Id="tools-we-use"
+                    Heading="Tools We Use for Scaling"
+                    Description="We are designers and developers, innovators and problem solvers. Small enough to be creative, big enough to deliver the scope."
+                    PrimaryButtonText="Read more"
+                    PrimaryButtonHref="#"
+                    SecondaryButtonText="View our team"
+                    SecondaryButtonHref="#"
+                    Images="@GalleryImages"
+                    Tags="@(new[] { "Cloud Solutions", "Microservices", "System Scaling", "Strategic Consulting" })" />
+
+    <CtaSection Heading="Want to Discuss a Similar Project?"
+                Description="Our experts are ready to help bring your idea to life"
+                PrimaryButtonText="Estimate Project"
+                PrimaryButtonHref="/contact"
+                SecondaryButtonText="" />
+}

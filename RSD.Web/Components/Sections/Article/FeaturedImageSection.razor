@@ -1,0 +1,11 @@
+<section class="bg-white pt-6 lg:pt-8 px-4 lg:px-section-x">
+    <div class="max-w-screen-xl mx-auto">
+        <figure class="overflow-hidden rounded-base">
+            <img src="@ImageSrc" alt="@Caption" class="w-full h-auto object-cover" />
+            @if (!string.IsNullOrEmpty(Caption))
+            {
+                <figcaption class="text-ink-soft text-body-sm mt-3 text-center">@Caption</figcaption>
+            }
+        </figure>
+    </div>
+</section>

@@ -1,0 +1,79 @@
+<section class="bg-white py-section-y px-5 lg:px-section-x">
+    <div class="max-w-screen-xl mx-auto flex flex-col gap-section-gap">
+        @if (ShowHeader)
+        {
+            <SectionHeader BadgeLabel="Cases"
+                           Heading="How we Work"
+                           Description="Projects we've delivered for clients around the world" />
+        }
+
+        @if (ShowFilters)
+        {
+            <div class="flex flex-wrap gap-3 items-center">
+                @for (var i = 0; i < Filters.Count; i++)
+                {
+                    var f = Filters[i];
+                    var dropdownId = $"case-filter-{i}";
+                    <button data-dropdown-toggle="@dropdownId"
+                            type="button"
+                            class="inline-flex items-center gap-2 bg-white border border-line rounded-full px-4 py-2 text-ink-soft text-body-sm hover:bg-line-subtle">
+                        @f.Label
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div id="@dropdownId" class="z-10 hidden bg-white border border-line rounded-base shadow-lg w-44">
+                        <ul class="py-2 text-body-sm text-ink-soft">
+                            @foreach (var opt in f.Options)
+                            {
+                                <li><a href="#" class="block px-4 py-2 hover:bg-line-subtle">@opt</a></li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+        }
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            @foreach (var c in DisplayedCases)
+            {
+                var href = string.IsNullOrEmpty(c.Slug) ? null : $"/cases/{c.Slug}";
+                <article class="flex flex-col rounded-base overflow-hidden bg-white border border-line shadow-sm @(href is null ? "" : "transition hover:shadow-md focus-within:shadow-md")">
+                    <div class="relative h-60 flex items-center justify-center overflow-hidden">
+                        <img src="@c.ImageSrc" alt="@(c.Name) project screenshot" class="absolute inset-0 w-full h-full object-cover" />
+                        <div class="absolute inset-0 pointer-events-none"
+                             style="background: linear-gradient(0deg, rgb(255,255,255) 1.5%, rgba(255,255,255,0.738) 18.5%, rgba(255,255,255,0.2) 41%, rgba(255,255,255,0) 100%);"></div>
+                        <img src="images/cases/rsd-watermark.svg" alt="" aria-hidden="true" class="relative" style="width: 103.27px; height: 71px;" />
+                    </div>
+                    <div class="flex flex-col gap-4 p-6">
+                        <span class="inline-flex w-fit bg-[#f0faff] border border-[#b2e6ff] text-brand-900 text-[12px] font-medium leading-4 px-1.5 py-0.5 rounded-[12px]">@c.Industry</span>
+                        <div class="flex flex-col gap-2">
+                            @if (href is not null)
+                            {
+                                <a href="@href" class="text-ink text-[30px] font-semibold leading-[1.25] hover:text-brand-900">@c.Name</a>
+                            }
+                            else
+                            {
+                                <h3 class="text-ink text-[30px] font-semibold leading-[1.25]">@c.Name</h3>
+                            }
+                            <p class="text-ink-soft text-body leading-6">@c.Description</p>
+                        </div>
+                        <div class="flex flex-wrap gap-3">
+                            @foreach (var tag in c.TechTags)
+                            {
+                                <span class="inline-flex items-center bg-[#f9fafb] border border-line h-6 px-2 py-1 rounded-[12px] text-ink text-body-sm font-medium leading-4">@tag</span>
+                            }
+                        </div>
+                    </div>
+                </article>
+            }
+        </div>
+
+        @if (ShowViewAllButton)
+        {
+            <div class="flex justify-center">
+                <Button Href="/cases" Variant="ButtonVariant.Primary" Size="ButtonSize.Lg" TrailingArrow="true">View All Cases</Button>
+            </div>
+        }
+    </div>
+</section>

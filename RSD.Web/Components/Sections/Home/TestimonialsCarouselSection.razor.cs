@@ -30,3 +30,5 @@ public partial class TestimonialsCarouselSection
 
     private static string CarouselItemClass(bool isActive) => isActive ? "block" : "hidden";
 }
+
+public record TestimonialEntry(string Title, string Quote, string AvatarSrc, string Name, string Role);

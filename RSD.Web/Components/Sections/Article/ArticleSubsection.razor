@@ -1,0 +1,51 @@
+<div class="flex flex-col gap-6">
+    @if (!string.IsNullOrEmpty(Heading))
+    {
+        <h2 id="@Id" class="text-ink text-[28px] lg:text-[36px] font-bold leading-9 tracking-[-0.9px] scroll-mt-24">@Heading</h2>
+    }
+    @if (!string.IsNullOrEmpty(Subheading))
+    {
+        <h3 class="text-ink text-[20px] lg:text-[24px] font-semibold leading-8 tracking-[-0.6px]">@Subheading</h3>
+    }
+    @if (!string.IsNullOrEmpty(SubheadingBody))
+    {
+        <p class="text-ink-soft text-body leading-6">@SubheadingBody</p>
+    }
+    @if (Items.Count > 0)
+    {
+        @if (Style == ArticleListStyle.CheckIcon)
+        {
+            <ul class="flex flex-col gap-3">
+                @foreach (var item in Items)
+                {
+                    <li class="flex gap-3 items-start">
+                        <span class="size-5 rounded-full bg-cyan-200/20 flex items-center justify-center shrink-0 mt-0.5">
+                            <svg class="w-3 h-3 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </span>
+                        <span class="text-ink-soft text-body leading-6"><span class="font-semibold text-ink">@item.Label</span> @item.Body</span>
+                    </li>
+                }
+            </ul>
+        }
+        else if (Style == ArticleListStyle.Numbered)
+        {
+            <ol class="flex flex-col gap-3 list-decimal pl-6">
+                @foreach (var item in Items)
+                {
+                    <li class="text-ink-soft text-body leading-6"><span class="font-semibold text-ink">@item.Label</span> @item.Body</li>
+                }
+            </ol>
+        }
+        else
+        {
+            <ul class="flex flex-col gap-3 list-disc pl-6">
+                @foreach (var item in Items)
+                {
+                    <li class="text-ink-soft text-body leading-6"><span class="font-semibold text-ink">@item.Label</span> @item.Body</li>
+                }
+            </ul>
+        }
+    }
+</div>

@@ -1,0 +1,24 @@
+<section class="bg-white pt-8 lg:pt-12 px-4 lg:px-section-x">
+    <div class="max-w-screen-xl mx-auto flex flex-col lg:flex-row gap-8 lg:gap-12">
+        <aside class="hidden lg:block w-[225px] shrink-0">
+            <div class="lg:sticky lg:top-24 flex flex-col gap-4">
+                <h3 class="text-ink text-body font-semibold leading-6">Table of Contents</h3>
+                <div class="border-b border-line-subtle"></div>
+                <nav class="relative pl-4" data-article-toc>
+                    <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-line rounded-full" aria-hidden="true"></div>
+                    <ul class="flex flex-col gap-2.5">
+                        @foreach (var t in TocItems)
+                        {
+                            <li>
+                                <a href="#@t.AnchorId" class="toc-link block text-ink-soft text-body leading-6 hover:text-cyan-700">@t.Label</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+        <div class="flex-1 min-w-0 flex flex-col gap-8" data-article-body>
+            @ChildContent
+        </div>
+    </div>
+</section>

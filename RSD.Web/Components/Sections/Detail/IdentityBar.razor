@@ -1,0 +1,22 @@
+<section class="bg-white border-t border-line lg:sticky lg:top-0 lg:z-30">
+    <div class="max-w-screen-xl mx-auto flex items-center justify-between gap-4 px-4 lg:px-section-x py-3 lg:py-5">
+        <div class="flex items-center gap-3 lg:gap-4 min-w-0">
+            <a href="@BackHref" class="text-ink-soft hover:text-ink shrink-0" aria-label="Back">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </a>
+            <div class="flex flex-col min-w-0">
+                <span class="text-ink-deep text-[18px] font-bold leading-7 tracking-[-0.45px] truncate">@Title</span>
+                <span class="text-ink-soft text-body-sm leading-5 truncate">@Subtitle</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-3 lg:gap-4 shrink-0">
+            @if (!string.IsNullOrEmpty(RightLabel))
+            {
+                <span class="hidden lg:inline text-ink-soft text-body-sm">@RightLabel</span>
+            }
+            <Button Href="@CtaHref" Variant="ButtonVariant.Primary" Size="ButtonSize.Md">@CtaText</Button>
+        </div>
+    </div>
+</section>

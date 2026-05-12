@@ -1,0 +1,29 @@
+<section id="@Id" class="relative bg-white py-8 lg:py-12 px-4 scroll-mt-24 overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none opacity-40"
+         style="background-image: url('images/services/cloud-solutions/hex-pattern.svg'); background-repeat: repeat; background-size: 84px 96px;"
+         aria-hidden="true"></div>
+    <div class="mx-auto flex flex-col gap-8 items-center relative" style="max-width: 1344px">
+        <div class="flex flex-col items-center gap-4 max-w-2xl text-center">
+            <h2 class="text-ink text-[28px] lg:text-[36px] font-bold leading-9 tracking-[-0.9px]">@Heading</h2>
+            @if (!string.IsNullOrEmpty(Description))
+            {
+                <p class="text-ink-soft text-body-lg leading-7">@Description</p>
+            }
+        </div>
+        <div class="flex flex-col sm:flex-row gap-3">
+            <Button Href="@PrimaryButtonHref" Variant="ButtonVariant.Primary" TrailingArrow="true" AdditionalClasses="w-full sm:w-auto">@PrimaryButtonText</Button>
+            <Button Href="@SecondaryButtonHref" Variant="ButtonVariant.Outline" AdditionalClasses="w-full sm:w-auto">@SecondaryButtonText</Button>
+        </div>
+
+
+        @if (Tags.Count > 0)
+        {
+            <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+                @foreach (var t in Tags)
+                {
+                    <span class="inline-flex items-center bg-[#f9fafb] border border-line h-7 px-3 py-1 rounded-full text-ink text-body-sm font-medium leading-5">@t</span>
+                }
+            </div>
+        }
+    </div>
+</section>

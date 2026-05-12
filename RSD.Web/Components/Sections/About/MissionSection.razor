@@ -1,0 +1,30 @@
+<section class="bg-white py-14 lg:py-20 px-4 lg:px-section-x">
+    <div class="max-w-screen-xl mx-auto">
+        <div class="flex flex-col lg:flex-row gap-12 items-stretch lg:items-end">
+            <div class="lg:flex-1 flex flex-col gap-6 items-start">
+                <h2 class="text-[30px] lg:text-h3 text-ink-deep font-bold tracking-[-0.8px] leading-9">Our Mission</h2>
+                <p class="text-ink-faint lg:text-ink-soft text-body-lg leading-7">
+                    Our company provides B2B and B2C development services. We are mainly focused on the development of web, desktop and cross platform mobile applications and cloud infrastructure using Microsoft Stack technologies.
+                </p>
+                <p class="text-ink-faint lg:text-ink-soft text-body-lg leading-7">
+                    We believe that technology should be accessible and understandable for every business. Our mission is to transform complex technical solutions into simple and effective tools for achieving business goals.
+                </p>
+                <p class="text-ink-faint lg:text-ink-soft text-body-lg leading-7">
+                    Over 8+ years, we have helped more than 50 companies — from startups to enterprises — realize their digital ambitions and reach new levels of efficiency.
+                </p>
+            </div>
+            <div class="w-full lg:w-[520px] lg:shrink-0 grid grid-cols-2 gap-4 lg:gap-6">
+                @foreach (var s in Stats)
+                {
+                    <div class="bg-white border border-line rounded-base flex flex-col items-center justify-center gap-2 h-[160px] p-6 shadow-sm">
+                        <div class="flex items-end justify-center h-12">
+                            <span class="text-ink text-[36px] leading-[44px] font-medium">@s.Number</span>
+                            <span class="text-[#3ac0ff] text-[36px] leading-[40px] font-bold h-12 ml-0.5">@s.Symbol</span>
+                        </div>
+                        <span class="text-ink-muted text-body-sm font-semibold uppercase tracking-[0.1px]">@s.Label</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

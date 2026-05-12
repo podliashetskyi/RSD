@@ -1,0 +1,20 @@
+<section class="bg-white pt-8 lg:pt-12 px-4 lg:px-section-x">
+    <div class="max-w-screen-xl mx-auto">
+        <article class="bg-white border border-line rounded-base @ShadowClass p-6 lg:p-12 flex flex-col gap-6 items-center">
+            <h3 class="text-ink @HeadingSizeClass font-bold @HeadingLeadingClass tracking-[-0.6px] text-center">@Heading</h3>
+            <ul class="grid grid-cols-1 lg:grid-cols-2 gap-x-20 gap-y-3 w-full max-w-[580px]">
+                @foreach (var item in Items)
+                {
+                    <li class="flex items-center gap-3">
+                        <span class="w-5 h-5 rounded-full bg-cyan-200/20 flex items-center justify-center shrink-0">
+                            <svg class="w-3 h-3 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </span>
+                        <span class="text-ink-soft text-body leading-6">@item</span>
+                    </li>
+                }
+            </ul>
+        </article>
+    </div>
+</section>

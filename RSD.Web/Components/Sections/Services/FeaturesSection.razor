@@ -1,0 +1,40 @@
+@using RSD.Web.Components.Shared
+
+<section class="bg-white">
+    @for (var i = 0; i < Features.Count; i++)
+    {
+        var feature = Features[i];
+        <div class="py-9 lg:py-16 px-4 lg:px-section-x">
+            <div class="max-w-screen-xl mx-auto">
+                <article class="flex flex-col-reverse @DirectionClass(i) gap-4 lg:gap-16 lg:items-center">
+                    <div class="lg:flex-1 lg:min-w-0 flex flex-col gap-4">
+                        <h2 class="text-ink text-[36px] font-bold tracking-[-0.9px] leading-10">@feature.Title</h2>
+                        <div class="flex flex-col gap-8">
+                            <p class="text-ink-soft text-[18px] leading-7">@feature.Description</p>
+                            <ul class="flex flex-col gap-3">
+                                @foreach (var bullet in feature.BulletPoints)
+                                {
+                                    <li class="flex gap-3 items-center">
+                                        <span class="size-5 rounded-full bg-[#3dc5ff]/20 flex items-center justify-center shrink-0">
+                                            <img src="images/services/features/check.svg" alt="" aria-hidden="true" class="size-3" />
+                                        </span>
+                                        <span class="text-ink-soft text-body leading-6">@bullet</span>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                        <Button Href="@feature.DetailsHref" Variant="ButtonVariant.Primary" Size="ButtonSize.Md" TrailingArrow="true" AdditionalClasses="w-full lg:w-auto">View details</Button>
+                    </div>
+
+                    <div class="lg:flex-1 lg:min-w-0 flex items-center justify-center w-full">
+                        <div class="bg-[#f9fafb] border-8 border-[#f9fafb] rounded-[24px] w-full h-[320px] lg:h-[425px] overflow-hidden">
+                            <div class="border border-line rounded-[16px] size-full overflow-hidden">
+                                <img src="@feature.ImageSrc" alt="@feature.Title" class="size-full object-cover" />
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    }
+</section>
