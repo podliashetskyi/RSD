@@ -1,10 +1,17 @@
+using Microsoft.EntityFrameworkCore;
 using RSD.Web.Components;
+using RSD.Web.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres")));
+
+builder.Services.AddHostedService<MigrationHostedService>();
 
 var app = builder.Build();
 
