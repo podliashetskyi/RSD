@@ -147,11 +147,13 @@ public record class SeoMetadata
 {
     public string MetaTitle { get; set; } = "";
     public string MetaDescription { get; set; } = "";
-    public string? OgImagePath { get; set; }
+    public string OgImagePath { get; set; } = "";   // "" means "no OG image; use default"
 }
 ```
 
 Soft delete is enforced globally via an EF query filter `where !e.IsDeleted`; admin Trash view bypasses with `IgnoreQueryFilters()`.
+
+**Nullable convention.** Per CLAUDE.md §5, nullable strings are avoided in business logic. FK-like ID columns (`OgImagePath`, `HandledByUserId`, `UploadedByUserId`, `AuditLogEntry.UserId`) use empty-string sentinels — `""` means "no reference". `DateTime?` is retained where there is no natural sentinel for "this never happened yet" (`PublishedAt`, `HandledAt`); these are domain-semantic nullables and are an accepted extension of CLAUDE.md §5's allowed-nullable list.
 
 ### 5.2 Tables — content entities
 
@@ -178,9 +180,9 @@ The "non-content" entities (`Testimonials` through `SocialLinks`) inherit from `
 | Table | Purpose |
 |---|---|
 | `AspNetUsers`, `AspNetRoles`, `AspNetUserRoles`, etc. | ASP.NET Identity. |
-| `ContactSubmissions` | `Id, Name, Email, Subject, Message, SubmittedAt, IsHandled, HandledByUserId, HandledAt` |
-| `AuditLogEntries` | `Id, UserId, UserEmail, EntityType, EntityId, Action (Create/Update/Publish/Unpublish/Archive/Delete/Restore), Diff jsonb, At` |
-| `UploadedFiles` | `Id, Path, OriginalName, ContentType, Bytes, UploadedByUserId, UploadedAt, Variants jsonb, RefCount int` |
+| `ContactSubmissions` | `Id, Name, Email, Subject, Message, SubmittedAt, IsHandled, HandledByUserId (string, "" = unhandled), HandledAt (DateTime?)` |
+| `AuditLogEntries` | `Id, UserId (string, "" = system), UserEmail, EntityType, EntityId, Action (Create/Update/Publish/Unpublish/Archive/Delete/Restore), Diff jsonb, At` |
+| `UploadedFiles` | `Id, Path, OriginalName, ContentType, Bytes, UploadedByUserId (string, "" = system), UploadedAt, Variants jsonb, RefCount int` |
 
 ### 5.4 The jsonb-backed bodies
 
@@ -286,7 +288,7 @@ public record class UploadedFile
     public required string OriginalName { get; init; }
     public required string ContentType { get; init; }
     public long Bytes { get; init; }
-    public string? UploadedByUserId { get; init; }
+    public string UploadedByUserId { get; init; } = "";    // "" = system / unknown uploader
     public DateTime UploadedAt { get; init; } = DateTime.UtcNow;
     public List<ImageVariant> Variants { get; set; } = []; // [] for SVG; small/medium/large for rasters
     public int RefCount { get; set; }                       // incremented by entity FK usage
@@ -401,7 +403,7 @@ All `<img>` tags currently using hard-coded paths in section components switch t
 
 ### 8.1 ASP.NET Identity
 
-- `AdminUser : IdentityUser` adds `DisplayName`.
+- `class AdminUser : IdentityUser` adds `DisplayName`. (Plain `class`, not `record class`, because C# CS8864 disallows records inheriting from non-record base types like `IdentityUser`. Covered by the CLAUDE.md §3 "complex inheritance" exception.)
 - EF Core store with cookie auth: `HttpOnly`, `Secure`, `SameSite=Lax`, sliding expiration 30 days.
 - Default Microsoft password policy (no overrides): min 6, requires digit + lowercase + uppercase + non-alphanumeric.
 - Lockout: 5 failures → 15 min lockout.

@@ -453,7 +453,7 @@ public interface IPublicPageCache
 **Purpose:** ASP.NET Identity wiring, first-admin bootstrapping, user-management helpers used by the admin Users page.
 
 **Key files:**
-- `AdminUser.cs` — `record class AdminUser : IdentityUser` with `DisplayName`.
+- `AdminUser.cs` — `class AdminUser : IdentityUser` with `DisplayName`. (Plain `class`, not `record class`: C# CS8864 disallows records inheriting from non-record base types. CLAUDE.md §3 "complex inheritance" exception.)
 - `AdminBootstrapper.cs` — `IHostedService` that runs after migrations; reads bootstrap env vars; idempotent.
 - `UserManagementService.cs` / `IUserManagementService` — invite, disable, reset-password, list. Wraps `UserManager<AdminUser>`.
 - `AdminUserClaimsTransformer.cs` — adds `DisplayName` claim on auth.

@@ -96,7 +96,7 @@ Every task is scoped to be reviewable in one focused sitting and ends with a ver
 - `Data/AppDbContext.cs` inherits `IdentityDbContext<AdminUser>`; one `DbSet<T>` for every operational entity that exists in Phase 1: `ContactSubmissions`, `AuditLogEntries`, `UploadedFiles`. (Content `DbSet<T>` are introduced in their respective phases — keep the DbContext small now.)
 - `Data/Entities/ContentEntity.cs` (abstract `record class` base with `Id`, `Slug`, `Status`, `CreatedAt`, `UpdatedAt`, `PublishedAt`, `IsDeleted`, `Seo`).
 - `Data/Entities/SeoMetadata.cs`, `Data/Entities/ContactSubmission.cs`, `Data/Entities/AuditLogEntry.cs`, `Data/Entities/UploadedFile.cs`, `Data/Entities/ImageVariant.cs`.
-- `Services/Auth/AdminUser.cs` (`record class AdminUser : IdentityUser` with `DisplayName`).
+- `Services/Auth/AdminUser.cs` (`class AdminUser : IdentityUser` with `DisplayName`. Plain `class`, not `record class`, because C# CS8864 disallows records inheriting from non-record base types like `IdentityUser`; CLAUDE.md §3 "complex inheritance" exception applies).
 - `Data/Configurations/` with one configuration class per entity introduced here. `OwnsOne` for `SeoMetadata` (deferred — only used by content entities). Indexes for `AuditLogEntries` (`At desc`, `EntityType`, `UserId`).
 - Initial migration `0001_Initial.cs` created via `dotnet ef migrations add`.
 - `Program.cs` registers `AppDbContext` against the Postgres connection string and runs `Database.Migrate()` on startup, gated by `Database:AutoMigrate` config flag (default true).
@@ -104,7 +104,7 @@ Every task is scoped to be reviewable in one focused sitting and ends with a ver
 **Acceptance criteria.**
 - App boots; on first run it creates all tables; on subsequent runs it no-ops.
 - `psql` into `postgres` confirms `aspnet_users`, `contact_submissions`, `audit_log_entries`, `uploaded_files` exist with expected columns.
-- Unit test confirms `ContentEntity.IsDeleted` defaults to `false`.
+- `ContentEntity.IsDeleted` default verified by type inspection (`bool` with no initializer is `false` by language definition). Formal unit test deferred to T07 where the test project is established — see T07 coverage list.
 
 **Dependencies.** T01.
 
@@ -231,7 +231,7 @@ Every task is scoped to be reviewable in one focused sitting and ends with a ver
 **Deliverables.**
 - `RSD.Web.Tests/RSD.Web.Tests.csproj` referencing `xUnit`, `Testcontainers`, `Testcontainers.PostgreSql`, `Microsoft.NET.Test.Sdk`, `FluentAssertions`, `Bunit` (Bunit suite first used in Phase 4).
 - Solution `.sln` updated to include the test project.
-- `RSD.Web.Tests/Unit/` with first tests: `SluggerTests`, `HmacPreviewTokenSignerTests`, `ImageSharpProcessorPathTests`, `AuditDiffTests`, `EmailTemplates_RenderTests`.
+- `RSD.Web.Tests/Unit/` with first tests: `SluggerTests`, `HmacPreviewTokenSignerTests`, `ImageSharpProcessorPathTests`, `AuditDiffTests`, `EmailTemplates_RenderTests`, and `ContentEntityDefaultsTests` (covering the deferred T02 acceptance — `IsDeleted` defaults to `false`, `Status` defaults to `Draft`, `CreatedAt`/`UpdatedAt` populate, `Seo` is non-null).
 - `RSD.Web.Tests/Integration/` with `PostgresFixture` (singleton Testcontainers Postgres), `AppDbContextFixture` (provides a fresh DB transaction per test, rolled back on dispose). One sample integration test: `AdminBootstrapper_OnEmptyDb_CreatesFirstAdmin`.
 - CI placeholder: a `dotnet test` invocation in a single command at the repo root; no GitHub Actions workflow yet (deferred to ops backlog).
 
