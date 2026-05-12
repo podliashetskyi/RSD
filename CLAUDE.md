@@ -170,7 +170,7 @@ Blazor lifecycle methods (`OnInitialized`, `OnParametersSet`, etc.) are exempt.
 
 ---
 
-## 7. Cyclomatic Complexity ≤ 5
+## 7. Cyclomatic Complexity ≤ 4
 
-No method may exceed a cyclomatic complexity of 5.
+No method may exceed a cyclomatic complexity of 4.
 Extract sub-methods, use switch expressions, or restructure to stay within the limit.
