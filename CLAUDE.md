@@ -174,3 +174,23 @@ Blazor lifecycle methods (`OnInitialized`, `OnParametersSet`, etc.) are exempt.
 
 No method may exceed a cyclomatic complexity of 4.
 Extract sub-methods, use switch expressions, or restructure to stay within the limit.
+
+---
+
+## 8. Task Execution Workflow
+
+When working from a task list (e.g. `Research/tasks.md` or any enumerated task plan):
+
+- Complete **one task at a time**, in order, unless the user explicitly says otherwise.
+- After each task is done — code written, build green, acceptance criteria visibly met — **STOP and report**:
+  - What was delivered (files touched, key decisions).
+  - Anything that didn't go as planned (deviations from the task spec, surprises, follow-ups).
+  - That the task is ready for review.
+- Do **not** start the next task. Wait for the user's explicit "continue", "next", or equivalent.
+- This applies even when the next task looks small or obvious. The user wants the choice every time.
+
+The user will decide:
+1. Approve and continue to the next task,
+2. Ask for changes to the just-completed task,
+3. Reprioritize / skip / split a task,
+4. Pause the work entirely.
