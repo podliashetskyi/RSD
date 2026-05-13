@@ -1,0 +1,89 @@
+@page "/admin/blog/new"
+@page "/admin/blog/{Id:guid}"
+@attribute [Authorize(Roles = AdminRoles.Admin)]
+@layout AdminLayout
+@rendermode InteractiveServer
+
+<PageTitle>@(IsCreate ? "New post" : "Edit post") &middot; RSD Admin</PageTitle>
+
+<section class="max-w-3xl space-y-6">
+    <header class="flex items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">@(IsCreate ? "New blog post" : "Edit blog post")</h1>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Header metadata — body editor lands in Phase 4.</p>
+        </div>
+        <a href="/admin/blog" class="rounded-md border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Back to list</a>
+    </header>
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div role="alert" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">@ErrorMessage</div>
+    }
+
+    <EditForm Model="Input" OnValidSubmit="SaveAsync" FormName="blog-edit" class="space-y-5">
+        <DataAnnotationsValidator />
+
+        <FormField Label="Title">
+            <InputText id="title" @bind-Value="Input.Title" required aria-required="true" class="form-input" />
+            <ValidationMessage For="() => Input.Title" class="form-error" />
+        </FormField>
+
+        <SlugField TEntity="BlogPost" Value="Input.Slug" TitleSource="Input.Title" CurrentEntityId="Id"
+                   ValueChanged="OnSlugChanged" IsValidChanged="OnSlugValidityChanged" />
+
+        <FormField Label="Description" Hint="Short summary shown in the list grid.">
+            <InputTextArea id="description" @bind-Value="Input.Description" rows="3" class="form-input" />
+        </FormField>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <FormField Label="Category">
+                <InputText id="category" @bind-Value="Input.Category" class="form-input" />
+            </FormField>
+            <FormField Label="Read time (minutes)">
+                <InputNumber id="readTime" @bind-Value="Input.ReadTimeMinutes" class="form-input" />
+            </FormField>
+            <FormField Label="Status">
+                <InputSelect id="status" @bind-Value="Input.Status" class="form-input">
+                    <option value="@ContentStatus.Draft">Draft</option>
+                    <option value="@ContentStatus.Published">Published</option>
+                    <option value="@ContentStatus.Archived">Archived</option>
+                </InputSelect>
+            </FormField>
+        </div>
+
+        <TagInput Label="Tags" Value="Input.Tags" ValueChanged="OnTagsChanged" />
+
+        <FormField Label="Intro" Hint="Brief lead paragraph shown above the body.">
+            <InputTextArea id="intro" @bind-Value="Input.Intro" rows="3" class="form-input" />
+        </FormField>
+
+        <div class="space-y-2">
+            <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Cover image</p>
+            @if (!string.IsNullOrEmpty(Input.CoverImagePath))
+            {
+                <div class="flex items-start gap-3">
+                    <img src="/@Input.CoverImagePath" alt="Cover preview" class="h-24 w-32 rounded-md object-cover border border-gray-200 dark:border-gray-800" />
+                    <button type="button" @onclick="ClearCover"
+                            class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-1 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Remove cover</button>
+                </div>
+            }
+            <ImageUploader Subfolder="blog" CurrentFileChanged="OnCoverUploaded" />
+            <p class="text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>
+            <InputText id="cover" @bind-Value="Input.CoverImagePath" placeholder="images/blog/post-cover.png" class="form-input" />
+        </div>
+
+        <div class="rounded-md border border-dashed border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40 p-4 text-sm text-gray-500 dark:text-gray-400">
+            <strong class="text-gray-700 dark:text-gray-300">Body content</strong> — block editor coming in Phase 4. Body remains as currently seeded for this post.
+        </div>
+
+        <SeoMetaPanel Value="Input.Seo" ValueChanged="OnSeoChanged" />
+
+        <div class="flex items-center gap-2 pt-2">
+            <button type="submit" disabled="@(!CanSave)"
+                    class="rounded-md bg-gray-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-gray-900 hover:bg-black dark:hover:bg-gray-100 disabled:opacity-50">
+                @(IsCreate ? "Create post" : "Save changes")
+            </button>
+            <a href="/admin/blog" class="rounded-md border border-gray-300 dark:border-gray-700 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Cancel</a>
+        </div>
+    </EditForm>
+</section>
