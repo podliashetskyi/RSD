@@ -1,0 +1,23 @@
+@if (IsOpen)
+{
+    <div role="dialog" aria-modal="true" aria-labelledby="@TitleId"
+         class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+        <div class="w-full max-w-md rounded-lg bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 p-6 shadow-lg">
+            <h2 id="@TitleId" class="text-lg font-semibold text-gray-900 dark:text-white">@Title</h2>
+            @if (!string.IsNullOrEmpty(Body))
+            {
+                <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">@Body</p>
+            }
+            <div class="mt-6 flex items-center justify-end gap-2">
+                <button type="button" @onclick="CancelAsync"
+                        class="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
+                    @CancelLabel
+                </button>
+                <button type="button" @onclick="ConfirmAsync" autofocus
+                        class="@($"rounded-md px-3 py-1.5 text-sm text-white {ConfirmClasses}")">
+                    @ConfirmLabel
+                </button>
+            </div>
+        </div>
+    </div>
+}

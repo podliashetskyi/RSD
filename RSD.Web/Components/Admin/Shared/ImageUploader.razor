@@ -1,0 +1,32 @@
+@inherits Microsoft.AspNetCore.Components.ComponentBase
+
+<div class="space-y-2">
+    @if (CurrentFile is not null)
+    {
+        <div class="flex items-center gap-3 rounded-md border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-3">
+            <ResponsiveImage File="CurrentFile" Role="ImageRole.Avatar" Alt="@($"{CurrentFile.OriginalName}")"
+                             CssClass="h-12 w-12 rounded-md object-cover" />
+            <div class="flex-1 text-sm">
+                <div class="font-medium text-gray-900 dark:text-white">@CurrentFile.OriginalName</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">@FormatBytes(CurrentFile.Bytes) &middot; @CurrentFile.Variants.Count variants</div>
+            </div>
+            <button type="button" @onclick="ClearAsync"
+                    class="text-xs text-red-600 dark:text-red-400 hover:underline">Remove</button>
+        </div>
+    }
+
+    <label @ref="DropzoneRef" for="@InputId"
+           class="block cursor-pointer rounded-md border-2 border-dashed border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 px-4 py-8 text-center hover:border-gray-500 dark:hover:border-gray-500">
+        <p class="text-sm text-gray-700 dark:text-gray-300">
+            @if (IsUploading) { <span>Uploading…</span> }
+            else { <span>Drop an image here, or click to select a file.</span> }
+        </p>
+        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">PNG, JPEG, WebP, or SVG. Max @FormatBytes(MaxBytes).</p>
+        <InputFile id="@InputId" OnChange="HandleInputAsync" accept="image/png,image/jpeg,image/webp,image/svg+xml" class="sr-only" />
+    </label>
+
+    @if (!string.IsNullOrEmpty(Error))
+    {
+        <p role="alert" aria-live="polite" class="text-xs text-red-600 dark:text-red-400">@Error</p>
+    }
+</div>

@@ -1,0 +1,13 @@
+@inherits LayoutComponentBase
+@attribute [Authorize(Roles = AdminRoles.Admin)]
+
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
+    <AdminNavbar DisplayName="@DisplayName" />
+    <div class="flex flex-1">
+        <AdminSidebar />
+        <main class="flex-1 px-6 py-8">
+            @Body
+        </main>
+    </div>
+    <ToastHost @rendermode="InteractiveServer" />
+</div>

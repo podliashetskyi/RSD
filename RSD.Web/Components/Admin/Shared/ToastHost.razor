@@ -1,0 +1,18 @@
+@if (Items.Count > 0)
+{
+    <div aria-live="polite" aria-atomic="false"
+         class="fixed bottom-4 right-4 z-40 flex flex-col gap-2 max-w-sm">
+        @foreach (var t in Items)
+        {
+            <div role="status" class="@($"rounded-md border px-3 py-2 text-sm shadow-md {KindClasses(t.Kind)}")">
+                <div class="flex items-start gap-2">
+                    <span class="flex-1">@t.Message</span>
+                    <button type="button" @onclick="() => Toasts.Dismiss(t.Id)" aria-label="Dismiss"
+                            class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                        &times;
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+}

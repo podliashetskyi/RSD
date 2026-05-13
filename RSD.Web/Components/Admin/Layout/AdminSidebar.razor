@@ -1,0 +1,23 @@
+<aside aria-label="Admin navigation" class="border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 w-56 shrink-0">
+    <nav class="px-4 py-6 space-y-6">
+        @foreach (var group in Groups)
+        {
+            <div>
+                <h2 class="px-2 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">@group.Key</h2>
+                <ul class="space-y-1">
+                    @foreach (var item in group)
+                    {
+                        <li>
+                            <NavLink href="@item.Href"
+                                     Match="@(item.Href == "/admin" ? NavLinkMatch.All : NavLinkMatch.Prefix)"
+                                     ActiveClass="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white"
+                                     class="block rounded-md px-2 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                                @item.Label
+                            </NavLink>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+    </nav>
+</aside>
