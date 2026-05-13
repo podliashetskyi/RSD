@@ -1,27 +1,27 @@
 #pragma warning disable S1144, S4487, S2933
-using System.Collections.Generic;
+
+using RSD.Web.Data.Entities;
+using RSD.Web.Services.Content;
 
 namespace RSD.Web.Components.Sections.About;
 
-public partial class ManagementSection
+public partial class ManagementSection(ITeamMemberService TeamService, ISocialLinkService SocialService)
 {
-    private static readonly IReadOnlyList<ManagerCard> Managers =
-    [
-        new("images/about/management/portrait-bonnie-green.png",   "Bonnie Green",  "Front-end Developer"),
-        new("images/about/management/portrait-robert-fox.png",     "Robert Fox",    "Front-end Developer"),
-        new("images/about/management/portrait-eleanor-pena.png",   "Eleanor Pena",  "Front-end Developer"),
-        new("images/about/management/portrait-esther-howard.png",  "Esther Howard", "Front-end Developer"),
-    ];
+    private IReadOnlyList<TeamMember> Managers { get; set; } = [];
+    private IReadOnlyList<SocialLink> SocialIcons { get; set; } = [];
 
-    private static readonly IReadOnlyList<SocialIcon> SocialIcons =
-    [
-        new("images/about/social/icon-x.svg",        "X"),
-        new("images/about/social/icon-google.svg",   "Google"),
-        new("images/about/social/icon-github.svg",   "GitHub"),
-        new("images/about/social/icon-dribbble.svg", "Dribbble"),
-        new("images/about/social/icon-linkedin.svg", "LinkedIn"),
-    ];
+    protected override async Task OnInitializedAsync()
+    {
+        var team = await TeamService.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 100), CancellationToken.None);
+        Managers = team
+            .Where(m => m.IsManagement)
+            .OrderBy(m => m.DisplayOrder)
+            .ToList();
+
+        var socials = await SocialService.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 100), CancellationToken.None);
+        SocialIcons = socials
+            .Where(s => s.Scope == SocialLinkScope.Management)
+            .OrderBy(s => s.DisplayOrder)
+            .ToList();
+    }
 }
-
-public record ManagerCard(string PhotoSrc, string Name, string Role);
-public record SocialIcon(string Src, string Label);

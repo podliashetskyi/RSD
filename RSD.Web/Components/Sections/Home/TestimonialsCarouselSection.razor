@@ -1,5 +1,5 @@
 @{
-    RenderFragment<TestimonialEntry> Card = t =>@<article class="relative flex flex-col gap-5 bg-white border border-line rounded-base p-6 overflow-hidden h-full">
+    RenderFragment<Testimonial> Card = t =>@<article class="relative flex flex-col gap-5 bg-white border border-line rounded-base p-6 overflow-hidden h-full">
         <span aria-hidden="true" class="absolute top-2 right-4 text-line text-display-xl font-serif leading-none select-none">99</span>
         <div class="flex items-center pb-4 border-b border-line-subtle relative">
             <div class="flex gap-1" aria-label="5 stars">
@@ -14,10 +14,10 @@
         <h3 class="text-ink text-body-lg font-semibold relative">@t.Title</h3>
         <p class="text-ink-soft text-body-sm leading-relaxed flex-1 relative">@t.Quote</p>
         <div class="flex items-center gap-2 pt-6 border-t border-line-subtle relative">
-            <img src="@t.AvatarSrc" alt="@t.Name" class="w-8 h-8 rounded-full object-cover" />
+            <ResponsiveImage FallbackSrc="@t.AvatarPath" Alt="@t.AuthorName" CssClass="w-8 h-8 rounded-full object-cover" />
             <div>
-                <p class="text-ink text-body font-medium leading-none">@t.Name</p>
-                <p class="text-ink-soft text-body-sm mt-1.5">@t.Role</p>
+                <p class="text-ink text-body font-medium leading-none">@t.AuthorName</p>
+                <p class="text-ink-soft text-body-sm mt-1.5">@t.AuthorRole</p>
             </div>
         </div>
     </article>;

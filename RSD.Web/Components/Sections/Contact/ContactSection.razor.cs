@@ -1,33 +1,28 @@
 #pragma warning disable S1144, S4487, S2933
-using System.Collections.Generic;
+
+using RSD.Web.Data.Entities;
+using RSD.Web.Services.Content;
 
 namespace RSD.Web.Components.Sections.Contact;
 
-public partial class ContactSection
+public partial class ContactSection(
+    IContactPointService PointsService,
+    IMessengerLinkService MessengerService,
+    ISocialLinkService SocialService)
 {
-    private static readonly IReadOnlyList<ContactPoint> Points =
-    [
-        new("Phone",   ["+1 (415) 555-1234"],                                   IsLink: false),
-        new("Email",   ["hello@nexatech.io"],                                   IsLink: false),
-        new("Address", ["San Francisco, CA 94102", "Business Center, Suite 100"], IsLink: true),
-    ];
+    private IReadOnlyList<ContactPoint> Points { get; set; } = [];
+    private IReadOnlyList<MessengerLink> Messengers { get; set; } = [];
+    private IReadOnlyList<SocialLink> Socials { get; set; } = [];
 
-    private static readonly IReadOnlyList<MessengerLink> Messengers =
-    [
-        new("WhatsApp", "images/contact/messenger/icon-whatsapp-large.svg", "images/contact/messenger/icon-whatsapp-small.svg", "#06d94c"),
-        new("Telegram", "images/contact/messenger/icon-telegram-large.svg", "images/contact/messenger/icon-telegram-small.svg", "#269cd9"),
-        new("Viber",    "images/contact/messenger/icon-viber-large.svg",    "images/contact/messenger/icon-viber-small.svg",    "#7d519e"),
-    ];
+    protected override async Task OnInitializedAsync()
+    {
+        var pts = await PointsService.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 100), CancellationToken.None);
+        Points = pts.OrderBy(p => p.DisplayOrder).ToList();
 
-    private static readonly IReadOnlyList<SocialLink> Socials =
-    [
-        new("LinkedIn", "images/contact/social/icon-linkedin.svg", "#"),
-        new("Twitter",  "images/contact/social/icon-twitter.svg",  "#"),
-        new("Reddit",   "images/contact/social/icon-reddit.svg",   "#"),
-        new("Facebook", "images/contact/social/icon-facebook.svg", "#"),
-    ];
+        var msgs = await MessengerService.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 100), CancellationToken.None);
+        Messengers = msgs.OrderBy(m => m.DisplayOrder).ToList();
+
+        var socials = await SocialService.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 100), CancellationToken.None);
+        Socials = socials.Where(s => s.Scope == SocialLinkScope.Contact).OrderBy(s => s.DisplayOrder).ToList();
+    }
 }
-
-public record ContactPoint(string Label, IReadOnlyList<string> Lines, bool IsLink);
-public record MessengerLink(string Label, string LargeIconSrc, string SmallIconSrc, string BgColor);
-public record SocialLink(string Label, string IconSrc, string Href);

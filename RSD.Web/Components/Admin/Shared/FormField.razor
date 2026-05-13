@@ -1,0 +1,8 @@
+<div>
+    <label class="form-label">@Label</label>
+    @ChildContent
+    @if (!string.IsNullOrEmpty(Hint))
+    {
+        <p class="form-hint">@Hint</p>
+    }
+</div>

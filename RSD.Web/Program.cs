@@ -1,12 +1,17 @@
+using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using RSD.Web.Components;
 using RSD.Web.Data;
 using RSD.Web.Data.Interceptors;
+using RSD.Web.Data.Seed;
+using RSD.Web.Endpoints;
 using RSD.Web.Services.Audit;
 using RSD.Web.Services.Auth;
 using RSD.Web.Services.Cache;
+using RSD.Web.Services.Content;
 using RSD.Web.Services.Email;
 using RSD.Web.Services.Imaging;
 using RSD.Web.Services.Preview;
@@ -21,13 +26,16 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient();
 builder.Services.AddScoped<AuditSaveChangesInterceptor>();
 builder.Services.AddScoped<IAuditLog, AuditLog>();
 builder.Services.AddScoped<RSD.Web.Components.Admin.Shared.IToastService, RSD.Web.Components.Admin.Shared.ToastService>();
 
-builder.Services.AddDbContext<AppDbContext>((sp, options) =>
+builder.Services.AddDbContextFactory<AppDbContext>((sp, options) =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres"))
            .AddInterceptors(sp.GetRequiredService<AuditSaveChangesInterceptor>()));
+builder.Services.AddScoped<AppDbContext>(sp =>
+    sp.GetRequiredService<IDbContextFactory<AppDbContext>>().CreateDbContext());
 
 builder.Services.AddHostedService<MigrationHostedService>();
 
@@ -38,7 +46,30 @@ builder.Services
     .AddRsdSlugs()
     .AddRsdCache(builder.Configuration)
     .AddRsdEmail(builder.Configuration, builder.Environment)
-    .AddRsdPreview(builder.Configuration);
+    .AddRsdPreview(builder.Configuration)
+    .AddRsdContent()
+    .AddRsdSeed();
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.OnRejected = static async (context, ct) =>
+    {
+        context.HttpContext.Response.Headers["Retry-After"] = "300";
+        await context.HttpContext.Response.WriteAsJsonAsync(
+            new { error = "Too many submissions. Please try again in a few minutes." }, ct);
+    };
+    options.AddPolicy(ContactSubmitEndpoint.RateLimitPolicy, context =>
+    {
+        var key = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        return RateLimitPartition.GetFixedWindowLimiter(key, _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 5,
+            Window = TimeSpan.FromMinutes(5),
+            QueueLimit = 0
+        });
+    });
+});
 
 var app = builder.Build();
 
@@ -53,9 +84,11 @@ if (!app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseAntiforgery();
+app.UseRateLimiter();
 app.UseOutputCache();
 
 app.MapStaticAssets();
+app.MapContactSubmit();
 app.MapPost("/admin/logout", async (HttpContext http, SignInManager<AdminUser> signIn) =>
 {
     await signIn.SignOutAsync();

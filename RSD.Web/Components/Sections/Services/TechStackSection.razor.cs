@@ -1,24 +1,17 @@
 #pragma warning disable S1144, S4487, S2933
 
+using RSD.Web.Data.Entities;
+using RSD.Web.Services.Content;
+
 namespace RSD.Web.Components.Sections.Services;
 
-public partial class TechStackSection
+public partial class TechStackSection(ITechStackItemService Service)
 {
-    private static readonly IReadOnlyList<TechStackItem> Items =
-    [
-        new TechStackItem("​.NET", "dotnet"),
-        new TechStackItem("C#", "csharp"),
-        new TechStackItem("Azure", "azure"),
-        new TechStackItem("SQL Server", "sql-server"),
-        new TechStackItem("TypeScript", "typescript"),
-        new TechStackItem("React", "react"),
-        new TechStackItem("React Native", "react-native"),
-        new TechStackItem("Flutter", "flutter"),
-        new TechStackItem("Docker", "docker"),
-        new TechStackItem("Kubernetes", "kubernetes"),
-        new TechStackItem("PostgreSQL", "postgresql"),
-        new TechStackItem("Redis", "redis"),
-    ];
-}
+    private IReadOnlyList<TechStackItem> Items { get; set; } = [];
 
-public record TechStackItem(string Label, string LogoBase);
+    protected override async Task OnInitializedAsync()
+    {
+        var list = await Service.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 100), CancellationToken.None);
+        Items = list.OrderBy(t => t.DisplayOrder).ToList();
+    }
+}

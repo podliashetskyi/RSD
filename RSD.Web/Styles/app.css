@@ -19,4 +19,20 @@
         content: "";
         @apply absolute -left-4 top-1 bottom-1 w-1.5 bg-cyan-700 rounded-full;
     }
+
+    .form-input {
+        @apply mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-gray-900 dark:text-white focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500;
+    }
+
+    .form-label {
+        @apply block text-sm font-medium text-gray-700 dark:text-gray-300;
+    }
+
+    .form-hint {
+        @apply mt-1 text-xs text-gray-500 dark:text-gray-400;
+    }
+
+    .form-error {
+        @apply mt-1 text-xs text-red-600 dark:text-red-400;
+    }
 }

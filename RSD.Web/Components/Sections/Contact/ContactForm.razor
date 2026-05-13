@@ -1,0 +1,68 @@
+@rendermode InteractiveServer
+
+<EditForm Model="Model" OnValidSubmit="HandleSubmitAsync" FormName="ContactForm" class="flex flex-col gap-6 items-start w-full">
+    <DataAnnotationsValidator />
+
+    <div class="flex flex-col gap-2.5 items-start w-full">
+        <label for="contact-name" class="text-ink text-body-sm font-medium leading-5">
+            Your name
+        </label>
+        <InputText id="contact-name" @bind-Value="Model.Name" placeholder="Jane Doe" autocomplete="name"
+                   class="w-full bg-white border border-line rounded-base px-3.5 py-3 text-ink text-body leading-6 placeholder:text-[#6a7282] shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" />
+        <ValidationMessage For="@(() => Model.Name)" class="text-red-600 text-body-sm" />
+    </div>
+
+    <div class="flex flex-col gap-2.5 items-start w-full">
+        <label for="contact-email" class="text-ink text-body-sm font-medium leading-5">
+            Your email address (So we can reply to you)
+        </label>
+        <InputText id="contact-email" type="email" @bind-Value="Model.Email" placeholder="name@company.com" autocomplete="email"
+                   class="w-full bg-white border border-line rounded-base px-3.5 py-3 text-ink text-body leading-6 placeholder:text-[#6a7282] shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" />
+        <ValidationMessage For="@(() => Model.Email)" class="text-red-600 text-body-sm" />
+    </div>
+
+    <div class="flex flex-col gap-2.5 items-start w-full">
+        <label for="contact-subject" class="flex items-center gap-1 text-ink text-body-sm font-medium leading-5">
+            <span>Subject <span class="text-ink">(optional)</span></span>
+        </label>
+        <InputText id="contact-subject" @bind-Value="Model.Subject" placeholder="Enter your subject"
+                   class="w-full bg-white border border-line rounded-base px-3.5 py-3 text-ink text-body leading-6 placeholder:text-[#6a7282] shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" />
+    </div>
+
+    <div class="flex flex-col gap-2.5 items-start w-full">
+        <label for="contact-message" class="flex items-center gap-1 text-ink text-body-sm font-medium leading-5">
+            <span>Your message</span>
+        </label>
+        <InputTextArea id="contact-message" rows="6" @bind-Value="Model.Message" placeholder="Write text here ..."
+                       class="w-full bg-white border border-line rounded-base px-3.5 py-3.5 text-ink text-body-sm leading-5 placeholder:text-[#6a7282] shadow-sm resize-y focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 min-h-[200px] lg:min-h-[380px]" />
+        <ValidationMessage For="@(() => Model.Message)" class="text-red-600 text-body-sm" />
+    </div>
+
+    <input type="text" name="hp" autocomplete="off" tabindex="-1" aria-hidden="true"
+           @bind="Model.Hp"
+           class="absolute -left-[10000px] w-px h-px overflow-hidden" />
+
+    <div class="flex gap-2.5 items-start">
+        <InputCheckbox id="contact-terms" @bind-Value="Model.AcceptsTerms"
+                       class="size-4 mt-0.5 bg-white border border-line rounded-lg shrink-0 accent-brand-950" />
+        <label for="contact-terms" class="text-ink-soft text-body-sm font-medium leading-4">
+            By submitting this form, you confirm that you have read and agree to
+            <a href="#" class="text-ink underline">our Terms of Service</a>
+        </label>
+    </div>
+
+    @if (Status == FormStatus.Error)
+    {
+        <p role="alert" class="text-red-700 text-body-sm">@ErrorText</p>
+    }
+    @if (Status == FormStatus.Success)
+    {
+        <p role="status" class="text-emerald-700 text-body-sm">Thanks — your message is on its way. We'll get back to you shortly.</p>
+    }
+
+    <button type="submit" disabled="@IsBusy"
+            class="w-full lg:w-auto bg-brand-950 text-white text-body font-medium leading-6 inline-flex items-center justify-center gap-1.5 px-6 py-3.5 rounded-base hover:bg-brand-900 transition-colors disabled:opacity-60">
+        @(IsBusy ? "Sending…" : "Submit message")
+        <img src="images/contact/form/icon-paper-airplane.svg" alt="" aria-hidden="true" class="size-5" />
+    </button>
+</EditForm>

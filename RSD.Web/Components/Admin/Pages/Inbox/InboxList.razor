@@ -1,0 +1,117 @@
+@page "/admin/inbox"
+@attribute [Authorize(Roles = AdminRoles.Admin)]
+@layout AdminLayout
+@rendermode InteractiveServer
+
+<PageTitle>Inbox &middot; RSD Admin</PageTitle>
+
+<section class="space-y-6">
+    <header class="flex items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Inbox</h1>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">@Total submissions · @Open open.</p>
+        </div>
+    </header>
+
+    <AdminDataTable TItem="ContactSubmission" Items="Items" EmptyText="No submissions match this filter.">
+        <ToolbarTemplate>
+            <div class="flex items-center gap-2">
+                @foreach (var option in FilterOptions)
+                {
+                    <button type="button" @onclick="() => SetFilterAsync(option.Value)"
+                            aria-pressed="@(Filter == option.Value ? "true" : "false")"
+                            class="@FilterButtonClass(option.Value)">
+                        @option.Label
+                    </button>
+                }
+            </div>
+            <input type="search" @bind-value="Search" @bind-value:event="oninput" @onkeyup="ReloadAsync"
+                   placeholder="Search name, email, subject…" aria-label="Search submissions"
+                   class="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-1.5 text-sm" />
+        </ToolbarTemplate>
+        <ColumnHeaderTemplate>
+            <th class="px-4 py-2">Submitted</th>
+            <th class="px-4 py-2">From</th>
+            <th class="px-4 py-2">Subject</th>
+            <th class="px-4 py-2">Status</th>
+            <th class="px-4 py-2 text-right">Actions</th>
+        </ColumnHeaderTemplate>
+        <RowTemplate Context="s">
+            <td class="px-4 py-2 text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                <time datetime="@s.SubmittedAt.ToString("u")">@s.SubmittedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</time>
+            </td>
+            <td class="px-4 py-2">
+                <div class="text-gray-900 dark:text-white">@s.Name</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">@s.Email</div>
+            </td>
+            <td class="px-4 py-2 text-gray-600 dark:text-gray-300">@s.Subject</td>
+            <td class="px-4 py-2">
+                @if (s.IsHandled)
+                {
+                    <span class="inline-flex items-center rounded-md bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 text-xs font-medium">Handled</span>
+                }
+                else
+                {
+                    <span class="inline-flex items-center rounded-md bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 px-2 py-0.5 text-xs font-medium">Open</span>
+                }
+            </td>
+            <td class="px-4 py-2 text-right">
+                <div class="inline-flex items-center gap-1">
+                    <button type="button" @onclick="() => OpenDetailAsync(s.Id)"
+                            class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-1 text-xs hover:bg-gray-50 dark:hover:bg-gray-800">View</button>
+                </div>
+            </td>
+        </RowTemplate>
+    </AdminDataTable>
+
+    @if (TotalPages > 1)
+    {
+        <nav class="flex items-center justify-between" aria-label="Pagination">
+            <p class="text-sm text-gray-500 dark:text-gray-400">Page @Page of @TotalPages</p>
+            <div class="flex items-center gap-1">
+                <button type="button" @onclick="PreviousPageAsync" disabled="@(Page <= 1)"
+                        class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-1 text-xs disabled:opacity-50">Previous</button>
+                <button type="button" @onclick="NextPageAsync" disabled="@(Page >= TotalPages)"
+                        class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-1 text-xs disabled:opacity-50">Next</button>
+            </div>
+        </nav>
+    }
+</section>
+
+@if (Selected is not null)
+{
+    <div class="fixed inset-0 z-40 flex" role="dialog" aria-modal="true" aria-labelledby="inbox-detail-title">
+        <button type="button" class="absolute inset-0 bg-black/40" aria-label="Close" @onclick="CloseDetail"></button>
+        <aside class="ml-auto relative w-full max-w-xl h-full bg-white dark:bg-gray-950 border-l border-gray-200 dark:border-gray-800 shadow-xl flex flex-col">
+            <header class="flex items-start justify-between gap-4 border-b border-gray-200 dark:border-gray-800 px-6 py-4">
+                <div>
+                    <h2 id="inbox-detail-title" class="text-lg font-semibold text-gray-900 dark:text-white">@Selected.Subject</h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        From <span class="font-medium text-gray-700 dark:text-gray-200">@Selected.Name</span>
+                        &lt;<a href="mailto:@Selected.Email" class="text-cyan-700 dark:text-cyan-400 underline">@Selected.Email</a>&gt;
+                    </p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        <time datetime="@Selected.SubmittedAt.ToString("u")">@Selected.SubmittedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</time>
+                    </p>
+                </div>
+                <button type="button" @onclick="CloseDetail" aria-label="Close" class="rounded-md p-1 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800">&times;</button>
+            </header>
+            <div class="flex-1 overflow-y-auto px-6 py-4 text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap">@Selected.Message</div>
+            <footer class="border-t border-gray-200 dark:border-gray-800 px-6 py-3 flex flex-wrap items-center gap-2">
+                <a href="@ReplyMailto" class="inline-flex items-center rounded-md bg-cyan-600 hover:bg-cyan-700 text-white px-3 py-1.5 text-sm font-medium">Reply by email</a>
+                @if (Selected.IsHandled)
+                {
+                    <button type="button" @onclick="MarkOpenAsync"
+                            class="rounded-md border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-sm">Reopen</button>
+                }
+                else
+                {
+                    <button type="button" @onclick="MarkHandledAsync"
+                            class="rounded-md border border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300 px-3 py-1.5 text-sm">Mark handled</button>
+                }
+                <button type="button" @onclick="DeleteAsync"
+                        class="ml-auto rounded-md border border-red-300 dark:border-red-700 text-red-700 dark:text-red-300 px-3 py-1.5 text-sm">Delete</button>
+            </footer>
+        </aside>
+    </div>
+}
