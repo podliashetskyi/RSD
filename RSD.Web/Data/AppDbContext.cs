@@ -11,6 +11,16 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<AuditLogEntry> AuditLogEntries => Set<AuditLogEntry>();
     public DbSet<UploadedFile> UploadedFiles => Set<UploadedFile>();
 
+    public DbSet<Testimonial> Testimonials => Set<Testimonial>();
+    public DbSet<TeamMember> TeamMembers => Set<TeamMember>();
+    public DbSet<Partner> Partners => Set<Partner>();
+    public DbSet<Value> Values => Set<Value>();
+    public DbSet<MissionStat> MissionStats => Set<MissionStat>();
+    public DbSet<TechStackItem> TechStackItems => Set<TechStackItem>();
+    public DbSet<ContactPoint> ContactPoints => Set<ContactPoint>();
+    public DbSet<MessengerLink> MessengerLinks => Set<MessengerLink>();
+    public DbSet<SocialLink> SocialLinks => Set<SocialLink>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

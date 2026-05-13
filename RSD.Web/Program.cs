@@ -4,9 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using RSD.Web.Components;
 using RSD.Web.Data;
 using RSD.Web.Data.Interceptors;
+using RSD.Web.Data.Seed;
 using RSD.Web.Services.Audit;
 using RSD.Web.Services.Auth;
 using RSD.Web.Services.Cache;
+using RSD.Web.Services.Content;
 using RSD.Web.Services.Email;
 using RSD.Web.Services.Imaging;
 using RSD.Web.Services.Preview;
@@ -38,7 +40,9 @@ builder.Services
     .AddRsdSlugs()
     .AddRsdCache(builder.Configuration)
     .AddRsdEmail(builder.Configuration, builder.Environment)
-    .AddRsdPreview(builder.Configuration);
+    .AddRsdPreview(builder.Configuration)
+    .AddRsdContent()
+    .AddRsdSeed();
 
 var app = builder.Build();
 
