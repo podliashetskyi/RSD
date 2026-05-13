@@ -1,10 +1,13 @@
+using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using RSD.Web.Components;
 using RSD.Web.Data;
 using RSD.Web.Data.Interceptors;
 using RSD.Web.Data.Seed;
+using RSD.Web.Endpoints;
 using RSD.Web.Services.Audit;
 using RSD.Web.Services.Auth;
 using RSD.Web.Services.Cache;
@@ -23,6 +26,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient();
 builder.Services.AddScoped<AuditSaveChangesInterceptor>();
 builder.Services.AddScoped<IAuditLog, AuditLog>();
 builder.Services.AddScoped<RSD.Web.Components.Admin.Shared.IToastService, RSD.Web.Components.Admin.Shared.ToastService>();
@@ -46,6 +50,27 @@ builder.Services
     .AddRsdContent()
     .AddRsdSeed();
 
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.OnRejected = static async (context, ct) =>
+    {
+        context.HttpContext.Response.Headers["Retry-After"] = "300";
+        await context.HttpContext.Response.WriteAsJsonAsync(
+            new { error = "Too many submissions. Please try again in a few minutes." }, ct);
+    };
+    options.AddPolicy(ContactSubmitEndpoint.RateLimitPolicy, context =>
+    {
+        var key = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        return RateLimitPartition.GetFixedWindowLimiter(key, _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 5,
+            Window = TimeSpan.FromMinutes(5),
+            QueueLimit = 0
+        });
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -59,9 +84,11 @@ if (!app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseAntiforgery();
+app.UseRateLimiter();
 app.UseOutputCache();
 
 app.MapStaticAssets();
+app.MapContactSubmit();
 app.MapPost("/admin/logout", async (HttpContext http, SignInManager<AdminUser> signIn) =>
 {
     await signIn.SignOutAsync();

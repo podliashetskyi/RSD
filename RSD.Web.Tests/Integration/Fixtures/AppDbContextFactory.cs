@@ -3,11 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
 using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Data.Interceptors;
 using RSD.Web.Services.Cache;
 using RSD.Web.Services.Content;
+using RSD.Web.Services.Email;
 using RSD.Web.Services.Slugs;
 
 namespace RSD.Web.Tests.Integration.Fixtures;
@@ -49,6 +51,9 @@ public sealed class AppDbContextFactory(string connectionString) : IAsyncDisposa
             sp.GetRequiredService<IDbContextFactory<AppDbContext>>().CreateDbContext());
         services.AddScoped<ISlugger, Slugger>();
         services.AddSingleton<IPublicPageCache, NoopPublicPageCache>();
+        services.AddSingleton<CapturingEmailSender>();
+        services.AddSingleton<IEmailSender>(sp => sp.GetRequiredService<CapturingEmailSender>());
+        services.Configure<EmailOptions>(o => { o.From = "test@local"; o.ContactTo = "inbox@local"; });
         services.AddRsdContent();
         return services.BuildServiceProvider();
     }
@@ -63,5 +68,15 @@ public sealed class AppDbContextFactory(string connectionString) : IAsyncDisposa
         public Task EvictForAsync<TEntity>(Guid id, CancellationToken ct) where TEntity : ContentEntity => Task.CompletedTask;
         public Task EvictListAsync<TEntity>(CancellationToken ct) where TEntity : ContentEntity => Task.CompletedTask;
         public Task EvictAllAsync(CancellationToken ct) => Task.CompletedTask;
+    }
+}
+
+public sealed class CapturingEmailSender : IEmailSender
+{
+    public List<EmailMessage> Sent { get; } = [];
+    public Task SendAsync(EmailMessage message, CancellationToken ct)
+    {
+        Sent.Add(message);
+        return Task.CompletedTask;
     }
 }
