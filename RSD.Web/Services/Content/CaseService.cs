@@ -1,0 +1,42 @@
+using Microsoft.EntityFrameworkCore;
+using RSD.Web.Data;
+using RSD.Web.Data.Entities;
+using RSD.Web.Services.Cache;
+using RSD.Web.Services.Slugs;
+
+namespace RSD.Web.Services.Content;
+
+public sealed class CaseService(
+    IDbContextFactory<AppDbContext> DbFactory,
+    ISlugger Slugger,
+    IPublicPageCache Cache)
+    : ContentServiceBase<Case, Case, Case, CaseUpsert>(DbFactory, Slugger, Cache), ICaseService
+{
+    protected override Case NewEntityFrom(CaseUpsert input) => new()
+    {
+        Slug = input.Slug,
+        Name = input.Name,
+        Industry = input.Industry,
+        Description = input.Description,
+        CoverImagePath = input.CoverImagePath,
+        TechTags = [.. input.TechTags],
+        Status = input.Status,
+        Seo = input.Seo
+    };
+
+    protected override void ApplyUpdate(Case entity, CaseUpsert input)
+    {
+        entity.Name = input.Name;
+        entity.Industry = input.Industry;
+        entity.Description = input.Description;
+        entity.CoverImagePath = input.CoverImagePath;
+        entity.TechTags = [.. input.TechTags];
+        entity.Status = input.Status;
+        entity.Seo = input.Seo;
+    }
+
+    protected override Case ToListItem(Case entity) => entity;
+    protected override Case ToDetail(Case entity) => entity;
+    protected override string NaturalKeyOf(CaseUpsert input) => input.Name;
+    protected override string SlugOf(CaseUpsert input) => input.Slug;
+}

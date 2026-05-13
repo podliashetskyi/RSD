@@ -14,6 +14,10 @@ public static class ContentServiceCollectionExtensions
         services.AddScoped<IMessengerLinkService, MessengerLinkService>();
         services.AddScoped<ISocialLinkService, SocialLinkService>();
         services.AddScoped<IContactSubmissionService, ContactSubmissionService>();
+        services.AddScoped<IBlogService, BlogService>();
+        services.AddScoped<ICaseService, CaseService>();
+        services.AddScoped<IProductService, ProductService>();
+        services.AddScoped<IServiceService, ServiceService>();
         return services;
     }
 }
