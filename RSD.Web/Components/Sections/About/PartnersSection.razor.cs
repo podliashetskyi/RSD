@@ -1,17 +1,17 @@
 #pragma warning disable S1144, S4487, S2933
-using System.Collections.Generic;
+
+using RSD.Web.Data.Entities;
+using RSD.Web.Services.Content;
 
 namespace RSD.Web.Components.Sections.About;
 
-public partial class PartnersSection
+public partial class PartnersSection(IPartnerService Service)
 {
-    private static readonly IReadOnlyList<PartnerCard> Partners =
-    [
-        new("images/about/partners/portrait-bonnie-green.png",  "Bonnie Green",  "Front-end Developer", "/contact"),
-        new("images/about/partners/portrait-bonnie-green.png",  "Robert Fox",    "Front-end Developer", "/contact"),
-        new("images/about/partners/portrait-eleanor-pena.png",  "Eleanor Pena",  "Front-end Developer", "/contact"),
-        new("images/about/partners/portrait-esther-howard.png", "Esther Howard", "Front-end Developer", "/contact"),
-    ];
-}
+    private IReadOnlyList<Partner> Partners { get; set; } = [];
 
-public record PartnerCard(string PhotoSrc, string Name, string Role, string ContactHref);
+    protected override async Task OnInitializedAsync()
+    {
+        var list = await Service.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 100), CancellationToken.None);
+        Partners = list.OrderBy(p => p.DisplayOrder).ToList();
+    }
+}

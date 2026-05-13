@@ -27,9 +27,11 @@ builder.Services.AddScoped<AuditSaveChangesInterceptor>();
 builder.Services.AddScoped<IAuditLog, AuditLog>();
 builder.Services.AddScoped<RSD.Web.Components.Admin.Shared.IToastService, RSD.Web.Components.Admin.Shared.ToastService>();
 
-builder.Services.AddDbContext<AppDbContext>((sp, options) =>
+builder.Services.AddDbContextFactory<AppDbContext>((sp, options) =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres"))
            .AddInterceptors(sp.GetRequiredService<AuditSaveChangesInterceptor>()));
+builder.Services.AddScoped<AppDbContext>(sp =>
+    sp.GetRequiredService<IDbContextFactory<AppDbContext>>().CreateDbContext());
 
 builder.Services.AddHostedService<MigrationHostedService>();
 

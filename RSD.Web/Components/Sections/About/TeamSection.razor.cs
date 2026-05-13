@@ -1,28 +1,23 @@
 #pragma warning disable S1144, S4487, S2933
-using System.Collections.Generic;
+
+using RSD.Web.Data.Entities;
+using RSD.Web.Services.Content;
 
 namespace RSD.Web.Components.Sections.About;
 
-public partial class TeamSection
+public partial class TeamSection(ITeamMemberService Service)
 {
-    private static readonly IReadOnlyList<TeamMember> TeamRow1 =
-    [
-        new("images/about/team/avatar-01.png", "Floyd Miles",     "Front-End Engineer"),
-        new("images/about/team/avatar-02.png", "Ralph Edwards",   "Front-End Engineer"),
-        new("images/about/team/avatar-03.png", "Kathryn Murphy",  "Back-End Engineer"),
-        new("images/about/team/avatar-04.png", "Robert Fox",      "Back-End Engineer"),
-        new("images/about/team/avatar-05.png", "Kathryn Murphy",  "Back-End Engineer"),
-        new("images/about/team/avatar-06.png", "Robert Fox",      "Back-End Engineer"),
-    ];
+    private IReadOnlyList<TeamMember> TeamRow1 { get; set; } = [];
+    private IReadOnlyList<TeamMember> TeamRow2 { get; set; } = [];
 
-    private static readonly IReadOnlyList<TeamMember> TeamRow2 =
-    [
-        new("images/about/team/avatar-07.png", "Floyd Miles",     "Front-End Engineer"),
-        new("images/about/team/avatar-08.png", "Ralph Edwards",   "Front-End Engineer"),
-        new("images/about/team/avatar-09.png", "Kathryn Murphy",  "Back-End Engineer"),
-        new("images/about/team/avatar-10.png", "Robert Fox",      "Back-End Engineer"),
-        new("images/about/team/avatar-11.png", "Kathryn Murphy",  "Back-End Engineer"),
-    ];
+    protected override async Task OnInitializedAsync()
+    {
+        var list = await Service.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 100), CancellationToken.None);
+        var members = list
+            .Where(m => !m.IsManagement)
+            .OrderBy(m => m.DisplayOrder)
+            .ToList();
+        TeamRow1 = members.Take(6).ToList();
+        TeamRow2 = members.Skip(6).ToList();
+    }
 }
-
-public record TeamMember(string AvatarSrc, string Name, string Role);

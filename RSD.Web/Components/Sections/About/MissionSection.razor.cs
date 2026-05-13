@@ -1,17 +1,17 @@
 #pragma warning disable S1144, S4487, S2933
-using System.Collections.Generic;
+
+using RSD.Web.Data.Entities;
+using RSD.Web.Services.Content;
 
 namespace RSD.Web.Components.Sections.About;
 
-public partial class MissionSection
+public partial class MissionSection(IMissionStatService Service)
 {
-    private static readonly IReadOnlyList<StatEntry> Stats =
-    [
-        new("8", "+", "Years of Experience"),
-        new("200", "+", "Projects"),
-        new("50", "+", "Partners"),
-        new("60", "+", "Developers"),
-    ];
-}
+    private IReadOnlyList<MissionStat> Stats { get; set; } = [];
 
-public record StatEntry(string Number, string Symbol, string Label);
+    protected override async Task OnInitializedAsync()
+    {
+        var list = await Service.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 100), CancellationToken.None);
+        Stats = list.OrderBy(s => s.DisplayOrder).ToList();
+    }
+}

@@ -42,9 +42,11 @@ public sealed class AppDbContextFactory(string connectionString) : IAsyncDisposa
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddLogging(b => b.AddProvider(NullLoggerProvider.Instance));
         services.AddScoped<AuditSaveChangesInterceptor>();
-        services.AddDbContext<AppDbContext>((sp, options) =>
+        services.AddDbContextFactory<AppDbContext>((sp, options) =>
             options.UseNpgsql(connectionString)
                    .AddInterceptors(sp.GetRequiredService<AuditSaveChangesInterceptor>()));
+        services.AddScoped<AppDbContext>(sp =>
+            sp.GetRequiredService<IDbContextFactory<AppDbContext>>().CreateDbContext());
         services.AddScoped<ISlugger, Slugger>();
         services.AddSingleton<IPublicPageCache, NoopPublicPageCache>();
         services.AddRsdContent();

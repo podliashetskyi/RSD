@@ -44,7 +44,7 @@
                         @foreach (var m in Messengers)
                         {
                             <a href="#" class="flex-1 min-w-0 bg-line-subtle border border-line rounded-xl p-3 flex flex-col gap-2 items-center hover:bg-white transition-colors">
-                                <img src="@m.LargeIconSrc" alt="" aria-hidden="true" class="size-12 lg:size-[60px]" />
+                                <img src="@m.LargeIconPath" alt="" aria-hidden="true" class="size-12 lg:size-[60px]" />
                                 <span class="text-ink-soft text-body-lg leading-5">@m.Label</span>
                             </a>
                         }
@@ -58,7 +58,7 @@
                         {
                             <a href="#" class="bg-line-subtle border border-line rounded-xl p-3 flex gap-4 items-center hover:bg-white transition-colors">
                                 <span class="flex items-center justify-center rounded-xl size-10 shrink-0" style="background-color: @m.BgColor;">
-                                    <img src="@m.SmallIconSrc" alt="" aria-hidden="true" class="size-6" />
+                                    <img src="@m.SmallIconPath" alt="" aria-hidden="true" class="size-6" />
                                 </span>
                                 <span class="text-ink-soft text-body-lg leading-5">@m.Label</span>
                             </a>
@@ -73,7 +73,7 @@
                         {
                             <a href="@s.Href" class="bg-line-subtle border border-line rounded-xl p-3 flex gap-4 items-center hover:bg-white transition-colors">
                                 <span class="bg-line flex items-center justify-center rounded-xl size-10 shrink-0">
-                                    <img src="@s.IconSrc" alt="" aria-hidden="true" class="size-5" />
+                                    <img src="@s.IconPath" alt="" aria-hidden="true" class="size-5" />
                                 </span>
                                 <span class="text-ink-soft text-body-lg leading-5">@s.Label</span>
                             </a>
@@ -135,7 +135,7 @@
                         {
                             <a href="#" class="flex-1 min-w-0 bg-line-subtle border border-line rounded-xl p-3 flex gap-4 items-center hover:bg-white transition-colors">
                                 <span class="flex items-center justify-center rounded-xl size-10 shrink-0" style="background-color: @m.BgColor;">
-                                    <img src="@m.SmallIconSrc" alt="" aria-hidden="true" class="size-6" />
+                                    <img src="@m.SmallIconPath" alt="" aria-hidden="true" class="size-6" />
                                 </span>
                                 <span class="text-ink-soft text-body-lg leading-5">@m.Label</span>
                             </a>
