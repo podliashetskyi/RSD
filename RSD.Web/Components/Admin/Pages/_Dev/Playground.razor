@@ -1,0 +1,80 @@
+@page "/admin/_dev/components"
+@attribute [Authorize(Roles = AdminRoles.Admin)]
+@layout AdminLayout
+@rendermode InteractiveServer
+
+<PageTitle>Component playground &middot; RSD Admin</PageTitle>
+
+<section class="max-w-3xl space-y-10">
+    <header>
+        <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Component playground</h1>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Off-menu page for kicking the tyres on T06 primitives. Removed in Phase 5 once admin pages exercise these naturally.</p>
+    </header>
+
+    <section aria-labelledby="status-heading" class="space-y-2">
+        <h2 id="status-heading" class="text-lg font-semibold text-gray-900 dark:text-white">StatusBadge</h2>
+        <div class="flex items-center gap-2">
+            <StatusBadge Status="ContentStatus.Draft" />
+            <StatusBadge Status="ContentStatus.Published" />
+            <StatusBadge Status="ContentStatus.Archived" />
+        </div>
+    </section>
+
+    <section aria-labelledby="toast-heading" class="space-y-2">
+        <h2 id="toast-heading" class="text-lg font-semibold text-gray-900 dark:text-white">Toast</h2>
+        <div class="flex flex-wrap items-center gap-2">
+            <button type="button" @onclick="ShowInfo" class="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-1.5 text-sm">Info</button>
+            <button type="button" @onclick="ShowSuccess" class="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-1.5 text-sm">Success</button>
+            <button type="button" @onclick="ShowWarning" class="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-1.5 text-sm">Warning</button>
+            <button type="button" @onclick="ShowError" class="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-1.5 text-sm">Error</button>
+        </div>
+    </section>
+
+    <section aria-labelledby="confirm-heading" class="space-y-2">
+        <h2 id="confirm-heading" class="text-lg font-semibold text-gray-900 dark:text-white">ConfirmDialog</h2>
+        <div class="flex items-center gap-2">
+            <button type="button" @onclick="OpenConfirm" class="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-1.5 text-sm">Open confirm</button>
+            <button type="button" @onclick="OpenDestructive" class="rounded-md border border-red-300 dark:border-red-700 bg-white dark:bg-gray-900 px-3 py-1.5 text-sm text-red-700 dark:text-red-300">Open destructive</button>
+            <span class="text-xs text-gray-500 dark:text-gray-400">Last action: @LastAction</span>
+        </div>
+        <ConfirmDialog IsOpen="ConfirmOpen" IsOpenChanged="SetConfirmOpen"
+                       Title="Confirm action"
+                       Body="Just a friendly heads-up — this is the non-destructive variant."
+                       OnConfirm="MarkConfirmed"
+                       OnCancel="MarkCancelled" />
+        <ConfirmDialog IsOpen="DestructiveOpen" IsOpenChanged="SetDestructiveOpen"
+                       Title="Delete forever?"
+                       Body="This action cannot be undone."
+                       ConfirmLabel="Delete"
+                       IsDestructive="true"
+                       OnConfirm="MarkDestructiveConfirmed"
+                       OnCancel="MarkDestructiveCancelled" />
+    </section>
+
+    <section aria-labelledby="uploader-heading" class="space-y-2">
+        <h2 id="uploader-heading" class="text-lg font-semibold text-gray-900 dark:text-white">ImageUploader</h2>
+        <p class="text-xs text-gray-500 dark:text-gray-400">Drop a PNG/JPEG/WebP/SVG (max 8&nbsp;MB). Files land under <code class="rounded bg-gray-100 dark:bg-gray-800 px-1">wwwroot/uploads/_test/yyyy/mm/</code> with WebP variants generated for rasters.</p>
+        <ImageUploader Subfolder="_test" CurrentFile="UploadedSample" CurrentFileChanged="HandleUploaded" />
+    </section>
+
+    <section aria-labelledby="slug-heading" class="space-y-2">
+        <h2 id="slug-heading" class="text-lg font-semibold text-gray-900 dark:text-white">SlugField</h2>
+        <p class="text-xs text-gray-500 dark:text-gray-400">Wired against a real <code class="rounded bg-gray-100 dark:bg-gray-800 px-1">ContentEntity</code> in T08+; this slot stays empty until a content type exists to validate against.</p>
+    </section>
+
+    <section aria-labelledby="table-heading" class="space-y-2">
+        <h2 id="table-heading" class="text-lg font-semibold text-gray-900 dark:text-white">AdminDataTable</h2>
+        <AdminDataTable TItem="TableRow" Items="DemoRows">
+            <ColumnHeaderTemplate>
+                <th class="px-4 py-2">Title</th>
+                <th class="px-4 py-2">Status</th>
+                <th class="px-4 py-2">Updated</th>
+            </ColumnHeaderTemplate>
+            <RowTemplate Context="row">
+                <td class="px-4 py-2 text-gray-900 dark:text-white">@row.Title</td>
+                <td class="px-4 py-2"><StatusBadge Status="row.Status" /></td>
+                <td class="px-4 py-2 text-gray-500 dark:text-gray-400">@row.Updated.ToString("u")</td>
+            </RowTemplate>
+        </AdminDataTable>
+    </section>
+</section>

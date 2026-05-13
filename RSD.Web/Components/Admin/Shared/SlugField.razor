@@ -1,0 +1,16 @@
+@typeparam TEntity where TEntity : RSD.Web.Data.Entities.ContentEntity
+
+<div>
+    <label for="@FieldId" class="block text-sm font-medium text-gray-700 dark:text-gray-300">@Label</label>
+    <div class="mt-1 flex gap-2">
+        <input id="@FieldId" type="text" value="@CurrentValue" @oninput="HandleInputAsync" @onblur="HandleBlurAsync" disabled="@Locked"
+               aria-describedby="@($"{FieldId}-msg")"
+               class="flex-1 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-gray-900 dark:text-white focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 disabled:bg-gray-100 dark:disabled:bg-gray-800" />
+        <button type="button" @onclick="ToggleLock" aria-pressed="@(Locked ? "true" : "false")"
+                title="@(Locked ? "Unlock to edit slug manually" : "Lock slug; auto-derive from title")"
+                class="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
+            @(Locked ? "Unlock" : "Lock")
+        </button>
+    </div>
+    <p id="@($"{FieldId}-msg")" aria-live="polite" class="@($"mt-1 text-xs {MessageClass}")">@Message</p>
+</div>
