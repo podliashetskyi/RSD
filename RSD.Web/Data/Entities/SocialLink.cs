@@ -1,6 +1,6 @@
 namespace RSD.Web.Data.Entities;
 
-public sealed record class SocialLink : ContentEntity
+public sealed record class SocialLink : ContentEntity, IHasDisplayOrder
 {
     public required string Label { get; set; }
     public string IconPath { get; set; } = "";

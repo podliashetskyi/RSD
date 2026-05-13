@@ -1,6 +1,6 @@
 namespace RSD.Web.Data.Entities;
 
-public sealed record class ContactPoint : ContentEntity
+public sealed record class ContactPoint : ContentEntity, IHasDisplayOrder
 {
     public required string Label { get; set; }
     public List<string> Lines { get; set; } = [];

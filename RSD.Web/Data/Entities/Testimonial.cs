@@ -1,6 +1,6 @@
 namespace RSD.Web.Data.Entities;
 
-public sealed record class Testimonial : ContentEntity
+public sealed record class Testimonial : ContentEntity, IHasDisplayOrder
 {
     public required string Title { get; set; }
     public required string Quote { get; set; }

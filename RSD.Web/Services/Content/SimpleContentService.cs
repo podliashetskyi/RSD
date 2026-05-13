@@ -67,6 +67,31 @@ public abstract class SimpleContentService<TEntity>(
             e.Status = ContentStatus.Draft;
         }, ct, ignoreFilters: true);
 
+    public async Task<Result<Unit>> BulkReorderAsync(IReadOnlyList<ReorderEntry> ordered, CancellationToken ct)
+    {
+        if (ordered.Count == 0) return Result.Ok();
+        var ids = ordered.Select(o => o.Id).ToList();
+        var entities = await Db.Set<TEntity>().Where(e => ids.Contains(e.Id)).ToListAsync(ct);
+        if (!CanReorder(entities)) return Result.Fail("This entity type does not support reordering.");
+        var orderMap = ordered.ToDictionary(o => o.Id, o => o.DisplayOrder);
+        ApplyOrderings(entities, orderMap);
+        await Db.SaveChangesAsync(ct);
+        await Cache.EvictListAsync<TEntity>(ct);
+        return Result.Ok();
+    }
+
+    private static bool CanReorder(IReadOnlyList<TEntity> entities) =>
+        entities.Count == 0 || entities[0] is IHasDisplayOrder;
+
+    private static void ApplyOrderings(IReadOnlyList<TEntity> entities, Dictionary<Guid, int> orderMap)
+    {
+        foreach (var e in entities)
+        {
+            if (e is IHasDisplayOrder ordered) ordered.DisplayOrder = orderMap[e.Id];
+            e.UpdatedAt = DateTime.UtcNow;
+        }
+    }
+
     /// <summary>Per-entity hook for picking a natural source for the slug when one isn't supplied.</summary>
     protected abstract string NaturalKeyOf(TEntity entity);
 

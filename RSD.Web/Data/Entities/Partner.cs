@@ -1,6 +1,6 @@
 namespace RSD.Web.Data.Entities;
 
-public sealed record class Partner : ContentEntity
+public sealed record class Partner : ContentEntity, IHasDisplayOrder
 {
     public required string Name { get; set; }
     public string Role { get; set; } = "";

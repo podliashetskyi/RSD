@@ -1,6 +1,6 @@
 namespace RSD.Web.Data.Entities;
 
-public sealed record class Value : ContentEntity
+public sealed record class Value : ContentEntity, IHasDisplayOrder
 {
     public required string Title { get; set; }
     public string Description { get; set; } = "";

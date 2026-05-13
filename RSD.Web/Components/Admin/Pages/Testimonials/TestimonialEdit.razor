@@ -1,0 +1,88 @@
+@page "/admin/testimonials/new"
+@page "/admin/testimonials/{Id:guid}"
+@attribute [Authorize(Roles = AdminRoles.Admin)]
+@layout AdminLayout
+
+<PageTitle>@(IsCreate ? "New testimonial" : "Edit testimonial") &middot; RSD Admin</PageTitle>
+
+<section class="max-w-2xl space-y-6">
+    <header>
+        <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">@(IsCreate ? "New testimonial" : "Edit testimonial")</h1>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Public quote shown on the home page and case studies.</p>
+    </header>
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div role="alert" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">@ErrorMessage</div>
+    }
+
+    <EditForm Model="Input" method="post" OnValidSubmit="SaveAsync" FormName="testimonial-edit" class="space-y-4">
+        <DataAnnotationsValidator />
+
+        <div>
+            <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
+            <InputText id="title" @bind-Value="Input.Title" required aria-required="true"
+                       class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-gray-900 dark:text-white" />
+            <ValidationMessage For="() => Input.Title" class="mt-1 text-xs text-red-600 dark:text-red-400" />
+        </div>
+
+        <div>
+            <label for="quote" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quote</label>
+            <InputTextArea id="quote" @bind-Value="Input.Quote" rows="4" required aria-required="true"
+                           class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-gray-900 dark:text-white" />
+            <ValidationMessage For="() => Input.Quote" class="mt-1 text-xs text-red-600 dark:text-red-400" />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label for="authorName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Author name</label>
+                <InputText id="authorName" @bind-Value="Input.AuthorName" required aria-required="true"
+                           class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-gray-900 dark:text-white" />
+            </div>
+            <div>
+                <label for="authorRole" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Author role</label>
+                <InputText id="authorRole" @bind-Value="Input.AuthorRole"
+                           class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-gray-900 dark:text-white" />
+            </div>
+        </div>
+
+        <div>
+            <label for="avatarPath" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Avatar path</label>
+            <InputText id="avatarPath" @bind-Value="Input.AvatarPath" placeholder="e.g. images/avatars/avatar-joseph.png"
+                       class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-gray-900 dark:text-white" />
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Drag-and-drop upload lands in Phase 3 alongside ImageUploader integration on this page.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+                <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
+                <InputSelect id="status" @bind-Value="Input.Status"
+                             class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-gray-900 dark:text-white">
+                    <option value="@ContentStatus.Draft">Draft</option>
+                    <option value="@ContentStatus.Published">Published</option>
+                    <option value="@ContentStatus.Archived">Archived</option>
+                </InputSelect>
+            </div>
+            <div>
+                <label for="displayOrder" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Display order</label>
+                <InputNumber id="displayOrder" @bind-Value="Input.DisplayOrder"
+                             class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-gray-900 dark:text-white" />
+            </div>
+            <div class="flex items-end">
+                <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                    <InputCheckbox @bind-Value="Input.DisplayOnHome" />
+                    Show on home
+                </label>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2 pt-4">
+            <button type="submit"
+                    class="rounded-md bg-gray-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-gray-900 hover:bg-black dark:hover:bg-gray-100">
+                @(IsCreate ? "Create" : "Save changes")
+            </button>
+            <a href="/admin/testimonials"
+               class="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Cancel</a>
+        </div>
+    </EditForm>
+</section>

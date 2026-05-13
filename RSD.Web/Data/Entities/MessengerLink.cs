@@ -1,6 +1,6 @@
 namespace RSD.Web.Data.Entities;
 
-public sealed record class MessengerLink : ContentEntity
+public sealed record class MessengerLink : ContentEntity, IHasDisplayOrder
 {
     public required string Label { get; set; }
     public string LargeIconPath { get; set; } = "";
