@@ -231,7 +231,8 @@ Every task is scoped to be reviewable in one focused sitting and ends with a ver
 **Deliverables.**
 - `RSD.Web.Tests/RSD.Web.Tests.csproj` referencing `xUnit`, `Testcontainers`, `Testcontainers.PostgreSql`, `Microsoft.NET.Test.Sdk`, `FluentAssertions`, `Bunit` (Bunit suite first used in Phase 4).
 - Solution `.sln` updated to include the test project.
-- `RSD.Web.Tests/Unit/` with first tests: `SluggerTests`, `HmacPreviewTokenSignerTests`, `ImageSharpProcessorPathTests`, `AuditDiffTests`, `EmailTemplates_RenderTests`, and `ContentEntityDefaultsTests` (covering the deferred T02 acceptance — `IsDeleted` defaults to `false`, `Status` defaults to `Draft`, `CreatedAt`/`UpdatedAt` populate, `Seo` is non-null).
+- `RSD.Web.Tests/Unit/` with first tests: `SluggerTests`, `HmacPreviewTokenSignerTests`, `ImageSharpProcessorPathTests`, `AuditDiffTests` (covers `DeriveAction` over every `EntityState`/`Status` transition, diff serialization, excluded-property masking), `EmailTemplates_RenderTests`, and `ContentEntityDefaultsTests` (covers the deferred T02 acceptance — `IsDeleted` defaults to `false`, `Status` defaults to `Draft`, `CreatedAt`/`UpdatedAt` populate, `Seo` is non-null).
+- `RSD.Web.Tests/Integration/AuditInterceptorTests.cs` covering the deferred T03 acceptance — saving a `ContactSubmission` via `AppDbContext` produces an `AuditLogEntries` row in the same transaction with correct `Action`, `EntityType`, `EntityId`, and `Diff`; a forced exception from inside the interceptor degrades to a warning log and the main save still commits.
 - `RSD.Web.Tests/Integration/` with `PostgresFixture` (singleton Testcontainers Postgres), `AppDbContextFixture` (provides a fresh DB transaction per test, rolled back on dispose). One sample integration test: `AdminBootstrapper_OnEmptyDb_CreatesFirstAdmin`.
 - CI placeholder: a `dotnet test` invocation in a single command at the repo root; no GitHub Actions workflow yet (deferred to ops backlog).
 

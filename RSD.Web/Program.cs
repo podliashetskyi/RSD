@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using RSD.Web.Components;
 using RSD.Web.Data;
+using RSD.Web.Data.Interceptors;
+using RSD.Web.Services.Audit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,8 +10,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres")));
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<AuditSaveChangesInterceptor>();
+builder.Services.AddScoped<IAuditLog, AuditLog>();
+
+builder.Services.AddDbContext<AppDbContext>((sp, options) =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres"))
+           .AddInterceptors(sp.GetRequiredService<AuditSaveChangesInterceptor>()));
 
 builder.Services.AddHostedService<MigrationHostedService>();
 
