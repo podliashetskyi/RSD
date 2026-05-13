@@ -1,0 +1,47 @@
+@page "/admin/login"
+@layout AdminAuthLayout
+
+<PageTitle>Sign in &middot; RSD Admin</PageTitle>
+
+<section aria-labelledby="login-heading" class="rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-6 shadow-sm">
+    <h1 id="login-heading" class="text-xl font-semibold text-gray-900 dark:text-white">Sign in</h1>
+    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Use your RSD Admin email and password.</p>
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div role="alert" aria-live="polite" class="mt-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">
+            @ErrorMessage
+        </div>
+    }
+
+    <EditForm Model="Input" method="post" OnValidSubmit="HandleSignInAsync" FormName="login" class="mt-6 space-y-4">
+        <DataAnnotationsValidator />
+        <input type="hidden" name="ReturnUrl" value="@(ReturnUrl ?? string.Empty)" />
+
+        <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+            <InputText id="email" @bind-Value="Input.Email" type="email" autocomplete="username" required aria-required="true"
+                       class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-gray-900 dark:text-white focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500" />
+            <ValidationMessage For="() => Input.Email" class="mt-1 text-xs text-red-600 dark:text-red-400" />
+        </div>
+
+        <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+            <InputText id="password" @bind-Value="Input.Password" type="password" autocomplete="current-password" required aria-required="true"
+                       class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-gray-900 dark:text-white focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500" />
+            <ValidationMessage For="() => Input.Password" class="mt-1 text-xs text-red-600 dark:text-red-400" />
+        </div>
+
+        <div class="flex items-center justify-between">
+            <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                <InputCheckbox @bind-Value="Input.RememberMe" class="rounded border-gray-300 dark:border-gray-700" />
+                Remember me
+            </label>
+            <a href="/admin/forgot-password" class="text-sm text-gray-600 dark:text-gray-300 underline hover:text-gray-900 dark:hover:text-white">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="w-full rounded-md bg-gray-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-gray-900 hover:bg-black dark:hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+            Sign in
+        </button>
+    </EditForm>
+</section>

@@ -1,8 +1,11 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RSD.Web.Components;
 using RSD.Web.Data;
 using RSD.Web.Data.Interceptors;
 using RSD.Web.Services.Audit;
+using RSD.Web.Services.Auth;
 using RSD.Web.Services.Cache;
 using RSD.Web.Services.Email;
 using RSD.Web.Services.Imaging;
@@ -16,6 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<AuditSaveChangesInterceptor>();
 builder.Services.AddScoped<IAuditLog, AuditLog>();
@@ -27,6 +31,7 @@ builder.Services.AddDbContext<AppDbContext>((sp, options) =>
 builder.Services.AddHostedService<MigrationHostedService>();
 
 builder.Services
+    .AddRsdAuth()
     .AddRsdStorage()
     .AddRsdImaging(builder.Configuration)
     .AddRsdSlugs()
@@ -44,10 +49,18 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseAntiforgery();
 app.UseOutputCache();
 
 app.MapStaticAssets();
+app.MapPost("/admin/logout", async (HttpContext http, SignInManager<AdminUser> signIn) =>
+{
+    await signIn.SignOutAsync();
+    return Results.LocalRedirect("/admin/login");
+}).RequireAuthorization();
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 

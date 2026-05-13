@@ -1,0 +1,12 @@
+@page "/admin"
+@layout AdminLayout
+@attribute [Authorize(Roles = AdminRoles.Admin)]
+
+<PageTitle>RSD Admin</PageTitle>
+
+<section aria-labelledby="welcome-heading" class="max-w-3xl">
+    <h1 id="welcome-heading" class="text-2xl font-semibold text-gray-900 dark:text-white">Welcome</h1>
+    <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">
+        You are signed in. Content management screens land in Phase 2; this page is a placeholder so authentication can be verified end-to-end.
+    </p>
+</section>
