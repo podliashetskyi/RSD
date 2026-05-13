@@ -307,7 +307,7 @@ Plus shared types:
 ```csharp
 public interface IFileStorage
 {
-    Task<StoredFile> SaveAsync(Stream content, string suggestedFileName, string contentType, CancellationToken ct);
+    Task<StoredFile> SaveAsync(string subfolder, Stream content, string suggestedFileName, string contentType, CancellationToken ct);
     Task DeleteAsync(string path, CancellationToken ct);
     Task<Stream> OpenReadAsync(string path, CancellationToken ct);
     string GetPublicUrl(string path);
@@ -316,10 +316,12 @@ public interface IFileStorage
 public record StoredFile(string Path, long Bytes, string ContentType);
 ```
 
-**Implementations:**
-- `LocalDiskFileStorage` — writes under a configured root (`wwwroot/uploads/`), uses `Path.Combine` with sanitized segments; returns paths relative to `wwwroot`.
+The `subfolder` segment (e.g. `"blog"`, `"avatars"`, `"_test"`) lets the caller place files under `wwwroot/uploads/{subfolder}/{yyyy}/{mm}/...` so the entity-prefix path layout from spec §5.8 is preserved. The implementation sanitizes the segment, the suggested file name, and prefixes a GUID for uniqueness.
 
-**Depends on:** Filesystem; configuration (`Storage:LocalRoot`).
+**Implementations:**
+- `LocalDiskFileStorage` — writes under `IWebHostEnvironment.WebRootPath + "/uploads"`, uses `Path.Combine` with sanitized segments; returns paths relative to `wwwroot`.
+
+**Depends on:** Filesystem; `IWebHostEnvironment`.
 
 **Depended on by:** `Services/Imaging/`, `Components/Admin/Shared/ImageUploader`, `Services/Content/` (where service holds the path).
 
@@ -333,13 +335,15 @@ public record StoredFile(string Path, long Bytes, string ContentType);
 ```csharp
 public interface IImageProcessor
 {
-    Task<ProcessedUpload> ProcessAsync(Stream original, string originalFileName, string contentType, CancellationToken ct);
+    Task<ProcessedUpload> ProcessAsync(string subfolder, Stream original, string originalFileName, string contentType, CancellationToken ct);
 }
 
 public record ProcessedUpload(
     StoredFile OriginalFile,
     IReadOnlyList<ImageVariant> Variants);
 ```
+
+`subfolder` is forwarded to `IFileStorage.SaveAsync` so the original and every variant land under the same `wwwroot/uploads/{subfolder}/yyyy/mm/...` location.
 
 **Implementations:**
 - `ImageSharpProcessor` — uses SixLabors.ImageSharp; reads `Imaging:Variants` from config; emits WebP at quality 82.
@@ -414,7 +418,9 @@ public record EmailMessage(string To, string Subject, string HtmlBody, string? T
 
 **Implementations:**
 - `SmtpEmailSender` — wraps `MailKit.Net.Smtp.SmtpClient`; reads host/port/credentials/from-address from config.
-- `LoggingEmailSender` — development binding; writes to `ILogger` and emits a fake "sent" event for tests.
+- `LoggingEmailSender` — writes the message to `ILogger` instead of sending it; used in tests and as the safe default whenever a real SMTP host is not configured.
+
+`AddRsdEmail` binds `LoggingEmailSender` when `IsDevelopment()` is true *or* when `Email:Smtp:Host` is blank, so dev and pre-configuration environments do not need an SMTP server to boot. `SmtpEmailSender` binds otherwise.
 
 **Helpers:**
 - `EmailTemplates/` — record-based templates: `ForgotPasswordTemplate`, `UserInviteTemplate`, `ContactSubmissionTemplate`. Each has a `Render()` that returns `(Subject, Html, Text)`.
