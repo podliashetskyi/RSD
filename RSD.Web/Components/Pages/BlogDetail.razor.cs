@@ -5,15 +5,19 @@ using Microsoft.AspNetCore.Http;
 using RSD.Web.Components.Sections.Article;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
+using RSD.Web.Services.Preview;
 
 namespace RSD.Web.Components.Pages;
 
 public partial class BlogDetail(
     IBlogService Blog,
     ITeamMemberService Team,
-    IHttpContextAccessor Http)
+    IHttpContextAccessor Http,
+    IPreviewContext PreviewCtx,
+    PreviewLink Preview)
 {
     [Parameter] public string Slug { get; set; } = "";
+    [SupplyParameterFromQuery] public string? Token { get; set; }
 
     private BlogPost? Post { get; set; }
     private TeamMember? Author { get; set; }
@@ -29,11 +33,17 @@ public partial class BlogDetail(
 
     protected override async Task OnInitializedAsync()
     {
-        Post = await Blog.GetBySlugAsync(Slug, includeDrafts: false, CancellationToken.None);
+        if (IsPreviewRequest() && !Preview.Verify("blog", Slug, Token))
+        {
+            NotFound();
+            return;
+        }
+        PreviewCtx.IsPreview = IsPreviewRequest();
+
+        Post = await Blog.GetBySlugAsync(Slug, includeDrafts: PreviewCtx.IsPreview, CancellationToken.None);
         if (Post is null)
         {
-            var http = Http.HttpContext;
-            if (http is not null) http.Response.StatusCode = StatusCodes.Status404NotFound;
+            NotFound();
             return;
         }
         if (Post.AuthorId is { } authorId)
@@ -41,5 +51,14 @@ public partial class BlogDetail(
             var team = await Team.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 200), CancellationToken.None);
             Author = team.FirstOrDefault(t => t.Id == authorId);
         }
+    }
+
+    private bool IsPreviewRequest() =>
+        Http.HttpContext?.Request.Path.StartsWithSegments("/preview") ?? false;
+
+    private void NotFound()
+    {
+        var http = Http.HttpContext;
+        if (http is not null) http.Response.StatusCode = StatusCodes.Status404NotFound;
     }
 }

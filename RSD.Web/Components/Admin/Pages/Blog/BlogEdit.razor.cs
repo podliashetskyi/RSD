@@ -6,13 +6,15 @@ using RSD.Web.Components.Admin.Shared;
 using RSD.Web.Components.Admin.Shared.Blocks;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
+using RSD.Web.Services.Preview;
 
 namespace RSD.Web.Components.Admin.Pages.Blog;
 
 public partial class BlogEdit(
     IBlogService Service,
     NavigationManager Nav,
-    IToastService Toasts) : ComponentBase
+    IToastService Toasts,
+    PreviewLink Preview) : ComponentBase
 {
     [Parameter] public Guid? Id { get; set; }
 
@@ -20,8 +22,10 @@ public partial class BlogEdit(
     private ArticleBodyForm Body { get; set; } = new();
     private string ErrorMessage { get; set; } = "";
     private bool SlugIsValid { get; set; } = true;
+    private string LoadedSlug { get; set; } = "";
     private bool IsCreate => Id is null;
     private bool CanSave => SlugIsValid;
+    private string PreviewUrl => string.IsNullOrEmpty(LoadedSlug) ? "" : Preview.Build("blog", LoadedSlug);
 
     protected override async Task OnInitializedAsync()
     {
@@ -34,6 +38,7 @@ public partial class BlogEdit(
         if (existing is null) { Nav.NavigateTo("/admin/blog"); return; }
         Input = BlogPostInput.From(existing);
         Body = ArticleBodyForm.From(existing.BodyBlocks);
+        LoadedSlug = existing.Slug;
     }
 
     private async Task SaveAsync()

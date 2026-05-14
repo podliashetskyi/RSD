@@ -12,7 +12,14 @@
             <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">@(IsCreate ? "New service" : "Edit service")</h1>
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Header metadata and typed body blocks.</p>
         </div>
-        <a href="/admin/services" class="rounded-md border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Back to list</a>
+        <div class="flex items-center gap-2">
+            @if (!string.IsNullOrEmpty(PreviewUrl))
+            {
+                <a href="@PreviewUrl" target="_blank" rel="noopener"
+                   class="rounded-md border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Preview &#8599;</a>
+            }
+            <a href="/admin/services" class="rounded-md border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Back to list</a>
+        </div>
     </header>
 
     @if (!string.IsNullOrEmpty(ErrorMessage))

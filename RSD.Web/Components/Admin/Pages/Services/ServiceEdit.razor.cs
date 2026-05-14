@@ -6,10 +6,15 @@ using RSD.Web.Components.Admin.Shared;
 using RSD.Web.Components.Admin.Shared.Blocks;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
+using RSD.Web.Services.Preview;
 
 namespace RSD.Web.Components.Admin.Pages.Services;
 
-public partial class ServiceEdit(IServiceService Service, NavigationManager Nav, IToastService Toasts) : ComponentBase
+public partial class ServiceEdit(
+    IServiceService Service,
+    NavigationManager Nav,
+    IToastService Toasts,
+    PreviewLink Preview) : ComponentBase
 {
     [Parameter] public Guid? Id { get; set; }
 
@@ -17,8 +22,10 @@ public partial class ServiceEdit(IServiceService Service, NavigationManager Nav,
     private ArticleBodyForm Body { get; set; } = new();
     private string ErrorMessage { get; set; } = "";
     private bool SlugIsValid { get; set; } = true;
+    private string LoadedSlug { get; set; } = "";
     private bool IsCreate => Id is null;
     private bool CanSave => SlugIsValid;
+    private string PreviewUrl => string.IsNullOrEmpty(LoadedSlug) ? "" : Preview.Build("services", LoadedSlug);
 
     protected override async Task OnInitializedAsync()
     {
@@ -31,6 +38,7 @@ public partial class ServiceEdit(IServiceService Service, NavigationManager Nav,
         if (existing is null) { Nav.NavigateTo("/admin/services"); return; }
         Input = ServiceInput.From(existing);
         Body = ArticleBodyForm.From(existing.BodyBlocks);
+        LoadedSlug = existing.Slug;
     }
 
     private async Task SaveAsync()

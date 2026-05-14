@@ -5,10 +5,15 @@ using Microsoft.AspNetCore.Components;
 using RSD.Web.Components.Admin.Shared;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
+using RSD.Web.Services.Preview;
 
 namespace RSD.Web.Components.Admin.Pages.Products;
 
-public partial class ProductEdit(IProductService Service, NavigationManager Nav, IToastService Toasts) : ComponentBase
+public partial class ProductEdit(
+    IProductService Service,
+    NavigationManager Nav,
+    IToastService Toasts,
+    PreviewLink Preview) : ComponentBase
 {
     [Parameter] public Guid? Id { get; set; }
 
@@ -16,8 +21,10 @@ public partial class ProductEdit(IProductService Service, NavigationManager Nav,
     private ProductBodyForm Body { get; set; } = new();
     private string ErrorMessage { get; set; } = "";
     private bool SlugIsValid { get; set; } = true;
+    private string LoadedSlug { get; set; } = "";
     private bool IsCreate => Id is null;
     private bool CanSave => SlugIsValid;
+    private string PreviewUrl => string.IsNullOrEmpty(LoadedSlug) ? "" : Preview.Build("products", LoadedSlug);
 
     protected override async Task OnInitializedAsync()
     {
@@ -30,6 +37,7 @@ public partial class ProductEdit(IProductService Service, NavigationManager Nav,
         if (existing is null) { Nav.NavigateTo("/admin/products"); return; }
         Input = ProductInput.From(existing);
         Body = ProductBodyForm.From(existing.DetailFields);
+        LoadedSlug = existing.Slug;
     }
 
     private async Task SaveAsync()
