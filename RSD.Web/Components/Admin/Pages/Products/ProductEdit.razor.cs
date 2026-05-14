@@ -13,6 +13,7 @@ public partial class ProductEdit(IProductService Service, NavigationManager Nav,
     [Parameter] public Guid? Id { get; set; }
 
     private ProductInput Input { get; set; } = new();
+    private ProductBodyForm Body { get; set; } = new();
     private string ErrorMessage { get; set; } = "";
     private bool SlugIsValid { get; set; } = true;
     private bool IsCreate => Id is null;
@@ -28,12 +29,13 @@ public partial class ProductEdit(IProductService Service, NavigationManager Nav,
         var existing = await Service.GetByIdAsync(id, CancellationToken.None);
         if (existing is null) { Nav.NavigateTo("/admin/products"); return; }
         Input = ProductInput.From(existing);
+        Body = ProductBodyForm.From(existing.DetailFields);
     }
 
     private async Task SaveAsync()
     {
         if (!CanSave) { ErrorMessage = "Resolve validation errors before saving."; return; }
-        var upsert = Input.ToUpsert();
+        var upsert = Input.ToUpsert(Body.ToEntity());
         var (ok, error) = IsCreate
             ? await CreateAsync(upsert)
             : await UpdateAsync(Id!.Value, upsert);
@@ -91,8 +93,8 @@ public partial class ProductEdit(IProductService Service, NavigationManager Nav,
             Seo = p.Seo
         };
 
-        public ProductUpsert ToUpsert() => new(
+        public ProductUpsert ToUpsert(ProductDetailFields detail) => new(
             Slug, Name, Subtitle, Price, Description, [.. BulletPoints],
-            CoverImagePath, TryForFreeHref, LearnMoreHref, Status, Seo);
+            CoverImagePath, TryForFreeHref, LearnMoreHref, Status, Seo, detail);
     }
 }

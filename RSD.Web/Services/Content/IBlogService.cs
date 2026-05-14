@@ -13,6 +13,7 @@ public record BlogPostUpsert(
     List<string> Tags,
     string Intro,
     ContentStatus Status,
-    SeoMetadata Seo);
+    SeoMetadata Seo,
+    ArticleBody Body);
 
 public interface IBlogService : IContentService<BlogPost, BlogPost, BlogPostUpsert> { }

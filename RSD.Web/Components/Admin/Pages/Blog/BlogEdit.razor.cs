@@ -3,16 +3,21 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
 using RSD.Web.Components.Admin.Shared;
+using RSD.Web.Components.Admin.Shared.Blocks;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
 
 namespace RSD.Web.Components.Admin.Pages.Blog;
 
-public partial class BlogEdit(IBlogService Service, NavigationManager Nav, IToastService Toasts) : ComponentBase
+public partial class BlogEdit(
+    IBlogService Service,
+    NavigationManager Nav,
+    IToastService Toasts) : ComponentBase
 {
     [Parameter] public Guid? Id { get; set; }
 
     private BlogPostInput Input { get; set; } = new();
+    private ArticleBodyForm Body { get; set; } = new();
     private string ErrorMessage { get; set; } = "";
     private bool SlugIsValid { get; set; } = true;
     private bool IsCreate => Id is null;
@@ -28,12 +33,13 @@ public partial class BlogEdit(IBlogService Service, NavigationManager Nav, IToas
         var existing = await Service.GetByIdAsync(id, CancellationToken.None);
         if (existing is null) { Nav.NavigateTo("/admin/blog"); return; }
         Input = BlogPostInput.From(existing);
+        Body = ArticleBodyForm.From(existing.BodyBlocks);
     }
 
     private async Task SaveAsync()
     {
         if (!CanSave) { ErrorMessage = "Resolve validation errors before saving."; return; }
-        var upsert = Input.ToUpsert();
+        var upsert = Input.ToUpsert(Body.ToEntity());
         var (ok, error) = IsCreate
             ? await CreateAsync(upsert)
             : await UpdateAsync(Id!.Value, upsert);
@@ -91,8 +97,8 @@ public partial class BlogEdit(IBlogService Service, NavigationManager Nav, IToas
             Seo = p.Seo
         };
 
-        public BlogPostUpsert ToUpsert() => new(
+        public BlogPostUpsert ToUpsert(ArticleBody body) => new(
             Slug, Title, Description, Category, AuthorId, CoverImagePath,
-            ReadTimeMinutes, [.. Tags], Intro, Status, Seo);
+            ReadTimeMinutes, [.. Tags], Intro, Status, Seo, body);
     }
 }

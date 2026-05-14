@@ -1,0 +1,15 @@
+@using RSD.Web.Components.Admin.Shared
+@using RSD.Web.Components.Admin.Shared.Blocks
+@using RSD.Web.Components.Admin.Shared.BlockRows
+
+<section class="space-y-4">
+    <header>
+        <h2 class="text-base font-semibold text-gray-900 dark:text-white">Body content</h2>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Lead intro plus an ordered list of typed blocks.</p>
+    </header>
+
+    <RichTextEditor Label="Intro" Hint="Brief lead paragraph shown above the body."
+                    Value="@Value.Intro" ValueChanged="OnIntroChanged" />
+
+    <BlockListEditor Rows="Value.Blocks" RowsChanged="OnBlocksChanged" />
+</section>

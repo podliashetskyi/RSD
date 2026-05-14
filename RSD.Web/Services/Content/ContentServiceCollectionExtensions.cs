@@ -1,9 +1,12 @@
+using RSD.Web.Services.Common;
+
 namespace RSD.Web.Services.Content;
 
 public static class ContentServiceCollectionExtensions
 {
     public static IServiceCollection AddRsdContent(this IServiceCollection services)
     {
+        services.AddSingleton<IContentHtmlSanitizer, ContentHtmlSanitizer>();
         services.AddScoped<ITestimonialService, TestimonialService>();
         services.AddScoped<ITeamMemberService, TeamMemberService>();
         services.AddScoped<IPartnerService, PartnerService>();

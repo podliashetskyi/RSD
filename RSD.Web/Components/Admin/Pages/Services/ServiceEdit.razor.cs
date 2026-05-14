@@ -3,6 +3,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
 using RSD.Web.Components.Admin.Shared;
+using RSD.Web.Components.Admin.Shared.Blocks;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
 
@@ -13,6 +14,7 @@ public partial class ServiceEdit(IServiceService Service, NavigationManager Nav,
     [Parameter] public Guid? Id { get; set; }
 
     private ServiceInput Input { get; set; } = new();
+    private ArticleBodyForm Body { get; set; } = new();
     private string ErrorMessage { get; set; } = "";
     private bool SlugIsValid { get; set; } = true;
     private bool IsCreate => Id is null;
@@ -28,12 +30,13 @@ public partial class ServiceEdit(IServiceService Service, NavigationManager Nav,
         var existing = await Service.GetByIdAsync(id, CancellationToken.None);
         if (existing is null) { Nav.NavigateTo("/admin/services"); return; }
         Input = ServiceInput.From(existing);
+        Body = ArticleBodyForm.From(existing.BodyBlocks);
     }
 
     private async Task SaveAsync()
     {
         if (!CanSave) { ErrorMessage = "Resolve validation errors before saving."; return; }
-        var upsert = Input.ToUpsert();
+        var upsert = Input.ToUpsert(Body.ToEntity());
         var (ok, error) = IsCreate
             ? await CreateAsync(upsert)
             : await UpdateAsync(Id!.Value, upsert);
@@ -87,7 +90,7 @@ public partial class ServiceEdit(IServiceService Service, NavigationManager Nav,
             Seo = s.Seo
         };
 
-        public ServiceUpsert ToUpsert() => new(
-            Slug, Title, Description, [.. BulletPoints], CoverImagePath, DetailsHref, Intro, Status, Seo);
+        public ServiceUpsert ToUpsert(ArticleBody body) => new(
+            Slug, Title, Description, [.. BulletPoints], CoverImagePath, DetailsHref, Intro, Status, Seo, body);
     }
 }

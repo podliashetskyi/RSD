@@ -1,0 +1,10 @@
+@using RSD.Web.Components.Admin.Shared.BlockRows
+
+<div class="space-y-3">
+    <FormField Label="Quote">
+        <InputTextArea @bind-Value="Row.Quote" rows="3" class="form-input" />
+    </FormField>
+    <FormField Label="Attribution">
+        <InputText @bind-Value="Row.Attribution" class="form-input" />
+    </FormField>
+</div>

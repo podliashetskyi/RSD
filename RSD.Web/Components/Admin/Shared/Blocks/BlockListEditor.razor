@@ -1,0 +1,94 @@
+@using RSD.Web.Components.Admin.Shared.BlockRows
+
+<section class="rounded-md border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-4 space-y-3">
+    <div class="flex items-center justify-between gap-2">
+        <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">@Label</h3>
+        <div class="relative">
+            <button type="button" @onclick="ToggleMenu"
+                    aria-expanded="@(MenuOpen ? "true" : "false")"
+                    aria-haspopup="menu"
+                    class="rounded-md border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
+                + Add block
+            </button>
+            @if (MenuOpen)
+            {
+                <div role="menu"
+                     class="absolute right-0 z-10 mt-1 w-48 rounded-md border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-lg">
+                    @foreach (var kind in PaletteKinds)
+                    {
+                        var k = kind;
+                        <button type="button" role="menuitem" @onclick="() => AddAsync(k)"
+                                class="block w-full px-3 py-1.5 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
+                            @LabelFor(k)
+                        </button>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+    @if (Rows.Count == 0)
+    {
+        <p class="text-xs italic text-gray-500 dark:text-gray-400">No blocks yet. Use + Add block to insert one.</p>
+    }
+
+    @for (var i = 0; i < Rows.Count; i++)
+    {
+        var idx = i;
+        var row = Rows[idx];
+        var expanded = ExpandedId == row.Id;
+        <article class="rounded-md border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/40">
+            <header class="flex items-center justify-between gap-2 px-3 py-2">
+                <div class="min-w-0 flex-1">
+                    <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">@row.TypeLabel</p>
+                    <p class="truncate text-sm text-gray-700 dark:text-gray-200">@row.Preview</p>
+                </div>
+                <div class="flex items-center gap-1 shrink-0">
+                    <button type="button" @onclick="() => MoveUpAsync(idx)" disabled="@(idx == 0)"
+                            aria-label="@($"Move block {idx + 1} up")"
+                            class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-0.5 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-40">&uarr;</button>
+                    <button type="button" @onclick="() => MoveDownAsync(idx)" disabled="@(idx == Rows.Count - 1)"
+                            aria-label="@($"Move block {idx + 1} down")"
+                            class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-0.5 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-40">&darr;</button>
+                    <button type="button" @onclick="() => ToggleExpanded(row.Id)"
+                            aria-expanded="@(expanded ? "true" : "false")"
+                            class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-0.5 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                        @(expanded ? "Collapse" : "Edit")
+                    </button>
+                    <button type="button" @onclick="() => RemoveAsync(idx)"
+                            aria-label="@($"Remove block {idx + 1}")"
+                            class="rounded-md border border-red-300 dark:border-red-900/50 px-2 py-0.5 text-xs text-red-700 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40">Remove</button>
+                </div>
+            </header>
+            @if (expanded)
+            {
+                <div class="border-t border-gray-200 dark:border-gray-800 p-3">
+                    @switch (row)
+                    {
+                        case SubsectionRow s:
+                            <SubsectionBlockEditor Row="s" />
+                            break;
+                        case StatsRowRow st:
+                            <StatsRowBlockEditor Row="st" />
+                            break;
+                        case GalleryRow g:
+                            <GalleryBlockEditor Row="g" />
+                            break;
+                        case BulletListRow bl:
+                            <BulletListBlockEditor Row="bl" />
+                            break;
+                        case QuoteRow q:
+                            <QuoteBlockEditor Row="q" />
+                            break;
+                        case ImageRow img:
+                            <ImageBlockEditor Row="img" />
+                            break;
+                        case RichTextRow rt:
+                            <RichTextBlockEditor Row="rt" />
+                            break;
+                    }
+                </div>
+            }
+        </article>
+    }
+</section>

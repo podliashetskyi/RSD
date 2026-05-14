@@ -1,0 +1,20 @@
+@using RSD.Web.Components.Admin.Shared.BlockRows
+
+<div class="space-y-3">
+    <FormField Label="Heading">
+        <InputText @bind-Value="Row.Heading" class="form-input" />
+    </FormField>
+    <RepeaterField TRow="StatRowItemRow" Label="Stats" AddLabel="Add stat" EmptyText="No stats yet."
+                   Items="Row.Items" ItemsChanged="OnItemsChanged">
+        <RowTemplate Context="item">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <FormField Label="Number">
+                    <InputText @bind-Value="item.Number" class="form-input" />
+                </FormField>
+                <FormField Label="Label">
+                    <InputText @bind-Value="item.Label" class="form-input" />
+                </FormField>
+            </div>
+        </RowTemplate>
+    </RepeaterField>
+</div>

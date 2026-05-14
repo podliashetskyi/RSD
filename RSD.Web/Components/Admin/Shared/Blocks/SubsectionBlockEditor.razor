@@ -1,0 +1,26 @@
+@using RSD.Web.Components.Admin.Shared.BlockRows
+
+<div class="space-y-3">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <FormField Label="Heading">
+            <InputText @bind-Value="Row.Heading" class="form-input" />
+        </FormField>
+        <FormField Label="Subheading">
+            <InputText @bind-Value="Row.Subheading" class="form-input" />
+        </FormField>
+    </div>
+    <RichTextEditor Label="Body" Value="@Row.Body" ValueChanged="OnBodyChanged" />
+    <RepeaterField TRow="SubsectionItemRow" Label="Items" AddLabel="Add item" EmptyText="No items yet."
+                   Items="Row.Items" ItemsChanged="OnItemsChanged">
+        <RowTemplate Context="item">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <FormField Label="Label">
+                    <InputText @bind-Value="item.Label" class="form-input" />
+                </FormField>
+                <FormField Label="Body">
+                    <InputText @bind-Value="item.Body" class="form-input" />
+                </FormField>
+            </div>
+        </RowTemplate>
+    </RepeaterField>
+</div>

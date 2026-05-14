@@ -11,6 +11,7 @@ public record ServiceUpsert(
     string DetailsHref,
     string Intro,
     ContentStatus Status,
-    SeoMetadata Seo);
+    SeoMetadata Seo,
+    ArticleBody Body);
 
 public interface IServiceService : IContentService<Service, Service, ServiceUpsert> { }

@@ -1,0 +1,13 @@
+@inherits Microsoft.AspNetCore.Components.ComponentBase
+
+<div class="space-y-1">
+    @if (!string.IsNullOrEmpty(Label))
+    {
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">@Label</label>
+    }
+    <div @ref="ContainerRef" class="rich-text-editor min-h-[8rem] rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950"></div>
+    @if (!string.IsNullOrEmpty(Hint))
+    {
+        <p class="text-xs text-gray-500 dark:text-gray-400">@Hint</p>
+    }
+</div>

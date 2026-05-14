@@ -13,6 +13,7 @@ public partial class CaseEdit(ICaseService Service, NavigationManager Nav, IToas
     [Parameter] public Guid? Id { get; set; }
 
     private CaseInput Input { get; set; } = new();
+    private CaseBodyForm Body { get; set; } = new();
     private string ErrorMessage { get; set; } = "";
     private bool SlugIsValid { get; set; } = true;
     private bool IsCreate => Id is null;
@@ -28,12 +29,13 @@ public partial class CaseEdit(ICaseService Service, NavigationManager Nav, IToas
         var existing = await Service.GetByIdAsync(id, CancellationToken.None);
         if (existing is null) { Nav.NavigateTo("/admin/cases"); return; }
         Input = CaseInput.From(existing);
+        Body = CaseBodyForm.From(existing.DetailFields);
     }
 
     private async Task SaveAsync()
     {
         if (!CanSave) { ErrorMessage = "Resolve validation errors before saving."; return; }
-        var upsert = Input.ToUpsert();
+        var upsert = Input.ToUpsert(Body.ToEntity());
         var (ok, error) = IsCreate
             ? await CreateAsync(upsert)
             : await UpdateAsync(Id!.Value, upsert);
@@ -85,7 +87,7 @@ public partial class CaseEdit(ICaseService Service, NavigationManager Nav, IToas
             Seo = c.Seo
         };
 
-        public CaseUpsert ToUpsert() => new(
-            Slug, Name, Industry, Description, CoverImagePath, [.. TechTags], Status, Seo);
+        public CaseUpsert ToUpsert(CaseDetailFields detail) => new(
+            Slug, Name, Industry, Description, CoverImagePath, [.. TechTags], Status, Seo, detail);
     }
 }

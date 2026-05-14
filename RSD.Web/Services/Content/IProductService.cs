@@ -13,6 +13,7 @@ public record ProductUpsert(
     string TryForFreeHref,
     string LearnMoreHref,
     ContentStatus Status,
-    SeoMetadata Seo);
+    SeoMetadata Seo,
+    ProductDetailFields DetailFields);
 
 public interface IProductService : IContentService<Product, Product, ProductUpsert> { }
