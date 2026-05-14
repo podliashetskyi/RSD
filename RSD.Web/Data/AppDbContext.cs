@@ -26,6 +26,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<Product> Products => Set<Product>();
     public DbSet<Service> Services => Set<Service>();
 
+    public DbSet<TermsOfService> TermsOfService => Set<TermsOfService>();
+    public DbSet<PrivacyPolicy> PrivacyPolicies => Set<PrivacyPolicy>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

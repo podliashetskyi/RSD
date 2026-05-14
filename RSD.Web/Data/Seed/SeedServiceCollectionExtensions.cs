@@ -17,6 +17,8 @@ public static class SeedServiceCollectionExtensions
         services.AddScoped<ISeeder, CaseSeeder>();
         services.AddScoped<ISeeder, ProductSeeder>();
         services.AddScoped<ISeeder, ServiceSeeder>();
+        services.AddScoped<ISeeder, TermsOfServiceSeeder>();
+        services.AddScoped<ISeeder, PrivacyPolicySeeder>();
         services.AddHostedService<SeedRunner>();
         return services;
     }

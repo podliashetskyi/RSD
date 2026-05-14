@@ -23,6 +23,8 @@ public static class ContentServiceCollectionExtensions
         services.AddScoped<ICaseService, CaseService>();
         services.AddScoped<IProductService, ProductService>();
         services.AddScoped<IServiceService, ServiceService>();
+        services.AddScoped<ITermsOfServiceService, TermsOfServiceService>();
+        services.AddScoped<IPrivacyPolicyService, PrivacyPolicyService>();
         return services;
     }
 }
