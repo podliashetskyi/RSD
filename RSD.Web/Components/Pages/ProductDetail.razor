@@ -57,3 +57,11 @@
                 PrimaryButtonHref="@Product.TryForFreeHref"
                 SecondaryButtonText="" />
 }
+else
+{
+    <PageTitle>Product not found — RSD</PageTitle>
+    <NotFoundPanel Heading="Product not found"
+                   Description="We couldn't find a published product at that URL. It may have been moved or unpublished."
+                   BackHref="/products"
+                   BackLabel="Back to products" />
+}

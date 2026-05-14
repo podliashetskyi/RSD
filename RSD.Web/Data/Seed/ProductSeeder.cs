@@ -16,11 +16,11 @@ public sealed class ProductSeeder(AppDbContext Db, ISlugger Slugger) : SeederBas
             Build("nexahr", "NexaHR", "HR Platform of the Future", "from $99/mo",
                   "Comprehensive HR management: recruiting, onboarding, performance review, and team development.",
                   ["AI Resume Screening", "Automated Onboarding", "360° Evaluation", "People Analytics"],
-                  "images/products/product-hr.png", "/contact", "#", new ProductDetailFields()),
+                  "images/products/product-hr.png", "/contact", "/products/nexahr", new ProductDetailFields()),
             Build("nexaanalytics", "NexaAnalytics", "Business Analytics for Everyone", "from $29/mo",
                   "No-code platform for data visualization and dashboard building with any data source.",
                   ["50+ Data Connectors", "AI Insights", "Custom Dashboards", "Real-time Reporting"],
-                  "images/products/product-analytics.png", "/contact", "#", new ProductDetailFields()),
+                  "images/products/product-analytics.png", "/contact", "/products/nexaanalytics", new ProductDetailFields()),
         ];
         return Task.FromResult(items);
     }
