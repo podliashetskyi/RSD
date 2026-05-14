@@ -6,7 +6,7 @@
                 var href = string.IsNullOrEmpty(p.Slug) ? null : $"/blog/{p.Slug}";
                 <article class="flex flex-col rounded-base overflow-hidden bg-white border border-line shadow-sm @(href is null ? "" : "transition hover:shadow-md focus-within:shadow-md")">
                     <div class="relative h-60 flex items-center justify-center overflow-hidden bg-[#f3f4f6]">
-                        <img src="@p.ImageSrc" alt="@(p.Title) cover image" class="absolute inset-0 w-full h-full object-cover" />
+                        <ResponsiveImage FallbackSrc="@p.CoverImagePath" Alt="@(p.Title + " cover image")" CssClass="absolute inset-0 w-full h-full object-cover" />
                         <div class="absolute inset-0 pointer-events-none"
                              style="background: linear-gradient(0deg, rgb(255,255,255) 1.5%, rgba(255,255,255,0.738) 18.5%, rgba(255,255,255,0.2) 41%, rgba(255,255,255,0) 100%);"></div>
                         <img src="images/cases/rsd-watermark.svg" alt="" aria-hidden="true" class="relative" style="width: 103.27px; height: 71px;" />
@@ -23,7 +23,7 @@
                         }
                         <p class="text-ink-soft text-body leading-6">@p.Description</p>
                         <div class="flex items-center gap-3">
-                            <img src="@p.AuthorAvatarSrc" alt="" class="w-8 h-8 rounded-full object-cover" />
+                            <ResponsiveImage FallbackSrc="@p.AuthorAvatarSrc" Alt="" CssClass="w-8 h-8 rounded-full object-cover" />
                             <div class="flex flex-col">
                                 <span class="text-ink text-body font-medium leading-5">@p.AuthorName</span>
                                 <span class="text-ink-soft text-body-sm leading-5">@p.PublishedDate · @p.ReadTime</span>

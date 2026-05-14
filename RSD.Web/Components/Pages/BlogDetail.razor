@@ -3,81 +3,27 @@
 @using RSD.Web.Components.Sections.Detail
 @using RSD.Web.Components.Sections.Shared
 
-@if (string.Equals(Slug, "cloud-infrastructure-scaling-2026", StringComparison.OrdinalIgnoreCase))
+@if (Post is not null)
 {
-    <PageTitle>Cloud Infrastructure Scaling: Strategies for 2026 — RSD</PageTitle>
+    <PageTitle>@Post.Title — RSD</PageTitle>
 
-    <HeroSection ImageSrc="images/services/cloud-solutions/hero.png" />
+    <HeroSection ImageSrc="@HeroImage" />
     <ArticleHeaderSection BackHref="/blog"
-                          CategoryText="Development"
-                          DateText="March 15, 2025"
-                          ReadTime="16 min"
-                          Title="Cloud Infrastructure Scaling: Strategies for 2026"
-                          Subtitle="Explore the latest trends in cloud-native scaling. We analyse how to maintain high performance under volatile load without sacrificing a stable digital ecosystem."
-                          AuthorName="Joseph McFall"
-                          AuthorRole="Cloud Infrastructure Architect"
-                          AuthorAvatarSrc="images/avatars/avatar-joseph.png" />
+                          CategoryText="@Post.Category"
+                          DateText="@DateText"
+                          ReadTime="@ReadTimeText"
+                          Title="@Post.Title"
+                          Subtitle="@Post.Description"
+                          AuthorName="@AuthorName"
+                          AuthorRole="@AuthorRole"
+                          AuthorAvatarSrc="@AuthorAvatarSrc" />
     <ArticleBodySection TocItems="@TocItems">
-        <h2 id="introduction" class="text-ink text-[28px] lg:text-[36px] font-bold leading-9 tracking-[-0.9px] scroll-mt-24">Why Cloud Scaling Matters in 2026</h2>
-        <p class="text-ink-soft text-body-lg leading-7">
-            As organisations move beyond first product-market fit, traffic patterns shift faster than infrastructure plans can keep up. The teams that scale gracefully into 2026 will be the ones that pair the right architectural patterns with a relentless focus on cost, reliability, and operational simplicity.
-        </p>
-        <p class="text-ink-soft text-body-lg leading-7">
-            In this article we unpack the patterns separating teams that scale gracefully from those that drown in cloud bills and 3 a.m. pages. Drawn from interviews across SaaS, fintech, and e-commerce, these are the strategies our cloud-infrastructure team applies every day.
-        </p>
-
-        <FeaturedImageSection ImageSrc="images/services/cloud-solutions/featured.png" />
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <p class="text-ink-soft text-body leading-6">
-                The teams we interviewed all started in the same place: a single monolithic deployment, a single database, and a release cycle measured in weeks. By 2026, all of them had moved to <a href="#" class="text-cyan-600 underline">cloud-native architectures</a> with deploys measured in minutes.
-            </p>
-            <p class="text-ink-soft text-body leading-6">
-                Cutting cloud spend by 40% while absorbing 10× more traffic is achievable — but only if you treat scaling as a discipline, not a fire-drill. The <a href="#" class="text-cyan-600 underline">following patterns</a> are the ones every engineering leader should be tracking heading into next year.
-            </p>
-        </div>
-
-        <ArticleSubsection Id="key-takeaways"
-                           Heading="Key Takeaways"
-                           Subheading="Architectural patterns that matter"
-                           SubheadingBody="The non-negotiables for a 2026-ready stack."
-                           Items="@KeyTakeawaysArch"
-                           Style="ArticleListStyle.CheckIcon" />
-        <ArticleSubsection Subheading="Operational disciplines"
-                           SubheadingBody="The behaviours behind the technology."
-                           Items="@KeyTakeawaysOps"
-                           Style="ArticleListStyle.CheckIcon" />
-
-        <StatsRow Id="benchmarks"
-                  Heading="Benchmarks We Saw"
-                  Items="@Benchmarks" />
-
-        <ArticleSubsection Id="implementation"
-                           Heading="A 90-Day Implementation Plan"
-                           Subheading="Where to start when you can't pause the business"
-                           SubheadingBody="Each item is a step you can take without a full rewrite."
-                           Items="@ImplementationPlan"
-                           Style="ArticleListStyle.Disc" />
-        <ArticleSubsection Id="pitfalls"
-                           Heading="Pitfalls to Avoid"
-                           SubheadingBody="Mistakes the teams we interviewed wished they had skipped."
-                           Items="@Pitfalls"
-                           Style="ArticleListStyle.Numbered" />
+        <ArticleBodyView Body="Post.BodyBlocks" />
     </ArticleBodySection>
 
-    <GallerySection Id="tooling"
-                    Heading="Tooling Stack for 2026"
-                    Description="The platforms our engineers reach for when scaling SaaS, fintech, and e-commerce workloads. Battle-tested, vendor-neutral, and ready to run."
-                    PrimaryButtonText="Read full guide"
-                    PrimaryButtonHref="#"
-                    SecondaryButtonText="View our team"
-                    SecondaryButtonHref="#"
-                    Images="@GalleryImages"
-                    Tags="@(new[] { "Kubernetes", "Observability", "FinOps", "Multi-region" })" />
-
-    <CtaSection Heading="Want Help Scaling Your Cloud?"
-                Description="Our infrastructure team can audit your stack and ship a 90-day scaling plan tailored to your traffic profile."
-                PrimaryButtonText="Talk to an Engineer"
+    <CtaSection Heading="Want to Talk to Our Team?"
+                Description="Our engineers can help map this to your stack."
+                PrimaryButtonText="Get in Touch"
                 PrimaryButtonHref="/contact"
                 SecondaryButtonText="" />
 }

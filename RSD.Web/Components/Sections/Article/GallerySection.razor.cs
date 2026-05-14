@@ -1,5 +1,6 @@
 #pragma warning disable S1144, S4487, S2933
 using Microsoft.AspNetCore.Components;
+using RSD.Web.Data.Entities;
 
 namespace RSD.Web.Components.Sections.Article;
 
@@ -15,5 +16,3 @@ public partial class GallerySection
     [Parameter, EditorRequired] public IReadOnlyList<GalleryImage> Images { get; set; } = [];
     [Parameter] public IReadOnlyList<string> Tags { get; set; } = [];
 }
-
-public record GalleryImage(string Src, string Alt);
