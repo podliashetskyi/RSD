@@ -1,0 +1,52 @@
+@page "/admin/privacy-policy"
+@attribute [Authorize(Roles = AdminRoles.Admin)]
+@layout AdminLayout
+@rendermode InteractiveServer
+
+<PageTitle>Privacy Policy &middot; RSD Admin</PageTitle>
+
+<section class="max-w-3xl space-y-6">
+    <header>
+        <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Privacy Policy</h1>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Edit the published Privacy Policy page. The slug is fixed at <code>privacy-policy</code>.</p>
+    </header>
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div role="alert" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">@ErrorMessage</div>
+    }
+
+    @if (Loaded)
+    {
+        <EditForm Model="Input" OnValidSubmit="SaveAsync" FormName="privacy-policy-edit" class="space-y-5">
+            <DataAnnotationsValidator />
+
+            <FormField Label="Page title">
+                <InputText id="title" @bind-Value="Input.Title" required aria-required="true" class="form-input" />
+                <ValidationMessage For="() => Input.Title" class="form-error" />
+            </FormField>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <FormField Label="Last updated" Hint="Shown in the page header. Bump only when the policy materially changes.">
+                    <InputDate id="last-updated" @bind-Value="Input.LastUpdatedAt" class="form-input" />
+                </FormField>
+                <FormField Label="Status">
+                    <InputSelect id="status" @bind-Value="Input.Status" class="form-input">
+                        <option value="@ContentStatus.Draft">Draft</option>
+                        <option value="@ContentStatus.Published">Published</option>
+                        <option value="@ContentStatus.Archived">Archived</option>
+                    </InputSelect>
+                </FormField>
+            </div>
+
+            <RichTextEditor Label="Body" Hint="Use H2 for numbered section headings (e.g. &quot;1. Data We Collect&quot;). UL/OL for bulleted lists. Links permitted." @bind-Value="Input.BodyHtml" />
+
+            <SeoMetaPanel Value="Input.Seo" ValueChanged="OnSeoChanged" />
+
+            <div class="flex items-center gap-2 pt-2">
+                <button type="submit" class="rounded-md bg-gray-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-gray-900 hover:bg-black dark:hover:bg-gray-100">Save changes</button>
+                <a href="/admin" class="rounded-md border border-gray-300 dark:border-gray-700 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Cancel</a>
+            </div>
+        </EditForm>
+    }
+</section>
