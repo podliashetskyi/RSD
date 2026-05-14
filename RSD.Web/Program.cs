@@ -16,6 +16,7 @@ using RSD.Web.Services.Email;
 using RSD.Web.Services.Imaging;
 using RSD.Web.Services.Preview;
 using RSD.Web.Services.Slugs;
+using Microsoft.Extensions.FileProviders;
 using RSD.Web.Services.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -88,6 +89,17 @@ app.UseRateLimiter();
 app.UseOutputCache();
 
 app.MapStaticAssets();
+
+// Serve runtime uploads (written under wwwroot/uploads after publish, so not in the
+// MapStaticAssets manifest). Mounted as a separate provider scoped to /uploads only.
+var uploadsRoot = Path.Combine(app.Environment.WebRootPath, "uploads");
+Directory.CreateDirectory(uploadsRoot);
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(uploadsRoot),
+    RequestPath = "/uploads"
+});
+
 app.MapContactSubmit();
 app.MapPost("/admin/logout", async (HttpContext http, SignInManager<AdminUser> signIn) =>
 {
