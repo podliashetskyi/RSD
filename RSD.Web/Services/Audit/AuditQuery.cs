@@ -4,6 +4,7 @@ namespace RSD.Web.Services.Audit;
 
 public record AuditQuery(
     string UserId = "",
+    string UserEmail = "",
     string EntityType = "",
     AuditAction? Action = null,
     DateOnly? From = null,
