@@ -1,12 +1,12 @@
 #pragma warning disable S1144, S4487, S2933
 
 using System.ComponentModel.DataAnnotations;
-using System.Net.Http.Json;
 using Microsoft.AspNetCore.Components;
+using RSD.Web.Services.Content;
 
 namespace RSD.Web.Components.Sections.Contact;
 
-public partial class ContactForm(IHttpClientFactory HttpClientFactory, NavigationManager Navigation) : ComponentBase
+public partial class ContactForm(IContactSubmissionService Service) : ComponentBase
 {
     private ContactFormModel Model { get; set; } = new();
     private FormStatus Status { get; set; } = FormStatus.Idle;
@@ -21,61 +21,28 @@ public partial class ContactForm(IHttpClientFactory HttpClientFactory, Navigatio
             ErrorText = "Please accept the Terms of Service to continue.";
             return;
         }
-        Status = FormStatus.Submitting;
-        ErrorText = "";
-        var payload = new
-        {
-            name = Model.Name,
-            email = Model.Email,
-            subject = Model.Subject,
-            message = Model.Message,
-            hp = Model.Hp
-        };
-
-        try
-        {
-            using var client = HttpClientFactory.CreateClient();
-            client.BaseAddress = new Uri(Navigation.BaseUri);
-            var response = await client.PostAsJsonAsync("api/contact", payload);
-            await ApplyResponseAsync(response);
-        }
-        catch (HttpRequestException)
-        {
-            Status = FormStatus.Error;
-            ErrorText = "We couldn't reach the server. Please try again.";
-        }
-    }
-
-    private async Task ApplyResponseAsync(HttpResponseMessage response)
-    {
-        if (response.IsSuccessStatusCode)
+        if (!string.IsNullOrWhiteSpace(Model.Hp))
         {
             Status = FormStatus.Success;
             Model = new ContactFormModel();
             return;
         }
-        ErrorText = await ReadErrorAsync(response);
+
+        Status = FormStatus.Submitting;
+        ErrorText = "";
+
+        var input = new ContactSubmissionInput(Model.Name, Model.Email, Model.Subject, Model.Message);
+        var result = await Service.SubmitAsync(input, CancellationToken.None);
+
+        if (result.Ok)
+        {
+            Status = FormStatus.Success;
+            Model = new ContactFormModel();
+            return;
+        }
         Status = FormStatus.Error;
+        ErrorText = string.IsNullOrWhiteSpace(result.Error) ? "Something went wrong. Please try again." : result.Error;
     }
-
-    private static async Task<string> ReadErrorAsync(HttpResponseMessage response)
-    {
-        if ((int)response.StatusCode == 429)
-        {
-            return "Too many submissions. Please wait a few minutes and try again.";
-        }
-        try
-        {
-            var body = await response.Content.ReadFromJsonAsync<ApiError>();
-            return string.IsNullOrWhiteSpace(body?.Error) ? "Something went wrong. Please try again." : body!.Error;
-        }
-        catch
-        {
-            return "Something went wrong. Please try again.";
-        }
-    }
-
-    private sealed record ApiError(string Error);
 }
 
 public sealed class ContactFormModel
