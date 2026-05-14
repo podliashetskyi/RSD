@@ -24,6 +24,15 @@ public sealed class SitemapBuilder(IDbContextFactory<AppDbContext> DbFactory) : 
             new($"{root}/about", FallbackLastMod),
         };
 
+        entries.AddRange(await db.TermsOfService.AsNoTracking()
+            .Where(e => e.Status == ContentStatus.Published)
+            .Select(e => new SitemapEntry($"{root}/terms-of-service", e.UpdatedAt))
+            .ToListAsync(ct));
+        entries.AddRange(await db.PrivacyPolicies.AsNoTracking()
+            .Where(e => e.Status == ContentStatus.Published)
+            .Select(e => new SitemapEntry($"{root}/privacy-policy", e.UpdatedAt))
+            .ToListAsync(ct));
+
         entries.AddRange(await db.BlogPosts.AsNoTracking()
             .Where(e => e.Status == ContentStatus.Published)
             .Select(e => new SitemapEntry($"{root}/blog/{e.Slug}", e.UpdatedAt))

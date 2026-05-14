@@ -35,4 +35,41 @@
     .form-error {
         @apply mt-1 text-xs text-red-600 dark:text-red-400;
     }
+
+    .legal-body {
+        @apply text-body text-ink-soft leading-7;
+    }
+
+    .legal-body > h2 {
+        @apply text-h4 font-bold text-ink mt-10 mb-4;
+    }
+
+    .legal-body > h2:first-child {
+        @apply mt-0;
+    }
+
+    .legal-body > h3 {
+        @apply text-body-lg font-semibold text-ink mt-6 mb-2;
+    }
+
+    .legal-body > p {
+        @apply mb-4;
+    }
+
+    .legal-body > ul,
+    .legal-body > ol {
+        @apply mb-4 ml-6 space-y-2;
+    }
+
+    .legal-body > ul {
+        @apply list-disc;
+    }
+
+    .legal-body > ol {
+        @apply list-decimal;
+    }
+
+    .legal-body a {
+        @apply text-brand-500 underline hover:text-brand-700;
+    }
 }
