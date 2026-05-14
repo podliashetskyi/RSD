@@ -1,4 +1,6 @@
 @page "/about"
+@using Microsoft.AspNetCore.OutputCaching
+@attribute [OutputCache(Tags = ["list:teammember", "list:value", "list:missionstat"])]
 @using RSD.Web.Components.Sections.About
 @using RSD.Web.Components.Sections.Shared
 

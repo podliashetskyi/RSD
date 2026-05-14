@@ -12,6 +12,7 @@ public interface ISimpleContentService<TEntity> where TEntity : ContentEntity
     Task<Result<Unit>> SetStatusAsync(Guid id, ContentStatus status, CancellationToken ct);
     Task<Result<Unit>> SoftDeleteAsync(Guid id, CancellationToken ct);
     Task<Result<Unit>> RestoreAsync(Guid id, CancellationToken ct);
+    Task<Result<Unit>> HardDeleteAsync(Guid id, CancellationToken ct);
     Task<Result<Unit>> BulkReorderAsync(IReadOnlyList<ReorderEntry> ordered, CancellationToken ct);
 }
 

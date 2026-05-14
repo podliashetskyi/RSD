@@ -1,0 +1,66 @@
+@page "/admin/trash"
+@attribute [Authorize(Roles = AdminRoles.Admin)]
+@layout AdminLayout
+@rendermode InteractiveServer
+
+<PageTitle>Trash &middot; RSD Admin</PageTitle>
+
+<section class="space-y-6">
+    <header>
+        <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Trash</h1>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">@Items.Count soft-deleted item@(Items.Count == 1 ? "" : "s"). Restore to recover; Hard delete to remove permanently.</p>
+    </header>
+
+    <div class="overflow-hidden rounded-md border border-gray-200 dark:border-gray-800">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-800 text-sm">
+            <caption class="sr-only">Soft-deleted entities</caption>
+            <thead class="bg-gray-50 dark:bg-gray-900/40 text-left">
+                <tr>
+                    <th scope="col" class="px-3 py-2">Type</th>
+                    <th scope="col" class="px-3 py-2">Title</th>
+                    <th scope="col" class="px-3 py-2">Slug</th>
+                    <th scope="col" class="px-3 py-2">Deleted</th>
+                    <th scope="col" class="px-3 py-2 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 dark:divide-gray-800">
+                @if (Items.Count == 0)
+                {
+                    <tr><td colspan="5" class="px-3 py-6 text-center italic text-gray-500 dark:text-gray-400">Trash is empty.</td></tr>
+                }
+                else
+                {
+                    @foreach (var item in Items)
+                    {
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-900/20">
+                            <td class="px-3 py-2"><span class="rounded-full bg-gray-100 dark:bg-gray-800 px-2 py-0.5 text-xs text-gray-700 dark:text-gray-200">@item.EntityLabel</span></td>
+                            <td class="px-3 py-2 text-gray-900 dark:text-white">@item.Title</td>
+                            <td class="px-3 py-2 font-mono text-xs text-gray-500 dark:text-gray-400">@item.Slug</td>
+                            <td class="px-3 py-2 text-gray-500 dark:text-gray-400">
+                                <time datetime="@item.DeletedAt.ToString("u")">@item.DeletedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</time>
+                            </td>
+                            <td class="px-3 py-2 text-right">
+                                <div class="inline-flex items-center gap-1">
+                                    <button type="button" @onclick="() => RestoreAsync(item)"
+                                            class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-1 text-xs hover:bg-gray-50 dark:hover:bg-gray-800">Restore</button>
+                                    <button type="button" @onclick="() => RequestHardDelete(item)"
+                                            class="rounded-md border border-red-300 dark:border-red-700 px-2 py-1 text-xs text-red-700 dark:text-red-300 hover:bg-red-50 dark:hover:bg-red-950">Hard delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <ConfirmDialog IsOpen="DialogOpen"
+                   Title="Permanently delete?"
+                   Body="@DialogBody"
+                   ConfirmLabel="Permanently delete"
+                   IsDestructive="true"
+                   RequiredText="DELETE"
+                   OnConfirm="ConfirmHardDeleteAsync"
+                   OnCancel="CancelHardDelete"
+                   IsOpenChanged="OnDialogOpenChanged" />
+</section>

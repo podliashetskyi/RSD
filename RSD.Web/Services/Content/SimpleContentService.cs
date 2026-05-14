@@ -4,13 +4,15 @@ using RSD.Web.Data.Entities;
 using RSD.Web.Services.Cache;
 using RSD.Web.Services.Common;
 using RSD.Web.Services.Slugs;
+using RSD.Web.Services.Storage;
 
 namespace RSD.Web.Services.Content;
 
 public abstract class SimpleContentService<TEntity>(
     IDbContextFactory<AppDbContext> DbFactory,
     ISlugger Slugger,
-    IPublicPageCache Cache) : ISimpleContentService<TEntity> where TEntity : ContentEntity
+    IPublicPageCache Cache,
+    IFileRefCountTracker RefCounts) : ISimpleContentService<TEntity> where TEntity : ContentEntity
 {
     public async Task<IReadOnlyList<TEntity>> ListAsync(ContentQuery query, CancellationToken ct)
     {
@@ -39,6 +41,7 @@ public abstract class SimpleContentService<TEntity>(
         ApplyTimestamps(input, isCreate: true);
         db.Set<TEntity>().Add(input);
         await db.SaveChangesAsync(ct);
+        await RefCounts.ApplyDeltaAsync([], EntityPaths.OfAny(input), ct);
         await Cache.EvictListAsync<TEntity>(ct);
         return Result.Ok(input.Id);
     }
@@ -48,10 +51,12 @@ public abstract class SimpleContentService<TEntity>(
         await using var db = await DbFactory.CreateDbContextAsync(ct);
         var existing = await db.Set<TEntity>().FirstOrDefaultAsync(e => e.Id == input.Id, ct);
         if (existing is null) return Result.Fail("Entity not found.");
+        var oldPaths = EntityPaths.OfAny(existing).ToList();
         input.Slug = await EnsureSlugAsync(input.Slug, NaturalKeyOf(input), input.Id, ct);
         db.Entry(existing).CurrentValues.SetValues(input);
         ApplyTimestamps(existing, isCreate: false);
         await db.SaveChangesAsync(ct);
+        await RefCounts.ApplyDeltaAsync(oldPaths, EntityPaths.OfAny(existing), ct);
         await Cache.EvictForAsync<TEntity>(input.Id, ct);
         return Result.Ok();
     }
@@ -72,6 +77,20 @@ public abstract class SimpleContentService<TEntity>(
             e.IsDeleted = false;
             e.Status = ContentStatus.Draft;
         }, ct, ignoreFilters: true);
+
+    public async Task<Result<Unit>> HardDeleteAsync(Guid id, CancellationToken ct)
+    {
+        await using var db = await DbFactory.CreateDbContextAsync(ct);
+        var entity = await db.Set<TEntity>().IgnoreQueryFilters().FirstOrDefaultAsync(e => e.Id == id, ct);
+        if (entity is null) return Result.Fail("Entity not found.");
+        if (!entity.IsDeleted) return Result.Fail("Soft-delete the entity before purging it.");
+        var oldPaths = EntityPaths.OfAny(entity).ToList();
+        db.Set<TEntity>().Remove(entity);
+        await db.SaveChangesAsync(ct);
+        await RefCounts.ApplyDeltaAsync(oldPaths, [], ct);
+        await Cache.EvictForAsync<TEntity>(id, ct);
+        return Result.Ok();
+    }
 
     public async Task<Result<Unit>> BulkReorderAsync(IReadOnlyList<ReorderEntry> ordered, CancellationToken ct)
     {

@@ -3,14 +3,16 @@ using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Cache;
 using RSD.Web.Services.Slugs;
+using RSD.Web.Services.Storage;
 
 namespace RSD.Web.Services.Content;
 
 public sealed class ProductService(
     IDbContextFactory<AppDbContext> DbFactory,
     ISlugger Slugger,
-    IPublicPageCache Cache)
-    : ContentServiceBase<Product, Product, Product, ProductUpsert>(DbFactory, Slugger, Cache), IProductService
+    IPublicPageCache Cache,
+    IFileRefCountTracker RefCounts)
+    : ContentServiceBase<Product, Product, Product, ProductUpsert>(DbFactory, Slugger, Cache, RefCounts), IProductService
 {
     protected override Product NewEntityFrom(ProductUpsert input) => new()
     {

@@ -28,6 +28,7 @@ public sealed class AuditLog(AppDbContext Db) : IAuditLog
     private static IQueryable<AuditLogEntry> ApplyUserAndType(IQueryable<AuditLogEntry> q, AuditQuery f)
     {
         if (!string.IsNullOrEmpty(f.UserId)) q = q.Where(e => e.UserId == f.UserId);
+        if (!string.IsNullOrEmpty(f.UserEmail)) q = q.Where(e => EF.Functions.ILike(e.UserEmail, $"%{f.UserEmail}%"));
         if (!string.IsNullOrEmpty(f.EntityType)) q = q.Where(e => e.EntityType == f.EntityType);
         return q;
     }

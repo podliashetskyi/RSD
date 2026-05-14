@@ -1,0 +1,33 @@
+@using RSD.Web.Services.Audit
+
+@if (Changes is null)
+{
+    <p class="text-xs italic text-gray-500 dark:text-gray-400">Could not parse diff JSON.</p>
+}
+else if (Changes.Count == 0)
+{
+    <p class="text-xs italic text-gray-500 dark:text-gray-400">No field changes recorded.</p>
+}
+else
+{
+    <dl class="space-y-3 text-sm">
+        @foreach (var change in Changes)
+        {
+            <div class="rounded-md border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 overflow-hidden">
+                <dt class="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/40 px-3 py-1.5 font-medium text-gray-800 dark:text-gray-200">
+                    @change.Name
+                </dt>
+                <dd class="grid grid-cols-1 md:grid-cols-2">
+                    <div class="border-r border-gray-200 dark:border-gray-800 bg-red-50 dark:bg-red-950/30 p-2">
+                        <p class="mb-1 text-[10px] font-semibold uppercase tracking-wider text-red-700 dark:text-red-300">Before</p>
+                        <pre class="whitespace-pre-wrap break-words font-mono text-xs text-red-900 dark:text-red-200">@change.Before</pre>
+                    </div>
+                    <div class="bg-emerald-50 dark:bg-emerald-950/30 p-2">
+                        <p class="mb-1 text-[10px] font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">After</p>
+                        <pre class="whitespace-pre-wrap break-words font-mono text-xs text-emerald-900 dark:text-emerald-200">@change.After</pre>
+                    </div>
+                </dd>
+            </div>
+        }
+    </dl>
+}

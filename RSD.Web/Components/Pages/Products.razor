@@ -1,4 +1,6 @@
 @page "/products"
+@using Microsoft.AspNetCore.OutputCaching
+@attribute [OutputCache(Tags = ["list:product"])]
 @using RSD.Web.Components.Sections.Products
 @using RSD.Web.Components.Sections.Shared
 

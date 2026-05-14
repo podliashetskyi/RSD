@@ -1,0 +1,92 @@
+@page "/admin/users"
+@attribute [Authorize(Roles = AdminRoles.Admin)]
+@layout AdminLayout
+@rendermode InteractiveServer
+
+<PageTitle>Users &middot; RSD Admin</PageTitle>
+
+<section class="space-y-6">
+    <header class="flex items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Admin users</h1>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">@Rows.Count user@(Rows.Count == 1 ? "" : "s") with admin access.</p>
+        </div>
+        <a href="/admin/users/invite"
+           class="inline-flex items-center rounded-md bg-gray-900 dark:bg-white px-3 py-1.5 text-sm font-medium text-white dark:text-gray-900 hover:bg-black dark:hover:bg-gray-100">
+            + Invite admin
+        </a>
+    </header>
+
+    @if (!string.IsNullOrEmpty(Message))
+    {
+        <div role="alert" class="@($"rounded-md border px-3 py-2 text-sm {MessageClasses}")">
+            @Message
+            @if (!string.IsNullOrEmpty(ResetUrl))
+            {
+                <p class="mt-1 break-all font-mono text-xs">@ResetUrl</p>
+            }
+        </div>
+    }
+
+    <div class="overflow-hidden rounded-md border border-gray-200 dark:border-gray-800">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-800 text-sm">
+            <caption class="sr-only">Admin users</caption>
+            <thead class="bg-gray-50 dark:bg-gray-900/40 text-left">
+                <tr>
+                    <th scope="col" class="px-3 py-2">Email</th>
+                    <th scope="col" class="px-3 py-2">Display name</th>
+                    <th scope="col" class="px-3 py-2">Last login</th>
+                    <th scope="col" class="px-3 py-2">Status</th>
+                    <th scope="col" class="px-3 py-2 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 dark:divide-gray-800">
+                @foreach (var row in Rows)
+                {
+                    var isSelf = string.Equals(row.Id, CurrentUserId, StringComparison.Ordinal);
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-900/20">
+                        <td class="px-3 py-2 text-gray-900 dark:text-white">
+                            @row.Email
+                            @if (isSelf)
+                            {
+                                <span class="ml-1 text-[10px] font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">(you)</span>
+                            }
+                        </td>
+                        <td class="px-3 py-2 text-gray-700 dark:text-gray-200">@(string.IsNullOrEmpty(row.DisplayName) ? "—" : row.DisplayName)</td>
+                        <td class="px-3 py-2 text-gray-500 dark:text-gray-400">
+                            @if (row.LastLoginAt is { } at)
+                            {
+                                <time datetime="@at.ToString("u")">@at.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</time>
+                            }
+                            else
+                            {
+                                <span>Never</span>
+                            }
+                        </td>
+                        <td class="px-3 py-2">
+                            <span class="@($"rounded-full px-2 py-0.5 text-xs {(row.IsDisabled ? "bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300" : "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300")}")">
+                                @(row.IsDisabled ? "Disabled" : "Active")
+                            </span>
+                        </td>
+                        <td class="px-3 py-2 text-right">
+                            <div class="inline-flex items-center gap-1">
+                                <button type="button" @onclick="() => ResendAsync(row.Id)"
+                                        class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-1 text-xs hover:bg-gray-50 dark:hover:bg-gray-800">Reset password</button>
+                                @if (row.IsDisabled)
+                                {
+                                    <button type="button" @onclick="() => EnableAsync(row.Id)"
+                                            class="rounded-md border border-emerald-300 dark:border-emerald-700 px-2 py-1 text-xs text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950">Enable</button>
+                                }
+                                else
+                                {
+                                    <button type="button" @onclick="() => DisableAsync(row.Id)" disabled="@isSelf"
+                                            class="rounded-md border border-red-300 dark:border-red-700 px-2 py-1 text-xs text-red-700 dark:text-red-300 hover:bg-red-50 dark:hover:bg-red-950 disabled:opacity-40 disabled:cursor-not-allowed">Disable</button>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

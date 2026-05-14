@@ -12,18 +12,29 @@ public partial class ConfirmDialog : ComponentBase
     [Parameter] public string ConfirmLabel { get; set; } = "Confirm";
     [Parameter] public string CancelLabel { get; set; } = "Cancel";
     [Parameter] public bool IsDestructive { get; set; }
+    [Parameter] public string RequiredText { get; set; } = "";
     [Parameter] public EventCallback OnConfirm { get; set; }
     [Parameter] public EventCallback OnCancel { get; set; }
     [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
 
     private string TitleId { get; } = $"dlg-{Guid.NewGuid():N}";
+    private string TypedConfirmation { get; set; } = "";
 
     private string ConfirmClasses => IsDestructive
         ? "bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
         : "bg-gray-900 hover:bg-black dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500";
 
+    private bool CanConfirm => string.IsNullOrEmpty(RequiredText)
+        || string.Equals(TypedConfirmation, RequiredText, StringComparison.Ordinal);
+
+    protected override void OnParametersSet()
+    {
+        if (!IsOpen) TypedConfirmation = "";
+    }
+
     private async Task ConfirmAsync()
     {
+        if (!CanConfirm) return;
         await OnConfirm.InvokeAsync();
         await CloseAsync();
     }

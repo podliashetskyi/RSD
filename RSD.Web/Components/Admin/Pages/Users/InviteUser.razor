@@ -1,0 +1,60 @@
+@page "/admin/users/invite"
+@attribute [Authorize(Roles = AdminRoles.Admin)]
+@layout AdminLayout
+@rendermode InteractiveServer
+
+<PageTitle>Invite admin &middot; RSD Admin</PageTitle>
+
+<section class="max-w-xl space-y-6">
+    <header class="flex items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Invite a new admin</h1>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">They will receive an email with a one-time link to set their password.</p>
+        </div>
+        <a href="/admin/users" class="rounded-md border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Back to list</a>
+    </header>
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div role="alert" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">@ErrorMessage</div>
+    }
+
+    @if (Sent is null)
+    {
+        <EditForm Model="Input" OnValidSubmit="SubmitAsync" FormName="invite" class="space-y-4">
+            <DataAnnotationsValidator />
+
+            <FormField Label="Email">
+                <InputText id="email" type="email" @bind-Value="Input.Email" required aria-required="true" class="form-input" />
+                <ValidationMessage For="() => Input.Email" class="form-error" />
+            </FormField>
+
+            <FormField Label="Display name" Hint="Optional. Defaults to email if blank.">
+                <InputText id="display" @bind-Value="Input.DisplayName" class="form-input" />
+            </FormField>
+
+            <div class="flex items-center gap-2 pt-2">
+                <button type="submit"
+                        class="rounded-md bg-gray-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-gray-900 hover:bg-black dark:hover:bg-gray-100">
+                    Send invite
+                </button>
+                <a href="/admin/users" class="rounded-md border border-gray-300 dark:border-gray-700 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Cancel</a>
+            </div>
+        </EditForm>
+    }
+    else
+    {
+        <div class="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-3 text-sm text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-200">
+            <p class="font-medium">Invitation sent to @Sent.Email.</p>
+            <p class="mt-1 text-xs">If the email doesn't arrive, share this set-password link directly. It is valid for one hour.</p>
+            <p class="mt-2 break-all font-mono text-xs">@Sent.ResetUrl</p>
+        </div>
+        <div class="flex items-center gap-2">
+            <a href="/admin/users" class="rounded-md border border-gray-300 dark:border-gray-700 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Back to users</a>
+            <button type="button" @onclick="ResetForm"
+                    class="rounded-md border border-gray-300 dark:border-gray-700 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
+                Invite another
+            </button>
+        </div>
+    }
+</section>

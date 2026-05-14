@@ -1,0 +1,118 @@
+@page "/admin/audit"
+@attribute [Authorize(Roles = AdminRoles.Admin)]
+@layout AdminLayout
+@rendermode InteractiveServer
+
+<PageTitle>Audit &middot; RSD Admin</PageTitle>
+
+<section class="space-y-6">
+    <header>
+        <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Audit log</h1>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">All admin actions, most recent first.</p>
+    </header>
+
+    <fieldset class="rounded-md border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        <legend class="px-2 text-sm font-medium text-gray-700 dark:text-gray-300">Filters</legend>
+
+        <div>
+            <label for="user-filter" class="block text-xs font-medium text-gray-700 dark:text-gray-300">User email</label>
+            <input id="user-filter" type="search" @bind-value="UserEmail" @bind-value:event="oninput" @onkeyup="ReloadAsync"
+                   placeholder="substring…"
+                   class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-2 py-1.5 text-sm" />
+        </div>
+        <div>
+            <label for="type-filter" class="block text-xs font-medium text-gray-700 dark:text-gray-300">Entity type</label>
+            <input id="type-filter" type="search" @bind-value="EntityType" @bind-value:event="oninput" @onkeyup="ReloadAsync"
+                   placeholder="e.g. BlogPost"
+                   class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-2 py-1.5 text-sm" />
+        </div>
+        <div>
+            <label for="action-filter" class="block text-xs font-medium text-gray-700 dark:text-gray-300">Action</label>
+            <InputSelect TValue="AuditAction?" id="action-filter" Value="ActionFilter" ValueChanged="OnActionChangedAsync"
+                         ValueExpression="() => ActionFilter"
+                         class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-2 py-1.5 text-sm">
+                <option value="">All actions</option>
+                @foreach (var a in Actions)
+                {
+                    <option value="@a">@a</option>
+                }
+            </InputSelect>
+        </div>
+        <div>
+            <label for="from-filter" class="block text-xs font-medium text-gray-700 dark:text-gray-300">From</label>
+            <input id="from-filter" type="date" @bind-value="FromDate" @bind-value:after="ReloadAsync"
+                   class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-2 py-1.5 text-sm" />
+        </div>
+        <div>
+            <label for="to-filter" class="block text-xs font-medium text-gray-700 dark:text-gray-300">To</label>
+            <input id="to-filter" type="date" @bind-value="ToDate" @bind-value:after="ReloadAsync"
+                   class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-2 py-1.5 text-sm" />
+        </div>
+    </fieldset>
+
+    <div class="overflow-hidden rounded-md border border-gray-200 dark:border-gray-800">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-800 text-sm">
+            <caption class="sr-only">Audit log entries</caption>
+            <thead class="bg-gray-50 dark:bg-gray-900/40 text-left">
+                <tr>
+                    <th scope="col" class="px-3 py-2 w-10" aria-label="Expand"></th>
+                    <th scope="col" class="px-3 py-2">When</th>
+                    <th scope="col" class="px-3 py-2">User</th>
+                    <th scope="col" class="px-3 py-2">Action</th>
+                    <th scope="col" class="px-3 py-2">Entity</th>
+                    <th scope="col" class="px-3 py-2">Entity ID</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 dark:divide-gray-800">
+                @if (Items.Count == 0)
+                {
+                    <tr><td colspan="6" class="px-3 py-6 text-center italic text-gray-500 dark:text-gray-400">No audit entries match the current filters.</td></tr>
+                }
+                else
+                {
+                    @foreach (var entry in Items)
+                    {
+                        var isOpen = ExpandedId == entry.Id;
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-900/20">
+                            <td class="px-3 py-2">
+                                <button type="button" @onclick="() => ToggleExpanded(entry.Id)"
+                                        aria-expanded="@(isOpen ? "true" : "false")"
+                                        aria-label="@($"Toggle diff for entry {entry.Id}")"
+                                        class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-0.5 text-xs">
+                                    @(isOpen ? "−" : "+")
+                                </button>
+                            </td>
+                            <td class="px-3 py-2 text-gray-500 dark:text-gray-400">
+                                <time datetime="@entry.At.ToString("u")">@entry.At.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</time>
+                            </td>
+                            <td class="px-3 py-2 text-gray-700 dark:text-gray-200">
+                                @(string.IsNullOrEmpty(entry.UserEmail) ? "—" : entry.UserEmail)
+                            </td>
+                            <td class="px-3 py-2"><span class="rounded-full bg-gray-100 dark:bg-gray-800 px-2 py-0.5 text-xs text-gray-700 dark:text-gray-200">@entry.Action</span></td>
+                            <td class="px-3 py-2 text-gray-700 dark:text-gray-200">@entry.EntityType</td>
+                            <td class="px-3 py-2 font-mono text-xs text-gray-500 dark:text-gray-400">@entry.EntityId</td>
+                        </tr>
+                        @if (isOpen)
+                        {
+                            <tr class="bg-gray-50 dark:bg-gray-900/20">
+                                <td colspan="6" class="px-3 py-3">
+                                    <AuditDiffViewer DiffJson="@entry.Diff" />
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <nav class="flex items-center justify-between" aria-label="Pagination">
+        <p class="text-xs text-gray-500 dark:text-gray-400">Page @Page</p>
+        <div class="flex items-center gap-2">
+            <button type="button" @onclick="PrevAsync" disabled="@(Page <= 1)"
+                    class="rounded-md border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-40">Previous</button>
+            <button type="button" @onclick="NextAsync" disabled="@(!HasNextPage)"
+                    class="rounded-md border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-40">Next</button>
+        </div>
+    </nav>
+</section>

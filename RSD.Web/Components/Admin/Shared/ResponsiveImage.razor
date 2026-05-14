@@ -1,6 +1,6 @@
 @if (File is null)
 {
-    <img src="@(FallbackSrc ?? "")" alt="@Alt" class="@CssClass" />
+    <img src="@(FallbackSrc ?? "")" alt="@Alt" class="@CssClass" loading="lazy" decoding="async" />
 }
 else if (IsResponsive)
 {
@@ -16,11 +16,11 @@ else if (IsResponsive)
         {
             <source media="(min-width: 769px)" srcset="/@large.Path" />
         }
-        <img src="/@fallback" alt="@Alt" class="@CssClass" loading="lazy" />
+        <img src="/@fallback" alt="@Alt" class="@CssClass" loading="lazy" decoding="async" />
     </picture>
 }
 else
 {
     var selected = SelectedVariant ?? File.Path;
-    <img src="/@selected" alt="@Alt" class="@CssClass" loading="lazy" />
+    <img src="/@selected" alt="@Alt" class="@CssClass" loading="lazy" decoding="async" />
 }
