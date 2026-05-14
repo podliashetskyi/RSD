@@ -1,0 +1,31 @@
+@code {
+    [Parameter, EditorRequired] public string Label { get; set; } = "";
+    [Parameter] public string Hint { get; set; } = "";
+    [Parameter] public string Description { get; set; } = "";
+    [Parameter] public RenderFragment? Icon { get; set; }
+    [Parameter] public bool Selected { get; set; }
+    [Parameter] public EventCallback OnSelected { get; set; }
+
+    private string CardClass => Selected
+        ? "border-cyan-500 ring-1 ring-cyan-500/30 bg-white"
+        : "border-line bg-white hover:border-cyan-300";
+}
+
+<button type="button" @onclick="OnSelected" aria-pressed="@(Selected ? "true" : "false")"
+        class="@($"flex flex-col gap-3 items-start text-left w-full rounded-base border p-6 transition-colors {CardClass}")">
+    @if (Icon is not null)
+    {
+        <span class="flex items-center justify-center w-10 h-10 rounded-full bg-cyan-100 text-cyan-600" aria-hidden="true">
+            @Icon
+        </span>
+    }
+    <span class="text-body-lg font-semibold text-ink">@Label</span>
+    @if (!string.IsNullOrEmpty(Hint))
+    {
+        <span class="text-body-sm text-ink-muted">@Hint</span>
+    }
+    @if (!string.IsNullOrEmpty(Description))
+    {
+        <p class="text-body-sm text-ink-soft leading-5">@Description</p>
+    }
+</button>

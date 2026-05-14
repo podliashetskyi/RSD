@@ -1,0 +1,46 @@
+@code {
+    [Parameter, EditorRequired] public int Current { get; set; }
+    [Parameter] public int Total { get; set; } = 4;
+
+    private bool IsCompleted(int step) => step < Current;
+    private bool IsCurrent(int step) => step == Current;
+
+    private string NodeClass(int step) => IsCompleted(step) || IsCurrent(step)
+        ? "bg-brand-950 text-white"
+        : "bg-cyan-100 text-brand-950";
+
+    private string ConnectorClass(int step) => step < Current
+        ? "bg-brand-950"
+        : "bg-cyan-100";
+}
+
+<nav aria-label="Wizard progress" class="max-w-3xl mx-auto px-4 py-10 lg:py-14">
+    <ol class="flex items-center gap-2">
+        @for (var i = 1; i <= Total; i++)
+        {
+            var step = i;
+            <li class="flex items-center" aria-current="@(IsCurrent(step) ? "step" : null)">
+                <span class="@($"flex items-center justify-center w-10 h-10 rounded-full text-body font-medium {NodeClass(step)}")"
+                      aria-label="@($"Step {step}{(IsCompleted(step) ? ", completed" : IsCurrent(step) ? ", current" : "")}")">
+                    @if (IsCompleted(step))
+                    {
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" aria-hidden="true">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    }
+                    else
+                    {
+                        @step
+                    }
+                </span>
+            </li>
+            @if (i < Total)
+            {
+                <li class="flex-1" aria-hidden="true">
+                    <span class="@($"block h-0.5 w-full rounded-full {ConnectorClass(step)}")"></span>
+                </li>
+            }
+        }
+    </ol>
+</nav>

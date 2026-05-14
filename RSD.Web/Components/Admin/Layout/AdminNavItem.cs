@@ -25,6 +25,7 @@ public static class AdminNav
         new("Terms of Service", "/admin/terms-of-service", ContentGroup),
         new("Privacy Policy", "/admin/privacy-policy", ContentGroup),
         new("Inbox",        "/admin/inbox",        OpsGroup),
+        new("Estimates",    "/admin/estimates",    OpsGroup),
         new("Media",        "/admin/media",        OpsGroup),
         new("Audit",        "/admin/audit",        OpsGroup),
         new("Trash",        "/admin/trash",        OpsGroup),

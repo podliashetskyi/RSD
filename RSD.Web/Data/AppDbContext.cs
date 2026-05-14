@@ -8,6 +8,7 @@ namespace RSD.Web.Data;
 public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<AdminUser>(options)
 {
     public DbSet<ContactSubmission> ContactSubmissions => Set<ContactSubmission>();
+    public DbSet<ProjectEstimate> ProjectEstimates => Set<ProjectEstimate>();
     public DbSet<AuditLogEntry> AuditLogEntries => Set<AuditLogEntry>();
     public DbSet<UploadedFile> UploadedFiles => Set<UploadedFile>();
 
