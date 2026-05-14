@@ -7,7 +7,10 @@ using RSD.Web.Services.Auth;
 
 namespace RSD.Web.Components.Admin.Pages;
 
-public partial class Login(SignInManager<AdminUser> SignIn, NavigationManager Nav)
+public partial class Login(
+    SignInManager<AdminUser> SignIn,
+    UserManager<AdminUser> Users,
+    NavigationManager Nav)
 {
     [SupplyParameterFromForm] private LoginInput Input { get; set; } = new();
     [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
@@ -17,7 +20,19 @@ public partial class Login(SignInManager<AdminUser> SignIn, NavigationManager Na
     {
         var result = await SignIn.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
         ErrorMessage = ResolveError(result);
-        if (result.Succeeded) Nav.NavigateTo(ResolveRedirect(), forceLoad: true);
+        if (result.Succeeded)
+        {
+            await RecordLoginAsync();
+            Nav.NavigateTo(ResolveRedirect(), forceLoad: true);
+        }
+    }
+
+    private async Task RecordLoginAsync()
+    {
+        var user = await Users.FindByEmailAsync(Input.Email);
+        if (user is null) return;
+        user.LastLoginAt = DateTime.UtcNow;
+        await Users.UpdateAsync(user);
     }
 
     private string ResolveRedirect()

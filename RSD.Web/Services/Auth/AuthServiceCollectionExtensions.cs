@@ -15,6 +15,7 @@ public static class AuthServiceCollectionExtensions
         ConfigureCookie(services);
         services.AddAuthorization();
         services.AddScoped<IClaimsTransformation, AdminUserClaimsTransformer>();
+        services.AddScoped<IUserAdminService, UserAdminService>();
         services.AddHostedService<AdminBootstrapper>();
         return services;
     }
@@ -33,6 +34,13 @@ public static class AuthServiceCollectionExtensions
             options.Lockout.AllowedForNewUsers = true;
             options.Lockout.MaxFailedAccessAttempts = 5;
             options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+        });
+
+        // Re-validate the user's security stamp on every request so that disabling
+        // an admin (which bumps the stamp) revokes their cookie immediately.
+        services.Configure<SecurityStampValidatorOptions>(options =>
+        {
+            options.ValidationInterval = TimeSpan.Zero;
         });
     }
 
