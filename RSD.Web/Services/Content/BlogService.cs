@@ -4,6 +4,7 @@ using RSD.Web.Data.Entities;
 using RSD.Web.Services.Cache;
 using RSD.Web.Services.Common;
 using RSD.Web.Services.Slugs;
+using RSD.Web.Services.Storage;
 
 namespace RSD.Web.Services.Content;
 
@@ -11,8 +12,9 @@ public sealed class BlogService(
     IDbContextFactory<AppDbContext> DbFactory,
     ISlugger Slugger,
     IPublicPageCache Cache,
+    IFileRefCountTracker RefCounts,
     IContentHtmlSanitizer Html)
-    : ContentServiceBase<BlogPost, BlogPost, BlogPost, BlogPostUpsert>(DbFactory, Slugger, Cache), IBlogService
+    : ContentServiceBase<BlogPost, BlogPost, BlogPost, BlogPostUpsert>(DbFactory, Slugger, Cache, RefCounts), IBlogService
 {
     protected override BlogPost NewEntityFrom(BlogPostUpsert input) => new()
     {

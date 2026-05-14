@@ -4,6 +4,7 @@ using RSD.Web.Data.Entities;
 using RSD.Web.Services.Cache;
 using RSD.Web.Services.Common;
 using RSD.Web.Services.Slugs;
+using RSD.Web.Services.Storage;
 
 namespace RSD.Web.Services.Content;
 
@@ -11,8 +12,9 @@ public sealed class ServiceService(
     IDbContextFactory<AppDbContext> DbFactory,
     ISlugger Slugger,
     IPublicPageCache Cache,
+    IFileRefCountTracker RefCounts,
     IContentHtmlSanitizer Html)
-    : ContentServiceBase<Service, Service, Service, ServiceUpsert>(DbFactory, Slugger, Cache), IServiceService
+    : ContentServiceBase<Service, Service, Service, ServiceUpsert>(DbFactory, Slugger, Cache, RefCounts), IServiceService
 {
     protected override Service NewEntityFrom(ServiceUpsert input) => new()
     {

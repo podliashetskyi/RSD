@@ -3,11 +3,12 @@ using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Cache;
 using RSD.Web.Services.Slugs;
+using RSD.Web.Services.Storage;
 
 namespace RSD.Web.Services.Content;
 
-public sealed class ContactPointService(IDbContextFactory<AppDbContext> DbFactory, ISlugger Slugger, IPublicPageCache Cache)
-    : SimpleContentService<ContactPoint>(DbFactory, Slugger, Cache), IContactPointService
+public sealed class ContactPointService(IDbContextFactory<AppDbContext> DbFactory, ISlugger Slugger, IPublicPageCache Cache, IFileRefCountTracker RefCounts)
+    : SimpleContentService<ContactPoint>(DbFactory, Slugger, Cache, RefCounts), IContactPointService
 {
     protected override string NaturalKeyOf(ContactPoint entity) => entity.Label;
 }

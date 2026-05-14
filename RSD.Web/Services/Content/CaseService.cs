@@ -3,14 +3,16 @@ using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Cache;
 using RSD.Web.Services.Slugs;
+using RSD.Web.Services.Storage;
 
 namespace RSD.Web.Services.Content;
 
 public sealed class CaseService(
     IDbContextFactory<AppDbContext> DbFactory,
     ISlugger Slugger,
-    IPublicPageCache Cache)
-    : ContentServiceBase<Case, Case, Case, CaseUpsert>(DbFactory, Slugger, Cache), ICaseService
+    IPublicPageCache Cache,
+    IFileRefCountTracker RefCounts)
+    : ContentServiceBase<Case, Case, Case, CaseUpsert>(DbFactory, Slugger, Cache, RefCounts), ICaseService
 {
     protected override Case NewEntityFrom(CaseUpsert input) => new()
     {

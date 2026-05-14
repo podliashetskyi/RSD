@@ -4,6 +4,7 @@ using RSD.Web.Data.Entities;
 using RSD.Web.Services.Cache;
 using RSD.Web.Services.Common;
 using RSD.Web.Services.Slugs;
+using RSD.Web.Services.Storage;
 
 namespace RSD.Web.Services.Content;
 
@@ -15,7 +16,8 @@ namespace RSD.Web.Services.Content;
 public abstract class ContentServiceBase<TEntity, TListItem, TDetail, TUpsert>(
     IDbContextFactory<AppDbContext> DbFactory,
     ISlugger Slugger,
-    IPublicPageCache Cache) : IContentService<TListItem, TDetail, TUpsert>
+    IPublicPageCache Cache,
+    IFileRefCountTracker RefCounts) : IContentService<TListItem, TDetail, TUpsert>
     where TEntity : ContentEntity
 {
     public async Task<IReadOnlyList<TListItem>> ListAsync(ContentQuery query, CancellationToken ct)
@@ -55,6 +57,7 @@ public abstract class ContentServiceBase<TEntity, TListItem, TDetail, TUpsert>(
         entity.Slug = await EnsureSlugAsync(entity.Slug, NaturalKeyOf(input), currentId: null, ct);
         db.Set<TEntity>().Add(entity);
         await db.SaveChangesAsync(ct);
+        await RefCounts.ApplyDeltaAsync([], EntityPaths.OfAny(entity), ct);
         await Cache.EvictListAsync<TEntity>(ct);
         return Result.Ok(entity.Id);
     }
@@ -64,11 +67,13 @@ public abstract class ContentServiceBase<TEntity, TListItem, TDetail, TUpsert>(
         await using var db = await DbFactory.CreateDbContextAsync(ct);
         var existing = await db.Set<TEntity>().FirstOrDefaultAsync(e => e.Id == id, ct);
         if (existing is null) return Result.Fail("Entity not found.");
+        var oldPaths = EntityPaths.OfAny(existing).ToList();
         var desiredSlug = SlugOf(input);
         existing.Slug = await EnsureSlugAsync(desiredSlug, NaturalKeyOf(input), id, ct);
         ApplyUpdate(existing, input);
         existing.UpdatedAt = DateTime.UtcNow;
         await db.SaveChangesAsync(ct);
+        await RefCounts.ApplyDeltaAsync(oldPaths, EntityPaths.OfAny(existing), ct);
         await Cache.EvictForAsync<TEntity>(id, ct);
         return Result.Ok();
     }
@@ -98,8 +103,10 @@ public abstract class ContentServiceBase<TEntity, TListItem, TDetail, TUpsert>(
         var entity = await db.Set<TEntity>().IgnoreQueryFilters().FirstOrDefaultAsync(e => e.Id == id, ct);
         if (entity is null) return Result.Fail("Entity not found.");
         if (!entity.IsDeleted) return Result.Fail("Soft-delete the entity before purging it.");
+        var oldPaths = EntityPaths.OfAny(entity).ToList();
         db.Set<TEntity>().Remove(entity);
         await db.SaveChangesAsync(ct);
+        await RefCounts.ApplyDeltaAsync(oldPaths, [], ct);
         await Cache.EvictForAsync<TEntity>(id, ct);
         return Result.Ok();
     }
