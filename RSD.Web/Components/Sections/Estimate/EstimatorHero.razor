@@ -1,0 +1,14 @@
+@code {
+    [Parameter, EditorRequired] public string Subtitle { get; set; } = "";
+}
+
+<section class="bg-brand-950 px-4 lg:px-section-x py-16 lg:py-24">
+    <div class="max-w-screen-xl mx-auto">
+        <span class="inline-flex items-center rounded-full bg-brand-900/60 px-3 py-1 text-body-sm text-cyan-200">Calculator</span>
+        <h1 class="mt-6 text-display-lg font-bold leading-tight">
+            <span class="text-white">Project</span>
+            <span class="block text-cyan-500">Cost Estimation</span>
+        </h1>
+        <p class="mt-6 max-w-2xl text-body-lg text-ink-muted">@Subtitle</p>
+    </div>
+</section>

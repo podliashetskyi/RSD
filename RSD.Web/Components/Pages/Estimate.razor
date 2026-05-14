@@ -1,0 +1,283 @@
+@page "/estimate"
+@rendermode InteractiveServer
+@using RSD.Web.Components.Sections.Contact
+@using RSD.Web.Components.Sections.Estimate
+@using RSD.Web.Data.Entities
+@using RSD.Web.Services.Estimates
+
+<PageTitle>Project Cost Estimation — RSD</PageTitle>
+
+@if (CurrentStep != WizardStep.Success)
+{
+    <EstimatorHero Subtitle="@HeroSubtitle" />
+}
+
+<section class="bg-white">
+    <div class="max-w-screen-xl mx-auto px-4 lg:px-section-x pb-16 lg:pb-24">
+        @if (CurrentStep != WizardStep.Success)
+        {
+            <StepIndicator Current="@StepNumber" />
+        }
+
+        @if (CurrentStep == WizardStep.Step1Platform)
+        {
+            <article class="max-w-4xl mx-auto rounded-base border border-line bg-white px-6 py-10 lg:px-12 lg:py-12 shadow-sm">
+                <header class="text-center mb-8">
+                    <h2 class="text-h3 font-bold text-ink">Work fast from everywhere</h2>
+                    <p class="mt-3 text-body text-ink-soft max-w-2xl mx-auto">
+                        Quickly calculate the estimated budget for your project by selecting your project type and desired complexity below.
+                    </p>
+                </header>
+
+                <div class="space-y-10">
+                    <div class="space-y-4">
+                        <h3 class="text-body-lg font-semibold text-ink">Select Platform</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <OptionCard Label="Mobile App"
+                                        Hint="@FromPrice(ProjectPlatform.MobileApp)"
+                                        Selected="@(State.Platform == ProjectPlatform.MobileApp)"
+                                        OnSelected="@(() => SetPlatform(ProjectPlatform.MobileApp))">
+                                <Icon>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                                        <rect x="5" y="2" width="14" height="20" rx="2"/>
+                                        <line x1="12" y1="18" x2="12" y2="18.01"/>
+                                    </svg>
+                                </Icon>
+                            </OptionCard>
+                            <OptionCard Label="Web Platform"
+                                        Hint="@FromPrice(ProjectPlatform.WebPlatform)"
+                                        Selected="@(State.Platform == ProjectPlatform.WebPlatform)"
+                                        OnSelected="@(() => SetPlatform(ProjectPlatform.WebPlatform))">
+                                <Icon>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                                        <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+                                    </svg>
+                                </Icon>
+                            </OptionCard>
+                            <OptionCard Label="Desktop App"
+                                        Hint="@FromPrice(ProjectPlatform.DesktopApp)"
+                                        Selected="@(State.Platform == ProjectPlatform.DesktopApp)"
+                                        OnSelected="@(() => SetPlatform(ProjectPlatform.DesktopApp))">
+                                <Icon>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                                        <polyline points="3 17 9 11 13 15 21 7"/>
+                                        <polyline points="14 7 21 7 21 14"/>
+                                    </svg>
+                                </Icon>
+                            </OptionCard>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h3 class="text-body-lg font-semibold text-ink">Choose Domain</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <OptionCard Label="E-commerce"
+                                        Selected="@(State.Domain == ProjectDomain.Ecommerce)"
+                                        OnSelected="@(() => SetDomain(ProjectDomain.Ecommerce))">
+                                <Icon>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                                        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+                                        <line x1="3" y1="6" x2="21" y2="6"/>
+                                        <path d="M16 10a4 4 0 0 1-8 0"/>
+                                    </svg>
+                                </Icon>
+                            </OptionCard>
+                            <OptionCard Label="Healthcare"
+                                        Selected="@(State.Domain == ProjectDomain.Healthcare)"
+                                        OnSelected="@(() => SetDomain(ProjectDomain.Healthcare))">
+                                <Icon>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                    </svg>
+                                </Icon>
+                            </OptionCard>
+                            <OptionCard Label="Fintech"
+                                        Selected="@(State.Domain == ProjectDomain.Fintech)"
+                                        OnSelected="@(() => SetDomain(ProjectDomain.Fintech))">
+                                <Icon>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                                        <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/>
+                                        <path d="M22 12A10 10 0 0 0 12 2v10z"/>
+                                    </svg>
+                                </Icon>
+                            </OptionCard>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between mt-10">
+                    <button type="button" class="text-body text-ink-muted hover:text-ink disabled:opacity-40 disabled:cursor-not-allowed" disabled>Back</button>
+                    <button type="button" @onclick="GoNext" disabled="@(!CanGoNext)"
+                            class="inline-flex items-center gap-2 rounded-full bg-brand-950 text-white px-6 py-3 text-body font-medium hover:bg-brand-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+                        Next
+                        <span aria-hidden="true">→</span>
+                    </button>
+                </div>
+            </article>
+        }
+        else if (CurrentStep == WizardStep.Step2Complexity)
+        {
+            <article class="max-w-4xl mx-auto rounded-base border border-line bg-white px-6 py-10 lg:px-12 lg:py-12 shadow-sm">
+                <header class="text-center mb-8">
+                    <h2 class="text-h3 font-bold text-ink">Select complexity level</h2>
+                    <p class="mt-3 text-body text-ink-soft max-w-2xl mx-auto">
+                        Choose the level of development that matches your business goals. This helps us provide a more accurate cost estimate.
+                    </p>
+                </header>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    @foreach (var c in new[] { ProjectComplexity.SimpleMvp, ProjectComplexity.MediumProfessional, ProjectComplexity.ComplexEnterprise })
+                    {
+                        var value = c;
+                        <OptionCard Label="@EstimatorCatalog.ComplexityLabel(value)"
+                                    Description="@EstimatorCatalog.ComplexityDescription(value)"
+                                    Selected="@(State.Complexity == value)"
+                                    OnSelected="@(() => SetComplexity(value))" />
+                    }
+                </div>
+
+                <div class="flex items-center justify-between mt-10">
+                    <button type="button" @onclick="GoBack" class="text-body text-ink-muted hover:text-ink">Back</button>
+                    <button type="button" @onclick="GoNext" disabled="@(!CanGoNext)"
+                            class="inline-flex items-center gap-2 rounded-full bg-brand-950 text-white px-6 py-3 text-body font-medium hover:bg-brand-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+                        Next
+                        <span aria-hidden="true">→</span>
+                    </button>
+                </div>
+            </article>
+        }
+        else if (CurrentStep == WizardStep.Step3Timeline)
+        {
+            <article class="max-w-4xl mx-auto rounded-base border border-line bg-white px-6 py-10 lg:px-12 lg:py-12 shadow-sm">
+                <header class="text-center mb-8">
+                    <h2 class="text-h3 font-bold text-ink">Select implementation timeline</h2>
+                    <p class="mt-3 text-body text-ink-soft max-w-2xl mx-auto">
+                        Pick how quickly you need the project delivered. Faster timelines require more parallel effort.
+                    </p>
+                </header>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    @foreach (var t in new[] { ProjectTimeline.Standard, ProjectTimeline.Accelerated, ProjectTimeline.Urgent })
+                    {
+                        var value = t;
+                        <OptionCard Label="@EstimatorCatalog.TimelineLabel(value)"
+                                    Hint="@EstimatorCatalog.TimelineWeeks(value)"
+                                    Selected="@(State.Timeline == value)"
+                                    OnSelected="@(() => SetTimeline(value))">
+                            <Icon>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                            </Icon>
+                        </OptionCard>
+                    }
+                </div>
+
+                <div class="flex items-center justify-between mt-10">
+                    <button type="button" @onclick="GoBack" class="text-body text-ink-muted hover:text-ink">Back</button>
+                    <button type="button" @onclick="GoNext" disabled="@(!CanGoNext)"
+                            class="inline-flex items-center gap-2 rounded-full bg-brand-950 text-white px-6 py-3 text-body font-medium hover:bg-brand-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+                        Next
+                        <span aria-hidden="true">→</span>
+                    </button>
+                </div>
+            </article>
+        }
+        else if (CurrentStep == WizardStep.Step4Submit)
+        {
+            <div class="max-w-3xl mx-auto space-y-10">
+                <div class="rounded-base border border-line bg-surface-subtle px-6 py-10 text-center">
+                    <p class="text-body-lg text-ink-soft font-medium">$ Preliminary Estimate</p>
+                    <p class="mt-3 text-display-lg font-bold text-brand-950 leading-none">
+                        $ @FormatMoney(EstimateRange.Min) – $ @FormatMoney(EstimateRange.Max)
+                    </p>
+                    <p class="mt-4 text-body-sm text-ink-muted">Final cost depends on detailed specifications</p>
+                </div>
+
+                <div>
+                    <header class="text-center mb-6">
+                        <h2 class="text-h3 font-bold text-ink">Leave your contact for a detailed estimate</h2>
+                        <p class="mt-3 text-body text-ink-soft">Our experts will contact you within 24 hours</p>
+                    </header>
+
+                    <EditForm Model="ContactModel" OnValidSubmit="SubmitAsync" FormName="EstimatorContact" class="space-y-5">
+                        <DataAnnotationsValidator />
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <label for="est-name" class="block text-body-sm font-medium text-ink">Name <span class="text-red-600">*</span></label>
+                                <InputText id="est-name" @bind-Value="ContactModel.Name" placeholder="Your name" autocomplete="name"
+                                           class="w-full bg-white border border-line rounded-base px-3.5 py-3 text-ink text-body placeholder:text-[#6a7282] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" />
+                                <ValidationMessage For="@(() => ContactModel.Name)" class="text-red-600 text-body-sm" />
+                            </div>
+                            <div class="space-y-1">
+                                <label for="est-email" class="block text-body-sm font-medium text-ink">Email <span class="text-red-600">*</span></label>
+                                <InputText id="est-email" type="email" @bind-Value="ContactModel.Email" placeholder="Your@email.com" autocomplete="email"
+                                           class="w-full bg-white border border-line rounded-base px-3.5 py-3 text-ink text-body placeholder:text-[#6a7282] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" />
+                                <ValidationMessage For="@(() => ContactModel.Email)" class="text-red-600 text-body-sm" />
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label for="est-company" class="block text-body-sm font-medium text-ink">Company <span class="text-red-600">*</span></label>
+                            <InputText id="est-company" @bind-Value="ContactModel.Company" placeholder="Company name" autocomplete="organization"
+                                       class="w-full bg-white border border-line rounded-base px-3.5 py-3 text-ink text-body placeholder:text-[#6a7282] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" />
+                            <ValidationMessage For="@(() => ContactModel.Company)" class="text-red-600 text-body-sm" />
+                        </div>
+                        <div class="space-y-1">
+                            <label for="est-description" class="block text-body-sm font-medium text-ink">Project Description <span class="text-red-600">*</span></label>
+                            <InputTextArea id="est-description" rows="5" @bind-Value="ContactModel.Description" placeholder="Tell us more about your project ..."
+                                           class="w-full bg-white border border-line rounded-base px-3.5 py-3 text-ink text-body placeholder:text-[#6a7282] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 min-h-[140px]" />
+                            <ValidationMessage For="@(() => ContactModel.Description)" class="text-red-600 text-body-sm" />
+                        </div>
+
+                        <input type="text" name="hp" autocomplete="off" tabindex="-1" aria-hidden="true"
+                               @bind="ContactModel.Hp"
+                               class="absolute -left-[10000px] w-px h-px overflow-hidden" />
+
+                        @if (Status == FormStatus.Error)
+                        {
+                            <p role="alert" class="text-red-700 text-body-sm">@ErrorText</p>
+                        }
+
+                        <button type="submit" disabled="@IsBusy"
+                                class="w-full inline-flex items-center justify-center gap-2 bg-brand-950 text-white text-body font-medium px-6 py-4 rounded-full hover:bg-brand-900 transition-colors disabled:opacity-60">
+                            @(IsBusy ? "Sending…" : "Get detailed Estimate")
+                            <span aria-hidden="true">→</span>
+                        </button>
+                    </EditForm>
+
+                    <div class="mt-4">
+                        <button type="button" @onclick="GoBack" class="text-body text-ink-muted hover:text-ink">Back</button>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="max-w-3xl mx-auto py-12 lg:py-20 px-4">
+                <div class="rounded-base bg-surface-info px-6 py-12 lg:py-16 text-center">
+                    <span class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-brand-950 text-white mb-6" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </span>
+                    <h2 class="text-h3 lg:text-h2 font-bold text-ink">Application Sent Successfully!</h2>
+                    <p class="mt-3 text-body text-ink-soft max-w-xl mx-auto">
+                        Thank you! Our team will review your estimation and contact you within 24 hours to discuss the next steps.
+                    </p>
+                    <a href="/" class="inline-flex items-center justify-center mt-8 px-6 py-3 rounded-full bg-brand-950 text-white text-body font-medium hover:bg-brand-900 transition-colors">
+                        Back to Home
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</section>
