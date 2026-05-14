@@ -13,6 +13,7 @@ using RSD.Web.Services.Auth;
 using RSD.Web.Services.Cache;
 using RSD.Web.Services.Content;
 using RSD.Web.Services.Email;
+using RSD.Web.Services.Estimates;
 using RSD.Web.Services.Imaging;
 using RSD.Web.Services.Preview;
 using RSD.Web.Services.Seo;
@@ -29,6 +30,10 @@ builder.Services.AddRazorComponents()
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
+builder.Services.ConfigureHttpJsonOptions(o =>
+{
+    o.SerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+});
 builder.Services.AddScoped<AuditSaveChangesInterceptor>();
 builder.Services.AddScoped<IAuditLog, AuditLog>();
 builder.Services.AddScoped<RSD.Web.Components.Admin.Shared.IToastService, RSD.Web.Components.Admin.Shared.ToastService>();
@@ -50,6 +55,7 @@ builder.Services
     .AddRsdEmail(builder.Configuration, builder.Environment)
     .AddRsdPreview(builder.Configuration)
     .AddRsdContent()
+    .AddRsdEstimates()
     .AddRsdSeo(builder.Configuration)
     .AddRsdSeed();
 
@@ -63,6 +69,16 @@ builder.Services.AddRateLimiter(options =>
             new { error = "Too many submissions. Please try again in a few minutes." }, ct);
     };
     options.AddPolicy(ContactSubmitEndpoint.RateLimitPolicy, context =>
+    {
+        var key = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        return RateLimitPartition.GetFixedWindowLimiter(key, _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 5,
+            Window = TimeSpan.FromMinutes(5),
+            QueueLimit = 0
+        });
+    });
+    options.AddPolicy(EstimateSubmitEndpoint.RateLimitPolicy, context =>
     {
         var key = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
         return RateLimitPartition.GetFixedWindowLimiter(key, _ => new FixedWindowRateLimiterOptions
@@ -103,6 +119,7 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 app.MapContactSubmit();
+app.MapEstimateSubmit();
 app.MapSitemap();
 app.MapRobots();
 app.MapPost("/admin/logout", async (HttpContext http, SignInManager<AdminUser> signIn) =>
