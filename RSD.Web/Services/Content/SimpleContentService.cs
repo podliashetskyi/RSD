@@ -73,6 +73,18 @@ public abstract class SimpleContentService<TEntity>(
             e.Status = ContentStatus.Draft;
         }, ct, ignoreFilters: true);
 
+    public async Task<Result<Unit>> HardDeleteAsync(Guid id, CancellationToken ct)
+    {
+        await using var db = await DbFactory.CreateDbContextAsync(ct);
+        var entity = await db.Set<TEntity>().IgnoreQueryFilters().FirstOrDefaultAsync(e => e.Id == id, ct);
+        if (entity is null) return Result.Fail("Entity not found.");
+        if (!entity.IsDeleted) return Result.Fail("Soft-delete the entity before purging it.");
+        db.Set<TEntity>().Remove(entity);
+        await db.SaveChangesAsync(ct);
+        await Cache.EvictForAsync<TEntity>(id, ct);
+        return Result.Ok();
+    }
+
     public async Task<Result<Unit>> BulkReorderAsync(IReadOnlyList<ReorderEntry> ordered, CancellationToken ct)
     {
         if (ordered.Count == 0) return Result.Ok();

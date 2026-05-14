@@ -92,6 +92,18 @@ public abstract class ContentServiceBase<TEntity, TListItem, TDetail, TUpsert>(
             e.Status = ContentStatus.Draft;
         }, ct, ignoreFilters: true);
 
+    public async Task<Result<Unit>> HardDeleteAsync(Guid id, CancellationToken ct)
+    {
+        await using var db = await DbFactory.CreateDbContextAsync(ct);
+        var entity = await db.Set<TEntity>().IgnoreQueryFilters().FirstOrDefaultAsync(e => e.Id == id, ct);
+        if (entity is null) return Result.Fail("Entity not found.");
+        if (!entity.IsDeleted) return Result.Fail("Soft-delete the entity before purging it.");
+        db.Set<TEntity>().Remove(entity);
+        await db.SaveChangesAsync(ct);
+        await Cache.EvictForAsync<TEntity>(id, ct);
+        return Result.Ok();
+    }
+
     protected abstract TEntity NewEntityFrom(TUpsert input);
     protected abstract void ApplyUpdate(TEntity entity, TUpsert input);
     protected abstract TListItem ToListItem(TEntity entity);

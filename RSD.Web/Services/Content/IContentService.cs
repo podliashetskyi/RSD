@@ -14,4 +14,5 @@ public interface IContentService<TListItem, TDetail, TUpsert>
     Task<Result<Unit>> ArchiveAsync(Guid id, CancellationToken ct);
     Task<Result<Unit>> SoftDeleteAsync(Guid id, CancellationToken ct);
     Task<Result<Unit>> RestoreAsync(Guid id, CancellationToken ct);
+    Task<Result<Unit>> HardDeleteAsync(Guid id, CancellationToken ct);
 }
