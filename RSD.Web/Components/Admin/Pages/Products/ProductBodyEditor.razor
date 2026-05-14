@@ -1,0 +1,81 @@
+@using RSD.Web.Components.Admin.Shared
+@using RSD.Web.Components.Admin.Shared.BodyForms
+
+<section class="space-y-4">
+    <header>
+        <h2 class="text-base font-semibold text-gray-900 dark:text-white">Detail content</h2>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">These fields render the product detail page.</p>
+    </header>
+
+    <RepeaterField TRow="BadgeRow" Label="Badges" AddLabel="Add badge" EmptyText="No badges yet."
+                   Hint="Small coloured pills shown above the product title."
+                   Items="Value.Badges" ItemsChanged="OnBadgesChanged">
+        <RowTemplate Context="row">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <FormField Label="Text">
+                    <InputText @bind-Value="row.Text" class="form-input" />
+                </FormField>
+                <FormField Label="Background class" Hint="Tailwind, e.g. bg-emerald-100">
+                    <InputText @bind-Value="row.BgClass" class="form-input" />
+                </FormField>
+                <FormField Label="Text class" Hint="Tailwind, e.g. text-emerald-700">
+                    <InputText @bind-Value="row.TextClass" class="form-input" />
+                </FormField>
+            </div>
+        </RowTemplate>
+    </RepeaterField>
+
+    <TagInput Label="Features" Placeholder="Add feature…"
+              Hint="Feature bullets shown on the product detail page."
+              Value="Value.Features" ValueChanged="OnFeaturesChanged" />
+
+    <RepeaterField TRow="MetaRow" Label="Challenge meta" AddLabel="Add meta entry" EmptyText="No meta entries yet."
+                   Hint="Label/value rows shown beside the Challenge section."
+                   Items="Value.ChallengeMeta" ItemsChanged="OnChallengeMetaChanged">
+        <RowTemplate Context="row">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <FormField Label="Label">
+                    <InputText @bind-Value="row.Label" class="form-input" />
+                </FormField>
+                <FormField Label="Value">
+                    <InputText @bind-Value="row.Value" class="form-input" />
+                </FormField>
+            </div>
+        </RowTemplate>
+    </RepeaterField>
+
+    <RepeaterField TRow="HurdleRow" Label="Challenge hurdles" AddLabel="Add hurdle" EmptyText="No hurdles yet."
+                   Items="Value.Hurdles" ItemsChanged="OnHurdlesChanged">
+        <RowTemplate Context="row">
+            <FormField Label="Heading">
+                <InputText @bind-Value="row.Heading" class="form-input" />
+            </FormField>
+            <FormField Label="Body">
+                <InputTextArea @bind-Value="row.Body" rows="3" class="form-input" />
+            </FormField>
+        </RowTemplate>
+    </RepeaterField>
+
+    <TagInput Label="Results" Placeholder="Add result…"
+              Hint="Bulleted result statements."
+              Value="Value.Results" ValueChanged="OnResultsChanged" />
+
+    <RepeaterField TRow="MetricRow" Label="Metric callouts" AddLabel="Add metric" EmptyText="No metrics yet."
+                   Hint="Large headline + supporting line (e.g. 3.2× / faster onboarding)."
+                   Items="Value.Metrics" ItemsChanged="OnMetricsChanged">
+        <RowTemplate Context="row">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <FormField Label="Headline">
+                    <InputText @bind-Value="row.Headline" class="form-input" />
+                </FormField>
+                <FormField Label="Description">
+                    <InputText @bind-Value="row.Description" class="form-input" />
+                </FormField>
+            </div>
+        </RowTemplate>
+    </RepeaterField>
+
+    <TagInput Label="Tech pills" Placeholder="Add technology…"
+              Hint="Tech-stack labels shown under the product body."
+              Value="Value.TechPills" ValueChanged="OnTechPillsChanged" />
+</section>

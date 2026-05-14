@@ -10,9 +10,16 @@
     <header class="flex items-center justify-between gap-4">
         <div>
             <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">@(IsCreate ? "New blog post" : "Edit blog post")</h1>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Header metadata — body editor lands in Phase 4.</p>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Header metadata and typed body blocks.</p>
         </div>
-        <a href="/admin/blog" class="rounded-md border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Back to list</a>
+        <div class="flex items-center gap-2">
+            @if (!string.IsNullOrEmpty(PreviewUrl))
+            {
+                <a href="@PreviewUrl" target="_blank" rel="noopener"
+                   class="rounded-md border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Preview &#8599;</a>
+            }
+            <a href="/admin/blog" class="rounded-md border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Back to list</a>
+        </div>
     </header>
 
     @if (!string.IsNullOrEmpty(ErrorMessage))
@@ -53,10 +60,6 @@
 
         <TagInput Label="Tags" Value="Input.Tags" ValueChanged="OnTagsChanged" />
 
-        <FormField Label="Intro" Hint="Brief lead paragraph shown above the body.">
-            <InputTextArea id="intro" @bind-Value="Input.Intro" rows="3" class="form-input" />
-        </FormField>
-
         <div class="space-y-2">
             <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Cover image</p>
             @if (!string.IsNullOrEmpty(Input.CoverImagePath))
@@ -72,9 +75,7 @@
             <InputText id="cover" @bind-Value="Input.CoverImagePath" placeholder="images/blog/post-cover.png" class="form-input" />
         </div>
 
-        <div class="rounded-md border border-dashed border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40 p-4 text-sm text-gray-500 dark:text-gray-400">
-            <strong class="text-gray-700 dark:text-gray-300">Body content</strong> — block editor coming in Phase 4. Body remains as currently seeded for this post.
-        </div>
+        <BlogBodyEditor Value="Body" />
 
         <SeoMetaPanel Value="Input.Seo" ValueChanged="OnSeoChanged" />
 

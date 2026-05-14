@@ -21,7 +21,8 @@ public sealed class CaseService(
         CoverImagePath = input.CoverImagePath,
         TechTags = [.. input.TechTags],
         Status = input.Status,
-        Seo = input.Seo
+        Seo = input.Seo,
+        DetailFields = input.DetailFields
     };
 
     protected override void ApplyUpdate(Case entity, CaseUpsert input)
@@ -33,6 +34,7 @@ public sealed class CaseService(
         entity.TechTags = [.. input.TechTags];
         entity.Status = input.Status;
         entity.Seo = input.Seo;
+        entity.DetailFields = input.DetailFields;
     }
 
     protected override Case ToListItem(Case entity) => entity;

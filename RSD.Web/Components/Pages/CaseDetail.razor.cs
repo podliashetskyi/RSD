@@ -4,14 +4,18 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
+using RSD.Web.Services.Preview;
 
 namespace RSD.Web.Components.Pages;
 
 public partial class CaseDetail(
     ICaseService Cases,
-    IHttpContextAccessor Http)
+    IHttpContextAccessor Http,
+    IPreviewContext PreviewCtx,
+    PreviewLink Preview)
 {
     [Parameter] public string Slug { get; set; } = "";
+    [SupplyParameterFromQuery] public string? Token { get; set; }
 
     private Case? Case { get; set; }
 
@@ -19,11 +23,23 @@ public partial class CaseDetail(
 
     protected override async Task OnInitializedAsync()
     {
-        Case = await Cases.GetBySlugAsync(Slug, includeDrafts: false, CancellationToken.None);
-        if (Case is null)
+        if (IsPreviewRequest() && !Preview.Verify("cases", Slug, Token))
         {
-            var http = Http.HttpContext;
-            if (http is not null) http.Response.StatusCode = StatusCodes.Status404NotFound;
+            NotFound();
+            return;
         }
+        PreviewCtx.IsPreview = IsPreviewRequest();
+
+        Case = await Cases.GetBySlugAsync(Slug, includeDrafts: PreviewCtx.IsPreview, CancellationToken.None);
+        if (Case is null) NotFound();
+    }
+
+    private bool IsPreviewRequest() =>
+        Http.HttpContext?.Request.Path.StartsWithSegments("/preview") ?? false;
+
+    private void NotFound()
+    {
+        var http = Http.HttpContext;
+        if (http is not null) http.Response.StatusCode = StatusCodes.Status404NotFound;
     }
 }

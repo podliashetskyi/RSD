@@ -3,20 +3,29 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
 using RSD.Web.Components.Admin.Shared;
+using RSD.Web.Components.Admin.Shared.Blocks;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
+using RSD.Web.Services.Preview;
 
 namespace RSD.Web.Components.Admin.Pages.Blog;
 
-public partial class BlogEdit(IBlogService Service, NavigationManager Nav, IToastService Toasts) : ComponentBase
+public partial class BlogEdit(
+    IBlogService Service,
+    NavigationManager Nav,
+    IToastService Toasts,
+    PreviewLink Preview) : ComponentBase
 {
     [Parameter] public Guid? Id { get; set; }
 
     private BlogPostInput Input { get; set; } = new();
+    private ArticleBodyForm Body { get; set; } = new();
     private string ErrorMessage { get; set; } = "";
     private bool SlugIsValid { get; set; } = true;
+    private string LoadedSlug { get; set; } = "";
     private bool IsCreate => Id is null;
     private bool CanSave => SlugIsValid;
+    private string PreviewUrl => string.IsNullOrEmpty(LoadedSlug) ? "" : Preview.Build("blog", LoadedSlug);
 
     protected override async Task OnInitializedAsync()
     {
@@ -28,12 +37,14 @@ public partial class BlogEdit(IBlogService Service, NavigationManager Nav, IToas
         var existing = await Service.GetByIdAsync(id, CancellationToken.None);
         if (existing is null) { Nav.NavigateTo("/admin/blog"); return; }
         Input = BlogPostInput.From(existing);
+        Body = ArticleBodyForm.From(existing.BodyBlocks);
+        LoadedSlug = existing.Slug;
     }
 
     private async Task SaveAsync()
     {
         if (!CanSave) { ErrorMessage = "Resolve validation errors before saving."; return; }
-        var upsert = Input.ToUpsert();
+        var upsert = Input.ToUpsert(Body.ToEntity());
         var (ok, error) = IsCreate
             ? await CreateAsync(upsert)
             : await UpdateAsync(Id!.Value, upsert);
@@ -91,8 +102,8 @@ public partial class BlogEdit(IBlogService Service, NavigationManager Nav, IToas
             Seo = p.Seo
         };
 
-        public BlogPostUpsert ToUpsert() => new(
+        public BlogPostUpsert ToUpsert(ArticleBody body) => new(
             Slug, Title, Description, Category, AuthorId, CoverImagePath,
-            ReadTimeMinutes, [.. Tags], Intro, Status, Seo);
+            ReadTimeMinutes, [.. Tags], Intro, Status, Seo, body);
     }
 }

@@ -1,0 +1,24 @@
+@using RSD.Web.Components.Admin.Shared.BlockRows
+
+<div class="space-y-3">
+    @if (!string.IsNullOrEmpty(Row.ImagePath))
+    {
+        <div class="flex items-start gap-3">
+            <img src="/@Row.ImagePath" alt="Block image preview" class="h-24 w-32 rounded-md object-cover border border-gray-200 dark:border-gray-800" />
+            <button type="button" @onclick="Clear"
+                    class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-1 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Remove</button>
+        </div>
+    }
+    <ImageUploader Subfolder="blog" CurrentFileChanged="OnUploaded" />
+    <FormField Label="Image path" Hint="Or paste a path manually.">
+        <InputText @bind-Value="Row.ImagePath" placeholder="images/blog/foo.png" class="form-input" />
+    </FormField>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <FormField Label="Alt text">
+            <InputText @bind-Value="Row.Alt" class="form-input" />
+        </FormField>
+        <FormField Label="Caption">
+            <InputText @bind-Value="Row.Caption" class="form-input" />
+        </FormField>
+    </div>
+</div>

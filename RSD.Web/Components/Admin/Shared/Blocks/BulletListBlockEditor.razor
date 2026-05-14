@@ -1,0 +1,10 @@
+@using RSD.Web.Components.Admin.Shared.BlockRows
+
+<div class="space-y-3">
+    <FormField Label="Heading">
+        <InputText @bind-Value="Row.Heading" class="form-input" />
+    </FormField>
+    <TagInput Label="Items" Placeholder="Add bullet…"
+              Hint="Each entry becomes one bullet on the public page."
+              Value="Row.Items" ValueChanged="OnItemsChanged" />
+</div>

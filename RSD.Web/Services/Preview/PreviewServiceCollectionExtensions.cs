@@ -6,6 +6,8 @@ public static class PreviewServiceCollectionExtensions
     {
         services.Configure<PreviewOptions>(configuration.GetSection(PreviewOptions.SectionName));
         services.AddSingleton<IPreviewTokenSigner, HmacPreviewTokenSigner>();
+        services.AddSingleton<PreviewLink>();
+        services.AddScoped<IPreviewContext, PreviewContext>();
         return services;
     }
 }

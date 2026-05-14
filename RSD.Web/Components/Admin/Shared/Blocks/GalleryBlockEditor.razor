@@ -1,0 +1,27 @@
+@using RSD.Web.Components.Admin.Shared.BlockRows
+
+<div class="space-y-3">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <FormField Label="Heading">
+            <InputText @bind-Value="Row.Heading" class="form-input" />
+        </FormField>
+        <FormField Label="Description">
+            <InputText @bind-Value="Row.Description" class="form-input" />
+        </FormField>
+    </div>
+    <TagInput Label="Tags" Placeholder="Add tag…"
+              Value="Row.Tags" ValueChanged="OnTagsChanged" />
+    <RepeaterField TRow="GalleryImageRow" Label="Images" AddLabel="Add image" EmptyText="No images yet."
+                   Items="Row.Images" ItemsChanged="OnImagesChanged">
+        <RowTemplate Context="img">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <FormField Label="Source path" Hint="e.g. images/blog/foo.png">
+                    <InputText @bind-Value="img.Src" class="form-input" />
+                </FormField>
+                <FormField Label="Alt text">
+                    <InputText @bind-Value="img.Alt" class="form-input" />
+                </FormField>
+            </div>
+        </RowTemplate>
+    </RepeaterField>
+</div>

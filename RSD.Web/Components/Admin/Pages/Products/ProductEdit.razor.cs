@@ -5,18 +5,26 @@ using Microsoft.AspNetCore.Components;
 using RSD.Web.Components.Admin.Shared;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
+using RSD.Web.Services.Preview;
 
 namespace RSD.Web.Components.Admin.Pages.Products;
 
-public partial class ProductEdit(IProductService Service, NavigationManager Nav, IToastService Toasts) : ComponentBase
+public partial class ProductEdit(
+    IProductService Service,
+    NavigationManager Nav,
+    IToastService Toasts,
+    PreviewLink Preview) : ComponentBase
 {
     [Parameter] public Guid? Id { get; set; }
 
     private ProductInput Input { get; set; } = new();
+    private ProductBodyForm Body { get; set; } = new();
     private string ErrorMessage { get; set; } = "";
     private bool SlugIsValid { get; set; } = true;
+    private string LoadedSlug { get; set; } = "";
     private bool IsCreate => Id is null;
     private bool CanSave => SlugIsValid;
+    private string PreviewUrl => string.IsNullOrEmpty(LoadedSlug) ? "" : Preview.Build("products", LoadedSlug);
 
     protected override async Task OnInitializedAsync()
     {
@@ -28,12 +36,14 @@ public partial class ProductEdit(IProductService Service, NavigationManager Nav,
         var existing = await Service.GetByIdAsync(id, CancellationToken.None);
         if (existing is null) { Nav.NavigateTo("/admin/products"); return; }
         Input = ProductInput.From(existing);
+        Body = ProductBodyForm.From(existing.DetailFields);
+        LoadedSlug = existing.Slug;
     }
 
     private async Task SaveAsync()
     {
         if (!CanSave) { ErrorMessage = "Resolve validation errors before saving."; return; }
-        var upsert = Input.ToUpsert();
+        var upsert = Input.ToUpsert(Body.ToEntity());
         var (ok, error) = IsCreate
             ? await CreateAsync(upsert)
             : await UpdateAsync(Id!.Value, upsert);
@@ -91,8 +101,8 @@ public partial class ProductEdit(IProductService Service, NavigationManager Nav,
             Seo = p.Seo
         };
 
-        public ProductUpsert ToUpsert() => new(
+        public ProductUpsert ToUpsert(ProductDetailFields detail) => new(
             Slug, Name, Subtitle, Price, Description, [.. BulletPoints],
-            CoverImagePath, TryForFreeHref, LearnMoreHref, Status, Seo);
+            CoverImagePath, TryForFreeHref, LearnMoreHref, Status, Seo, detail);
     }
 }

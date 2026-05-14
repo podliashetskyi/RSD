@@ -1,0 +1,129 @@
+@using RSD.Web.Components.Admin.Shared
+@using RSD.Web.Components.Admin.Shared.BodyForms
+
+<section class="space-y-4">
+    <header>
+        <h2 class="text-base font-semibold text-gray-900 dark:text-white">Detail content</h2>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">These fields render the case-study detail page.</p>
+    </header>
+
+    <RepeaterField TRow="BadgeRow" Label="Badges" AddLabel="Add badge" EmptyText="No badges yet."
+                   Hint="Small coloured pills shown above the case title."
+                   Items="Value.Badges" ItemsChanged="OnBadgesChanged">
+        <RowTemplate Context="row">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <FormField Label="Text">
+                    <InputText @bind-Value="row.Text" class="form-input" />
+                </FormField>
+                <FormField Label="Background class" Hint="Tailwind, e.g. bg-emerald-100">
+                    <InputText @bind-Value="row.BgClass" class="form-input" />
+                </FormField>
+                <FormField Label="Text class" Hint="Tailwind, e.g. text-emerald-700">
+                    <InputText @bind-Value="row.TextClass" class="form-input" />
+                </FormField>
+            </div>
+        </RowTemplate>
+    </RepeaterField>
+
+    <TagInput Label="Meta tags" Placeholder="Add meta tag…"
+              Hint="Free-form tags shown on the meta card (e.g. Fintech, B2B)."
+              Value="Value.MetaTags" ValueChanged="OnMetaTagsChanged" />
+
+    <RepeaterField TRow="MetaRow" Label="Meta entries" AddLabel="Add meta entry" EmptyText="No meta entries yet."
+                   Hint="Label/value rows shown beside the case (e.g. Duration / 6 months)."
+                   Items="Value.Meta" ItemsChanged="OnMetaChanged">
+        <RowTemplate Context="row">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <FormField Label="Label">
+                    <InputText @bind-Value="row.Label" class="form-input" />
+                </FormField>
+                <FormField Label="Value">
+                    <InputText @bind-Value="row.Value" class="form-input" />
+                </FormField>
+            </div>
+        </RowTemplate>
+    </RepeaterField>
+
+    <RepeaterField TRow="HurdleRow" Label="Challenge hurdles" AddLabel="Add hurdle" EmptyText="No hurdles yet."
+                   Items="Value.Hurdles" ItemsChanged="OnHurdlesChanged">
+        <RowTemplate Context="row">
+            <FormField Label="Heading">
+                <InputText @bind-Value="row.Heading" class="form-input" />
+            </FormField>
+            <FormField Label="Body">
+                <InputTextArea @bind-Value="row.Body" rows="3" class="form-input" />
+            </FormField>
+        </RowTemplate>
+    </RepeaterField>
+
+    <TagInput Label="Results" Placeholder="Add result…"
+              Hint="Bulleted result statements."
+              Value="Value.Results" ValueChanged="OnResultsChanged" />
+
+    <TagInput Label="Tech pills" Placeholder="Add technology…"
+              Hint="Tech-stack labels shown under the case body."
+              Value="Value.TechPills" ValueChanged="OnTechPillsChanged" />
+
+    <RepeaterField TRow="MetricRow" Label="Metric callouts" AddLabel="Add metric" EmptyText="No metrics yet."
+                   Hint="Large headline + supporting line (e.g. 3.2× / faster onboarding)."
+                   Items="Value.Metrics" ItemsChanged="OnMetricsChanged">
+        <RowTemplate Context="row">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <FormField Label="Headline">
+                    <InputText @bind-Value="row.Headline" class="form-input" />
+                </FormField>
+                <FormField Label="Description">
+                    <InputText @bind-Value="row.Description" class="form-input" />
+                </FormField>
+            </div>
+        </RowTemplate>
+    </RepeaterField>
+
+    <fieldset class="rounded-md border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-4 space-y-3">
+        <div class="flex items-center justify-between">
+            <legend class="px-1 text-sm font-medium text-gray-700 dark:text-gray-300">Embedded testimonial</legend>
+            <label class="inline-flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
+                <InputCheckbox @bind-Value="Value.Testimonial.Enabled" />
+                Show on detail page
+            </label>
+        </div>
+        @if (Value.Testimonial.Enabled)
+        {
+            <FormField Label="Quote">
+                <InputTextArea @bind-Value="Value.Testimonial.Quote" rows="3" class="form-input" />
+            </FormField>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <FormField Label="Author name">
+                    <InputText @bind-Value="Value.Testimonial.AuthorName" class="form-input" />
+                </FormField>
+                <FormField Label="Author role">
+                    <InputText @bind-Value="Value.Testimonial.AuthorRole" class="form-input" />
+                </FormField>
+            </div>
+            <FormField Label="Avatar path" Hint="e.g. images/avatars/avatar-default.png">
+                <InputText @bind-Value="Value.Testimonial.AvatarPath" class="form-input" />
+            </FormField>
+        }
+    </fieldset>
+
+    <fieldset class="rounded-md border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-4 space-y-3">
+        <div class="flex items-center justify-between">
+            <legend class="px-1 text-sm font-medium text-gray-700 dark:text-gray-300">Conclusion (two columns)</legend>
+            <label class="inline-flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
+                <InputCheckbox @bind-Value="Value.Conclusion.Enabled" />
+                Show on detail page
+            </label>
+        </div>
+        @if (Value.Conclusion.Enabled)
+        {
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <FormField Label="The Challenge (left column)">
+                    <InputTextArea @bind-Value="Value.Conclusion.Left" rows="4" class="form-input" />
+                </FormField>
+                <FormField Label="Our Solution (right column)">
+                    <InputTextArea @bind-Value="Value.Conclusion.Right" rows="4" class="form-input" />
+                </FormField>
+            </div>
+        }
+    </fieldset>
+</section>

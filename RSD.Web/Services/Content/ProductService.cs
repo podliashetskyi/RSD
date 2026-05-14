@@ -24,7 +24,8 @@ public sealed class ProductService(
         TryForFreeHref = input.TryForFreeHref,
         LearnMoreHref = input.LearnMoreHref,
         Status = input.Status,
-        Seo = input.Seo
+        Seo = input.Seo,
+        DetailFields = input.DetailFields
     };
 
     protected override void ApplyUpdate(Product entity, ProductUpsert input)
@@ -39,6 +40,7 @@ public sealed class ProductService(
         entity.LearnMoreHref = input.LearnMoreHref;
         entity.Status = input.Status;
         entity.Seo = input.Seo;
+        entity.DetailFields = input.DetailFields;
     }
 
     protected override Product ToListItem(Product entity) => entity;

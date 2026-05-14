@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Cache;
+using RSD.Web.Services.Common;
 using RSD.Web.Services.Slugs;
 
 namespace RSD.Web.Services.Content;
@@ -9,7 +10,8 @@ namespace RSD.Web.Services.Content;
 public sealed class BlogService(
     IDbContextFactory<AppDbContext> DbFactory,
     ISlugger Slugger,
-    IPublicPageCache Cache)
+    IPublicPageCache Cache,
+    IContentHtmlSanitizer Html)
     : ContentServiceBase<BlogPost, BlogPost, BlogPost, BlogPostUpsert>(DbFactory, Slugger, Cache), IBlogService
 {
     protected override BlogPost NewEntityFrom(BlogPostUpsert input) => new()
@@ -22,9 +24,10 @@ public sealed class BlogService(
         CoverImagePath = input.CoverImagePath,
         ReadTimeMinutes = input.ReadTimeMinutes,
         Tags = [.. input.Tags],
-        Intro = input.Intro,
+        Intro = Html.Sanitize(input.Intro),
         Status = input.Status,
-        Seo = input.Seo
+        Seo = input.Seo,
+        BodyBlocks = ArticleBodySanitizer.Sanitize(input.Body, Html)
     };
 
     protected override void ApplyUpdate(BlogPost entity, BlogPostUpsert input)
@@ -36,9 +39,10 @@ public sealed class BlogService(
         entity.CoverImagePath = input.CoverImagePath;
         entity.ReadTimeMinutes = input.ReadTimeMinutes;
         entity.Tags = [.. input.Tags];
-        entity.Intro = input.Intro;
+        entity.Intro = Html.Sanitize(input.Intro);
         entity.Status = input.Status;
         entity.Seo = input.Seo;
+        entity.BodyBlocks = ArticleBodySanitizer.Sanitize(input.Body, Html);
     }
 
     protected override BlogPost ToListItem(BlogPost entity) => entity;

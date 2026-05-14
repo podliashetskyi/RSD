@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Cache;
+using RSD.Web.Services.Common;
 using RSD.Web.Services.Slugs;
 
 namespace RSD.Web.Services.Content;
@@ -9,7 +10,8 @@ namespace RSD.Web.Services.Content;
 public sealed class ServiceService(
     IDbContextFactory<AppDbContext> DbFactory,
     ISlugger Slugger,
-    IPublicPageCache Cache)
+    IPublicPageCache Cache,
+    IContentHtmlSanitizer Html)
     : ContentServiceBase<Service, Service, Service, ServiceUpsert>(DbFactory, Slugger, Cache), IServiceService
 {
     protected override Service NewEntityFrom(ServiceUpsert input) => new()
@@ -20,9 +22,10 @@ public sealed class ServiceService(
         BulletPoints = [.. input.BulletPoints],
         CoverImagePath = input.CoverImagePath,
         DetailsHref = input.DetailsHref,
-        Intro = input.Intro,
+        Intro = Html.Sanitize(input.Intro),
         Status = input.Status,
-        Seo = input.Seo
+        Seo = input.Seo,
+        BodyBlocks = ArticleBodySanitizer.Sanitize(input.Body, Html)
     };
 
     protected override void ApplyUpdate(Service entity, ServiceUpsert input)
@@ -32,9 +35,10 @@ public sealed class ServiceService(
         entity.BulletPoints = [.. input.BulletPoints];
         entity.CoverImagePath = input.CoverImagePath;
         entity.DetailsHref = input.DetailsHref;
-        entity.Intro = input.Intro;
+        entity.Intro = Html.Sanitize(input.Intro);
         entity.Status = input.Status;
         entity.Seo = input.Seo;
+        entity.BodyBlocks = ArticleBodySanitizer.Sanitize(input.Body, Html);
     }
 
     protected override Service ToListItem(Service entity) => entity;
