@@ -15,6 +15,7 @@ using RSD.Web.Services.Content;
 using RSD.Web.Services.Email;
 using RSD.Web.Services.Imaging;
 using RSD.Web.Services.Preview;
+using RSD.Web.Services.Seo;
 using RSD.Web.Services.Slugs;
 using Microsoft.Extensions.FileProviders;
 using RSD.Web.Services.Storage;
@@ -49,6 +50,7 @@ builder.Services
     .AddRsdEmail(builder.Configuration, builder.Environment)
     .AddRsdPreview(builder.Configuration)
     .AddRsdContent()
+    .AddRsdSeo(builder.Configuration)
     .AddRsdSeed();
 
 builder.Services.AddRateLimiter(options =>
@@ -101,6 +103,8 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 app.MapContactSubmit();
+app.MapSitemap();
+app.MapRobots();
 app.MapPost("/admin/logout", async (HttpContext http, SignInManager<AdminUser> signIn) =>
 {
     await signIn.SignOutAsync();

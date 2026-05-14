@@ -1,4 +1,6 @@
 @page "/cases"
+@using Microsoft.AspNetCore.OutputCaching
+@attribute [OutputCache(Tags = ["list:case"])]
 @using RSD.Web.Components.Sections.Cases
 @using RSD.Web.Components.Sections.Shared
 

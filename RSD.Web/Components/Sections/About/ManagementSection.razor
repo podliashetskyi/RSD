@@ -7,7 +7,7 @@
             </p>
             <a href="#" class="hidden lg:inline-flex items-center gap-1.5 text-[#136eb3] text-body-sm font-medium leading-5 hover:underline">
                 Work with us
-                <img src="images/about/social/icon-arrow-right.svg" alt="" aria-hidden="true" class="size-4" />
+                <img src="images/about/social/icon-arrow-right.svg" alt="" aria-hidden="true" class="size-4"  loading="lazy" decoding="async" />
             </a>
         </div>
 
@@ -28,7 +28,7 @@
                             @foreach (var icon in SocialIcons)
                             {
                                 <a href="@(string.IsNullOrEmpty(icon.Href) ? "#" : icon.Href)" aria-label="@icon.Label" class="inline-flex">
-                                    <img src="@icon.IconPath" alt="" aria-hidden="true" class="size-5" />
+                                    <img src="@icon.IconPath" alt="" aria-hidden="true" class="size-5"  loading="lazy" decoding="async" />
                                 </a>
                             }
                         </div>

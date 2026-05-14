@@ -1,4 +1,6 @@
 @page "/contact"
+@using Microsoft.AspNetCore.OutputCaching
+@attribute [OutputCache(Tags = ["list:contactpoint", "list:messengerlink", "list:sociallink"])]
 @using RSD.Web.Components.Sections.Contact
 
 <PageTitle>Contact — RSD</PageTitle>
