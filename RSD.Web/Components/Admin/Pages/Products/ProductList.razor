@@ -1,0 +1,57 @@
+@page "/admin/products"
+@attribute [Authorize(Roles = AdminRoles.Admin)]
+@layout AdminLayout
+@rendermode InteractiveServer
+
+<PageTitle>Products &middot; RSD Admin</PageTitle>
+
+<section class="space-y-6">
+    <header class="flex items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Products</h1>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">@Items.Count products.</p>
+        </div>
+        <a href="/admin/products/new"
+           class="inline-flex items-center rounded-md bg-gray-900 dark:bg-white px-3 py-1.5 text-sm font-medium text-white dark:text-gray-900 hover:bg-black dark:hover:bg-gray-100">
+            + New product
+        </a>
+    </header>
+
+    <AdminDataTable TItem="Product" Items="Items" EmptyText="No products match this filter.">
+        <ToolbarTemplate>
+            <InputSelect TValue="ContentStatus?" Value="StatusFilter" ValueChanged="OnStatusChangedAsync" ValueExpression="() => StatusFilter"
+                         class="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-2 py-1.5 text-sm">
+                <option value="">All statuses</option>
+                <option value="@ContentStatus.Draft">Draft</option>
+                <option value="@ContentStatus.Published">Published</option>
+                <option value="@ContentStatus.Archived">Archived</option>
+            </InputSelect>
+            <input type="search" @bind-value="Search" @bind-value:event="oninput" @onkeyup="ReloadAsync"
+                   placeholder="Search slug…" aria-label="Search products"
+                   class="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-1.5 text-sm" />
+        </ToolbarTemplate>
+        <ColumnHeaderTemplate>
+            <th class="px-4 py-2">Name</th>
+            <th class="px-4 py-2">Price</th>
+            <th class="px-4 py-2">Status</th>
+            <th class="px-4 py-2">Updated</th>
+            <th class="px-4 py-2 text-right">Actions</th>
+        </ColumnHeaderTemplate>
+        <RowTemplate Context="p">
+            <td class="px-4 py-2 text-gray-900 dark:text-white">@p.Name</td>
+            <td class="px-4 py-2 text-gray-500 dark:text-gray-400">@p.Price</td>
+            <td class="px-4 py-2"><StatusBadge Status="p.Status" /></td>
+            <td class="px-4 py-2 text-gray-500 dark:text-gray-400">
+                <time datetime="@p.UpdatedAt.ToString("u")">@p.UpdatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</time>
+            </td>
+            <td class="px-4 py-2 text-right">
+                <div class="inline-flex items-center gap-1">
+                    <a href="/admin/products/@p.Id"
+                       class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-1 text-xs hover:bg-gray-50 dark:hover:bg-gray-800">Edit</a>
+                    <button type="button" @onclick="() => DeleteAsync(p.Id)"
+                            class="rounded-md border border-red-300 dark:border-red-700 px-2 py-1 text-xs text-red-700 dark:text-red-300 hover:bg-red-50 dark:hover:bg-red-950">Delete</button>
+                </div>
+            </td>
+        </RowTemplate>
+    </AdminDataTable>
+</section>

@@ -203,6 +203,157 @@ namespace RSD.Web.Data.Migrations
                     b.ToTable("audit_log_entries", (string)null);
                 });
 
+            modelBuilder.Entity("RSD.Web.Data.Entities.BlogPost", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("AuthorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("BodyBlocks")
+                        .IsRequired()
+                        .HasColumnType("json");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("CoverImagePath")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("Intro")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("character varying(4000)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("PublishedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("ReadTimeMinutes")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.PrimitiveCollection<List<string>>("Tags")
+                        .IsRequired()
+                        .HasColumnType("text[]");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("Category");
+
+                    b.HasIndex("Slug")
+                        .IsUnique()
+                        .HasFilter("\"IsDeleted\" = FALSE");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("blog_posts", (string)null);
+                });
+
+            modelBuilder.Entity("RSD.Web.Data.Entities.Case", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CoverImagePath")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("DetailFields")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("Industry")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<DateTime?>("PublishedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.PrimitiveCollection<List<string>>("TechTags")
+                        .IsRequired()
+                        .HasColumnType("text[]");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Industry");
+
+                    b.HasIndex("Slug")
+                        .IsUnique()
+                        .HasFilter("\"IsDeleted\" = FALSE");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("cases", (string)null);
+                });
+
             modelBuilder.Entity("RSD.Web.Data.Entities.ContactPoint", b =>
                 {
                     b.Property<Guid>("Id")
@@ -499,6 +650,160 @@ namespace RSD.Web.Data.Migrations
                     b.HasIndex("Status");
 
                     b.ToTable("partners", (string)null);
+                });
+
+            modelBuilder.Entity("RSD.Web.Data.Entities.Product", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.PrimitiveCollection<List<string>>("BulletPoints")
+                        .IsRequired()
+                        .HasColumnType("text[]");
+
+                    b.Property<string>("CoverImagePath")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("DetailFields")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LearnMoreHref")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("Price")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime?>("PublishedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("Subtitle")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("TryForFreeHref")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Slug")
+                        .IsUnique()
+                        .HasFilter("\"IsDeleted\" = FALSE");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("products", (string)null);
+                });
+
+            modelBuilder.Entity("RSD.Web.Data.Entities.Service", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("BodyBlocks")
+                        .IsRequired()
+                        .HasColumnType("json");
+
+                    b.PrimitiveCollection<List<string>>("BulletPoints")
+                        .IsRequired()
+                        .HasColumnType("text[]");
+
+                    b.Property<string>("CoverImagePath")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("DetailsHref")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Intro")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("character varying(4000)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("PublishedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Slug")
+                        .IsUnique()
+                        .HasFilter("\"IsDeleted\" = FALSE");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("services", (string)null);
                 });
 
             modelBuilder.Entity("RSD.Web.Data.Entities.SocialLink", b =>
@@ -985,6 +1290,80 @@ namespace RSD.Web.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("RSD.Web.Data.Entities.BlogPost", b =>
+                {
+                    b.OwnsOne("RSD.Web.Data.Entities.SeoMetadata", "Seo", b1 =>
+                        {
+                            b1.Property<Guid>("BlogPostId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("MetaDescription")
+                                .IsRequired()
+                                .HasMaxLength(500)
+                                .HasColumnType("character varying(500)")
+                                .HasColumnName("SeoMetaDescription");
+
+                            b1.Property<string>("MetaTitle")
+                                .IsRequired()
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)")
+                                .HasColumnName("SeoMetaTitle");
+
+                            b1.Property<string>("OgImagePath")
+                                .IsRequired()
+                                .HasMaxLength(500)
+                                .HasColumnType("character varying(500)")
+                                .HasColumnName("SeoOgImagePath");
+
+                            b1.HasKey("BlogPostId");
+
+                            b1.ToTable("blog_posts");
+
+                            b1.WithOwner()
+                                .HasForeignKey("BlogPostId");
+                        });
+
+                    b.Navigation("Seo")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("RSD.Web.Data.Entities.Case", b =>
+                {
+                    b.OwnsOne("RSD.Web.Data.Entities.SeoMetadata", "Seo", b1 =>
+                        {
+                            b1.Property<Guid>("CaseId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("MetaDescription")
+                                .IsRequired()
+                                .HasMaxLength(500)
+                                .HasColumnType("character varying(500)")
+                                .HasColumnName("SeoMetaDescription");
+
+                            b1.Property<string>("MetaTitle")
+                                .IsRequired()
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)")
+                                .HasColumnName("SeoMetaTitle");
+
+                            b1.Property<string>("OgImagePath")
+                                .IsRequired()
+                                .HasMaxLength(500)
+                                .HasColumnType("character varying(500)")
+                                .HasColumnName("SeoOgImagePath");
+
+                            b1.HasKey("CaseId");
+
+                            b1.ToTable("cases");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CaseId");
+                        });
+
+                    b.Navigation("Seo")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("RSD.Web.Data.Entities.ContactPoint", b =>
                 {
                     b.OwnsOne("RSD.Web.Data.Entities.SeoMetadata", "Seo", b1 =>
@@ -1127,6 +1506,80 @@ namespace RSD.Web.Data.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("PartnerId");
+                        });
+
+                    b.Navigation("Seo")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("RSD.Web.Data.Entities.Product", b =>
+                {
+                    b.OwnsOne("RSD.Web.Data.Entities.SeoMetadata", "Seo", b1 =>
+                        {
+                            b1.Property<Guid>("ProductId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("MetaDescription")
+                                .IsRequired()
+                                .HasMaxLength(500)
+                                .HasColumnType("character varying(500)")
+                                .HasColumnName("SeoMetaDescription");
+
+                            b1.Property<string>("MetaTitle")
+                                .IsRequired()
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)")
+                                .HasColumnName("SeoMetaTitle");
+
+                            b1.Property<string>("OgImagePath")
+                                .IsRequired()
+                                .HasMaxLength(500)
+                                .HasColumnType("character varying(500)")
+                                .HasColumnName("SeoOgImagePath");
+
+                            b1.HasKey("ProductId");
+
+                            b1.ToTable("products");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProductId");
+                        });
+
+                    b.Navigation("Seo")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("RSD.Web.Data.Entities.Service", b =>
+                {
+                    b.OwnsOne("RSD.Web.Data.Entities.SeoMetadata", "Seo", b1 =>
+                        {
+                            b1.Property<Guid>("ServiceId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("MetaDescription")
+                                .IsRequired()
+                                .HasMaxLength(500)
+                                .HasColumnType("character varying(500)")
+                                .HasColumnName("SeoMetaDescription");
+
+                            b1.Property<string>("MetaTitle")
+                                .IsRequired()
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)")
+                                .HasColumnName("SeoMetaTitle");
+
+                            b1.Property<string>("OgImagePath")
+                                .IsRequired()
+                                .HasMaxLength(500)
+                                .HasColumnType("character varying(500)")
+                                .HasColumnName("SeoOgImagePath");
+
+                            b1.HasKey("ServiceId");
+
+                            b1.ToTable("services");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ServiceId");
                         });
 
                     b.Navigation("Seo")

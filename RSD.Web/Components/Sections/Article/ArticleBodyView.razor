@@ -1,0 +1,67 @@
+@using RSD.Web.Data.Entities
+@using RSD.Web.Data.Entities.ArticleBlocks
+
+@if (!string.IsNullOrWhiteSpace(Body.Intro))
+{
+    <p class="text-ink-soft text-body-lg leading-7">@((MarkupString)Body.Intro)</p>
+}
+
+@foreach (var block in Body.Blocks)
+{
+    @switch (block)
+    {
+        case SubsectionBlock s:
+            <ArticleSubsection Id="@s.Id"
+                               Heading="@s.Heading"
+                               Subheading="@s.Subheading"
+                               SubheadingBody="@s.Body"
+                               Items="s.Items"
+                               Style="ArticleListStyle.CheckIcon" />
+            break;
+        case StatsRowBlock st:
+            <StatsRow Id="@st.Id" Heading="@st.Heading" Items="st.Items" />
+            break;
+        case GalleryBlock g:
+            <GallerySection Id="@g.Id"
+                            Heading="@(string.IsNullOrEmpty(g.Heading) ? "Gallery" : g.Heading)"
+                            Description="@g.Description"
+                            Images="g.Images"
+                            Tags="g.Tags" />
+            break;
+        case BulletListBlock b:
+            <div class="space-y-3">
+                @if (!string.IsNullOrEmpty(b.Heading))
+                {
+                    <h3 class="text-ink text-h4 font-semibold">@b.Heading</h3>
+                }
+                <ul class="list-disc pl-6 space-y-1 text-ink-soft">
+                    @foreach (var item in b.Items)
+                    {
+                        <li>@item</li>
+                    }
+                </ul>
+            </div>
+            break;
+        case QuoteBlock q:
+            <blockquote class="border-l-4 border-line pl-4 italic text-ink-soft">
+                <p>@q.Quote</p>
+                @if (!string.IsNullOrEmpty(q.Attribution))
+                {
+                    <footer class="mt-2 text-ink-faint text-body-sm">— @q.Attribution</footer>
+                }
+            </blockquote>
+            break;
+        case ImageBlock i:
+            <figure class="space-y-2">
+                <ResponsiveImage FallbackSrc="@i.ImagePath" Alt="@i.Alt" CssClass="w-full rounded-base" />
+                @if (!string.IsNullOrEmpty(i.Caption))
+                {
+                    <figcaption class="text-ink-faint text-body-sm">@i.Caption</figcaption>
+                }
+            </figure>
+            break;
+        case RichTextBlock r:
+            <div class="prose max-w-none text-ink-soft">@((MarkupString)r.Html)</div>
+            break;
+    }
+}

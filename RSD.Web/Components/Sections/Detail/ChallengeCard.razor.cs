@@ -1,5 +1,6 @@
 #pragma warning disable S1144, S4487, S2933
 using Microsoft.AspNetCore.Components;
+using RSD.Web.Data.Entities;
 
 namespace RSD.Web.Components.Sections.Detail;
 
@@ -11,5 +12,3 @@ public partial class ChallengeCard
     [Parameter, EditorRequired] public IReadOnlyList<ChallengeHurdle> Hurdles { get; set; } = [];
 }
 
-public record MetaItem(string Label, string Value);
-public record ChallengeHurdle(string Heading, string Body);

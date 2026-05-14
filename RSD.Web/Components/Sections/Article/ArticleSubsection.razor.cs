@@ -1,5 +1,6 @@
 #pragma warning disable S1144, S4487, S2933
 using Microsoft.AspNetCore.Components;
+using RSD.Web.Data.Entities;
 
 namespace RSD.Web.Components.Sections.Article;
 
@@ -12,7 +13,5 @@ public partial class ArticleSubsection
     [Parameter] public IReadOnlyList<SubsectionItem> Items { get; set; } = [];
     [Parameter] public ArticleListStyle Style { get; set; } = ArticleListStyle.CheckIcon;
 }
-
-public record SubsectionItem(string Label, string Body);
 
 public enum ArticleListStyle { CheckIcon, Disc, Numbered }

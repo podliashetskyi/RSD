@@ -13,6 +13,10 @@ public static class SeedServiceCollectionExtensions
         services.AddScoped<ISeeder, ContactPointSeeder>();
         services.AddScoped<ISeeder, MessengerLinkSeeder>();
         services.AddScoped<ISeeder, SocialLinkSeeder>();
+        services.AddScoped<ISeeder, BlogPostSeeder>();
+        services.AddScoped<ISeeder, CaseSeeder>();
+        services.AddScoped<ISeeder, ProductSeeder>();
+        services.AddScoped<ISeeder, ServiceSeeder>();
         services.AddHostedService<SeedRunner>();
         return services;
     }

@@ -2,40 +2,58 @@
 @using RSD.Web.Components.Sections.Detail
 @using RSD.Web.Components.Sections.Shared
 
-@if (string.Equals(Slug, "nexacrm", StringComparison.OrdinalIgnoreCase))
+@if (Product is not null)
 {
-    <PageTitle>NexaCRM — RSD</PageTitle>
+    <PageTitle>@Product.Name — RSD</PageTitle>
 
-    <HeroSection ImageSrc="images/products/nexacrm/hero-dashboard.png" />
+    <HeroSection ImageSrc="@HeroImage" />
     <IdentityBar BackHref="/products"
-                 Title="NexaCRM"
-                 Subtitle="Next-Generation CRM"
-                 RightLabel="from $49/mo"
+                 Title="@Product.Name"
+                 Subtitle="@Product.Subtitle"
+                 RightLabel="@Product.Price"
                  CtaText="Start Free Trial"
-                 CtaHref="#" />
-    <MetaCard Badges="@ProductBadges"
-              Title="NexaCRM"
-              Subtitle="Next-Generation CRM"
-              Description="NexaCRM is a comprehensive customer relationship management platform designed for modern sales teams. Powered by advanced AI, it automates routine tasks, provides intelligent insights, and helps close deals faster."
+                 CtaHref="@Product.TryForFreeHref" />
+    <MetaCard Badges="Product.DetailFields.Badges"
+              Title="@Product.Name"
+              Subtitle="@Product.Subtitle"
+              Description="@Product.Description"
               PrimaryText="Start free trial"
               PrimaryTextMobile="Try for free"
-              PrimaryHref="#"
+              PrimaryHref="@Product.TryForFreeHref"
               SecondaryText="Learn more"
-              SecondaryHref="#" />
-    <BulletListCard Heading="Features" Items="@Features" />
-    <ChallengeCard Heading="The Challenge"
-                   MetaItems="@ChallengeMeta"
-                   Body="The primary goal was to develop a sophisticated yet accessible communication tool for individuals with severe speech impairments caused by conditions such as ALS, cerebral palsy, or stroke. The project faced several critical hurdles:"
-                   Hurdles="@Hurdles" />
-    <BulletListCard Heading="Results" Items="@Results" HeadingSize="BulletListHeadingSize.Large" WithShadow="true" />
-    <StatCallouts Items="@Metrics" />
-    <TestimonialCard Quote="&quot;NexaCRM transformed how our sales team operates. We've seen a 45% increase in close rates within the first quarter.&quot;"
-                     AuthorName="Sarah Chen"
-                     AuthorRole="VP of Sales, TechCorp" />
-    <TechPillsCard Heading="Technologies Used" Pills="@TechPills" />
+              SecondaryHref="@Product.LearnMoreHref" />
+
+    @if (Product.DetailFields.Features.Count > 0)
+    {
+        <BulletListCard Heading="Features" Items="Product.DetailFields.Features" />
+    }
+
+    @if (Product.DetailFields.Hurdles.Count > 0)
+    {
+        <ChallengeCard Heading="The Challenge"
+                       MetaItems="Product.DetailFields.ChallengeMeta"
+                       Body="The primary goal was to develop a sophisticated yet accessible product. The project faced several critical hurdles:"
+                       Hurdles="Product.DetailFields.Hurdles" />
+    }
+
+    @if (Product.DetailFields.Results.Count > 0)
+    {
+        <BulletListCard Heading="Results" Items="Product.DetailFields.Results" HeadingSize="BulletListHeadingSize.Large" WithShadow="true" />
+    }
+
+    @if (Product.DetailFields.Metrics.Count > 0)
+    {
+        <StatCallouts Items="Product.DetailFields.Metrics" />
+    }
+
+    @if (Product.DetailFields.TechPills.Count > 0)
+    {
+        <TechPillsCard Heading="Technologies Used" Pills="Product.DetailFields.TechPills" />
+    }
+
     <CtaSection Heading="Ready to Get Started?"
                 Description="Start your free trial today, no credit card required"
                 PrimaryButtonText="Start Free Trial"
-                PrimaryButtonHref="#"
+                PrimaryButtonHref="@Product.TryForFreeHref"
                 SecondaryButtonText="" />
 }

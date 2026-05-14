@@ -21,6 +21,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<MessengerLink> MessengerLinks => Set<MessengerLink>();
     public DbSet<SocialLink> SocialLinks => Set<SocialLink>();
 
+    public DbSet<BlogPost> BlogPosts => Set<BlogPost>();
+    public DbSet<Case> Cases => Set<Case>();
+    public DbSet<Product> Products => Set<Product>();
+    public DbSet<Service> Services => Set<Service>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

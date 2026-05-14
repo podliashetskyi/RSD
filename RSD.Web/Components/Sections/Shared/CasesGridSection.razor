@@ -40,7 +40,7 @@
                 var href = string.IsNullOrEmpty(c.Slug) ? null : $"/cases/{c.Slug}";
                 <article class="flex flex-col rounded-base overflow-hidden bg-white border border-line shadow-sm @(href is null ? "" : "transition hover:shadow-md focus-within:shadow-md")">
                     <div class="relative h-60 flex items-center justify-center overflow-hidden">
-                        <img src="@c.ImageSrc" alt="@(c.Name) project screenshot" class="absolute inset-0 w-full h-full object-cover" />
+                        <ResponsiveImage FallbackSrc="@c.CoverImagePath" Alt="@(c.Name + " project screenshot")" CssClass="absolute inset-0 w-full h-full object-cover" />
                         <div class="absolute inset-0 pointer-events-none"
                              style="background: linear-gradient(0deg, rgb(255,255,255) 1.5%, rgba(255,255,255,0.738) 18.5%, rgba(255,255,255,0.2) 41%, rgba(255,255,255,0) 100%);"></div>
                         <img src="images/cases/rsd-watermark.svg" alt="" aria-hidden="true" class="relative" style="width: 103.27px; height: 71px;" />

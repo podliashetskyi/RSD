@@ -1,0 +1,48 @@
+using Microsoft.EntityFrameworkCore;
+using RSD.Web.Data;
+using RSD.Web.Data.Entities;
+using RSD.Web.Services.Cache;
+using RSD.Web.Services.Slugs;
+
+namespace RSD.Web.Services.Content;
+
+public sealed class BlogService(
+    IDbContextFactory<AppDbContext> DbFactory,
+    ISlugger Slugger,
+    IPublicPageCache Cache)
+    : ContentServiceBase<BlogPost, BlogPost, BlogPost, BlogPostUpsert>(DbFactory, Slugger, Cache), IBlogService
+{
+    protected override BlogPost NewEntityFrom(BlogPostUpsert input) => new()
+    {
+        Slug = input.Slug,
+        Title = input.Title,
+        Description = input.Description,
+        Category = input.Category,
+        AuthorId = input.AuthorId,
+        CoverImagePath = input.CoverImagePath,
+        ReadTimeMinutes = input.ReadTimeMinutes,
+        Tags = [.. input.Tags],
+        Intro = input.Intro,
+        Status = input.Status,
+        Seo = input.Seo
+    };
+
+    protected override void ApplyUpdate(BlogPost entity, BlogPostUpsert input)
+    {
+        entity.Title = input.Title;
+        entity.Description = input.Description;
+        entity.Category = input.Category;
+        entity.AuthorId = input.AuthorId;
+        entity.CoverImagePath = input.CoverImagePath;
+        entity.ReadTimeMinutes = input.ReadTimeMinutes;
+        entity.Tags = [.. input.Tags];
+        entity.Intro = input.Intro;
+        entity.Status = input.Status;
+        entity.Seo = input.Seo;
+    }
+
+    protected override BlogPost ToListItem(BlogPost entity) => entity;
+    protected override BlogPost ToDetail(BlogPost entity) => entity;
+    protected override string NaturalKeyOf(BlogPostUpsert input) => input.Title;
+    protected override string SlugOf(BlogPostUpsert input) => input.Slug;
+}

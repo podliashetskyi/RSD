@@ -1,0 +1,19 @@
+<div>
+    <label for="@FieldId" class="block text-sm font-medium text-gray-700 dark:text-gray-300">@Label</label>
+    <div class="mt-1 flex flex-wrap items-center gap-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-2 py-1.5">
+        @for (var i = 0; i < Value.Count; i++)
+        {
+            var idx = i;
+            var tag = Value[i];
+            <span class="inline-flex items-center gap-1 rounded-full bg-gray-100 dark:bg-gray-800 px-2 py-0.5 text-xs text-gray-700 dark:text-gray-200">
+                @tag
+                <button type="button" @onclick="() => RemoveAtAsync(idx)" aria-label="@($"Remove tag {tag}")"
+                        class="rounded-full px-1 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700">&times;</button>
+            </span>
+        }
+        <input id="@FieldId" type="text" @bind="Draft" @bind:event="oninput" @onkeydown="OnKeyDownAsync"
+               placeholder="@Placeholder"
+               class="flex-1 min-w-[8rem] border-0 bg-transparent px-1 py-0.5 text-sm focus:outline-none focus:ring-0 text-gray-900 dark:text-white" />
+    </div>
+    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">@Hint</p>
+</div>

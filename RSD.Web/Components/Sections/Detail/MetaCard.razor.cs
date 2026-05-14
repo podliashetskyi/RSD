@@ -1,5 +1,6 @@
 #pragma warning disable S1144, S4487, S2933
 using Microsoft.AspNetCore.Components;
+using RSD.Web.Data.Entities;
 
 namespace RSD.Web.Components.Sections.Detail;
 
@@ -17,4 +18,3 @@ public partial class MetaCard
     [Parameter] public string SecondaryHref { get; set; } = "#";
 }
 
-public record BadgePill(string Text, string BgClass = "", string TextClass = "");
