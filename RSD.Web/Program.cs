@@ -100,6 +100,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseStatusCodePagesWithReExecute("/404", "?statusCode={0}");
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseAntiforgery();
