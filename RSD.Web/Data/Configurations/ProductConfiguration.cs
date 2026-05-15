@@ -14,6 +14,7 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
         b.Property(x => x.Price).HasMaxLength(100);
         b.Property(x => x.Description).HasMaxLength(2000);
         b.Property(x => x.CoverImagePath).HasMaxLength(500);
+        b.Property(x => x.CoverImageAlt).HasMaxLength(200);
         b.Property(x => x.TryForFreeHref).HasMaxLength(500);
         b.Property(x => x.LearnMoreHref).HasMaxLength(500);
         b.Property(x => x.BulletPoints).HasColumnType("text[]");

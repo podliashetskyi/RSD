@@ -23,6 +23,7 @@ public sealed class ServiceService(
         Description = input.Description,
         BulletPoints = [.. input.BulletPoints],
         CoverImagePath = input.CoverImagePath,
+        CoverImageAlt = input.CoverImageAlt,
         DetailsHref = input.DetailsHref,
         Intro = Html.Sanitize(input.Intro),
         Status = input.Status,
@@ -36,6 +37,7 @@ public sealed class ServiceService(
         entity.Description = input.Description;
         entity.BulletPoints = [.. input.BulletPoints];
         entity.CoverImagePath = input.CoverImagePath;
+        entity.CoverImageAlt = input.CoverImageAlt;
         entity.DetailsHref = input.DetailsHref;
         entity.Intro = Html.Sanitize(input.Intro);
         entity.Status = input.Status;

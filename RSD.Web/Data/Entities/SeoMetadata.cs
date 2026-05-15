@@ -5,4 +5,5 @@ public record class SeoMetadata
     public string MetaTitle { get; set; } = "";
     public string MetaDescription { get; set; } = "";
     public string OgImagePath { get; set; } = "";
+    public string OgImageAlt { get; set; } = "";
 }

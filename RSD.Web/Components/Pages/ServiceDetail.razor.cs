@@ -22,6 +22,7 @@ public partial class ServiceDetail(
     private static readonly IReadOnlyList<TocEntry> TocItems = [];
 
     private string HeroImage => string.IsNullOrEmpty(Svc?.CoverImagePath) ? "images/services/cloud-solutions/hero.png" : Svc!.CoverImagePath;
+    private string HeroAlt => string.IsNullOrEmpty(Svc?.CoverImageAlt) ? (Svc?.Title ?? "") : Svc!.CoverImageAlt;
     private string DateText => (Svc?.PublishedAt ?? Svc?.CreatedAt ?? DateTime.UtcNow).ToString("MMMM dd, yyyy");
 
     protected override async Task OnInitializedAsync()

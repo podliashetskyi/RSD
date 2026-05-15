@@ -70,6 +70,7 @@ public partial class BlogEdit(
     private void OnTagsChanged(List<string> tags) => Input.Tags = tags;
     private void OnSeoChanged(SeoMetadata seo) => Input.Seo = seo;
     private void OnCoverUploaded(UploadedFile? file) { if (file is not null) Input.CoverImagePath = file.Path; }
+    private void OnCoverAltChanged(string alt) => Input.CoverImageAlt = alt;
     private void ClearCover() => Input.CoverImagePath = "";
 
     public sealed record class BlogPostInput
@@ -81,6 +82,7 @@ public partial class BlogEdit(
         public string Category { get; set; } = "";
         public Guid? AuthorId { get; set; }
         public string CoverImagePath { get; set; } = "";
+        public string CoverImageAlt { get; set; } = "";
         public int ReadTimeMinutes { get; set; }
         public List<string> Tags { get; set; } = [];
         public string Intro { get; set; } = "";
@@ -95,6 +97,7 @@ public partial class BlogEdit(
             Category = p.Category,
             AuthorId = p.AuthorId,
             CoverImagePath = p.CoverImagePath,
+            CoverImageAlt = p.CoverImageAlt,
             ReadTimeMinutes = p.ReadTimeMinutes,
             Tags = [.. p.Tags],
             Intro = p.Intro,
@@ -103,7 +106,7 @@ public partial class BlogEdit(
         };
 
         public BlogPostUpsert ToUpsert(ArticleBody body) => new(
-            Slug, Title, Description, Category, AuthorId, CoverImagePath,
+            Slug, Title, Description, Category, AuthorId, CoverImagePath, CoverImageAlt,
             ReadTimeMinutes, [.. Tags], Intro, Status, Seo, body);
     }
 }

@@ -10,6 +10,7 @@ public record ProductUpsert(
     string Description,
     List<string> BulletPoints,
     string CoverImagePath,
+    string CoverImageAlt,
     string TryForFreeHref,
     string LearnMoreHref,
     ContentStatus Status,

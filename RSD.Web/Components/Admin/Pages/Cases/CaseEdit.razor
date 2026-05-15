@@ -67,7 +67,8 @@
                             class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-1 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Remove cover</button>
                 </div>
             }
-            <ImageUploader Subfolder="cases" CurrentFileChanged="OnCoverUploaded" />
+            <ImageUploader Subfolder="cases" CurrentFileChanged="OnCoverUploaded"
+                           Alt="@Input.CoverImageAlt" AltChanged="OnCoverAltChanged" />
             <p class="text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>
             <InputText id="cover" @bind-Value="Input.CoverImagePath" placeholder="images/cases/case-foo.png" class="form-input" />
         </div>

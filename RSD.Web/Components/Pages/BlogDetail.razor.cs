@@ -25,6 +25,7 @@ public partial class BlogDetail(
     private static readonly IReadOnlyList<TocEntry> TocItems = [];
 
     private string HeroImage => string.IsNullOrEmpty(Post?.CoverImagePath) ? "images/services/cloud-solutions/hero.png" : Post!.CoverImagePath;
+    private string HeroAlt => string.IsNullOrEmpty(Post?.CoverImageAlt) ? (Post?.Title ?? "") : Post!.CoverImageAlt;
     private string DateText => (Post?.PublishedAt ?? Post?.CreatedAt ?? DateTime.UtcNow).ToString("MMMM dd, yyyy");
     private string ReadTimeText => Post is { ReadTimeMinutes: > 0 } ? $"{Post.ReadTimeMinutes} min" : "";
     private string AuthorName => Author?.Name ?? "RSD Team";

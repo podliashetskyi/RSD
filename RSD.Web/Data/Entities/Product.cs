@@ -8,6 +8,7 @@ public record class Product : ContentEntity
     public string Description { get; set; } = "";
     public List<string> BulletPoints { get; set; } = [];
     public string CoverImagePath { get; set; } = "";
+    public string CoverImageAlt { get; set; } = "";
     public string TryForFreeHref { get; set; } = "";
     public string LearnMoreHref { get; set; } = "";
     public ProductDetailFields DetailFields { get; set; } = new();

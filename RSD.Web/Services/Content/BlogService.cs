@@ -24,6 +24,7 @@ public sealed class BlogService(
         Category = input.Category,
         AuthorId = input.AuthorId,
         CoverImagePath = input.CoverImagePath,
+        CoverImageAlt = input.CoverImageAlt,
         ReadTimeMinutes = input.ReadTimeMinutes,
         Tags = [.. input.Tags],
         Intro = Html.Sanitize(input.Intro),
@@ -39,6 +40,7 @@ public sealed class BlogService(
         entity.Category = input.Category;
         entity.AuthorId = input.AuthorId;
         entity.CoverImagePath = input.CoverImagePath;
+        entity.CoverImageAlt = input.CoverImageAlt;
         entity.ReadTimeMinutes = input.ReadTimeMinutes;
         entity.Tags = [.. input.Tags];
         entity.Intro = Html.Sanitize(input.Intro);

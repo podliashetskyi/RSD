@@ -13,6 +13,7 @@ public sealed class BlogPostConfiguration : IEntityTypeConfiguration<BlogPost>
         b.Property(x => x.Description).HasMaxLength(2000);
         b.Property(x => x.Category).HasMaxLength(100);
         b.Property(x => x.CoverImagePath).HasMaxLength(500);
+        b.Property(x => x.CoverImageAlt).HasMaxLength(200);
         b.Property(x => x.Intro).HasMaxLength(4000);
         b.Property(x => x.Tags).HasColumnType("text[]");
 

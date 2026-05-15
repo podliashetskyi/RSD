@@ -1,14 +1,14 @@
 @inherits Microsoft.AspNetCore.Components.ComponentBase
 
 <div class="space-y-2">
-    @if (CurrentFile is not null)
+    @if (Preview is not null)
     {
         <div class="flex items-center gap-3 rounded-md border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-3">
-            <ResponsiveImage File="CurrentFile" Role="ImageRole.Avatar" Alt="@($"{CurrentFile.OriginalName}")"
+            <ResponsiveImage File="Preview" Role="ImageRole.Avatar" Alt="@Preview.OriginalName"
                              CssClass="h-12 w-12 rounded-md object-cover" />
             <div class="flex-1 text-sm">
-                <div class="font-medium text-gray-900 dark:text-white">@CurrentFile.OriginalName</div>
-                <div class="text-xs text-gray-500 dark:text-gray-400">@FormatBytes(CurrentFile.Bytes) &middot; @CurrentFile.Variants.Count variants</div>
+                <div class="font-medium text-gray-900 dark:text-white">@Preview.OriginalName</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">@FormatBytes(Preview.Bytes) &middot; @Preview.Variants.Count variants</div>
             </div>
             <button type="button" @onclick="ClearAsync"
                     class="text-xs text-red-600 dark:text-red-400 hover:underline">Remove</button>
@@ -28,5 +28,15 @@
     @if (!string.IsNullOrEmpty(Error))
     {
         <p role="alert" aria-live="polite" class="text-xs text-red-600 dark:text-red-400">@Error</p>
+    }
+
+    @if (AltChanged.HasDelegate)
+    {
+        <div>
+            <label for="@AltId" class="block text-xs font-medium text-gray-600 dark:text-gray-400">Alt text <span class="text-gray-400">(for screen readers and SEO)</span></label>
+            <input id="@AltId" type="text" maxlength="200" value="@Alt" @oninput="OnAltInput"
+                   placeholder="Describe the image"
+                   class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-1.5 text-sm text-gray-900 dark:text-white" />
+        </div>
     }
 </div>
