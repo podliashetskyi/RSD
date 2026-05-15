@@ -25,8 +25,8 @@ public sealed class MainContentServicesTests(PostgresFixture Postgres)
             Blocks = [new RSD.Web.Data.Entities.ArticleBlocks.RichTextBlock { Id = "rt", Html = "<p>hi</p>" }]
         };
         var upsert = new BlogPostUpsert(
-            Slug: marker, Title: $"Title {marker}", Description: "desc", Category: "Cat",
-            AuthorId: null, CoverImagePath: "/cover.png", ReadTimeMinutes: 7,
+            Slug: marker, Title: $"Title {marker}", Summary: "", Description: "desc", Category: "Cat",
+            AuthorId: null, CoverImagePath: "/cover.png", CoverImageAlt: "", ReadTimeMinutes: 7,
             Tags: ["A", "B"], Intro: "intro", Status: ContentStatus.Draft, Seo: new SeoMetadata(),
             Body: body);
 
@@ -57,8 +57,8 @@ public sealed class MainContentServicesTests(PostgresFixture Postgres)
         var marker = $"case-{Guid.NewGuid():N}";
 
         var upsert = new CaseUpsert(
-            Slug: marker, Name: $"Case {marker}", Industry: "Fintech", Description: "desc",
-            CoverImagePath: "/c.png", TechTags: ["React"], Status: ContentStatus.Draft, Seo: new SeoMetadata(),
+            Slug: marker, Name: $"Case {marker}", Summary: "", Industry: "Fintech", Description: "desc",
+            CoverImagePath: "/c.png", CoverImageAlt: "", TechTags: ["React"], Status: ContentStatus.Draft, Seo: new SeoMetadata(),
             DetailFields: new CaseDetailFields());
         var created = await service.CreateAsync(upsert, CancellationToken.None);
         created.Ok.Should().BeTrue();
@@ -76,8 +76,8 @@ public sealed class MainContentServicesTests(PostgresFixture Postgres)
         var marker = $"prod-{Guid.NewGuid():N}";
 
         var upsert = new ProductUpsert(
-            Slug: marker, Name: $"Product {marker}", Subtitle: "sub", Price: "$10",
-            Description: "desc", BulletPoints: ["a", "b"], CoverImagePath: "/p.png",
+            Slug: marker, Name: $"Product {marker}", Summary: "", Subtitle: "sub", Price: "$10",
+            Description: "desc", BulletPoints: ["a", "b"], CoverImagePath: "/p.png", CoverImageAlt: "",
             TryForFreeHref: "/contact", LearnMoreHref: "#", Status: ContentStatus.Draft, Seo: new SeoMetadata(),
             DetailFields: new ProductDetailFields());
 
@@ -109,8 +109,8 @@ public sealed class MainContentServicesTests(PostgresFixture Postgres)
         var marker = $"svc-{Guid.NewGuid():N}";
 
         var upsert = new ServiceUpsert(
-            Slug: marker, Title: $"Service {marker}", Description: "desc",
-            BulletPoints: ["Bullet 1", "Bullet 2"], CoverImagePath: "/s.png", DetailsHref: "/services/x",
+            Slug: marker, Title: $"Service {marker}", Summary: "", Description: "desc",
+            BulletPoints: ["Bullet 1", "Bullet 2"], CoverImagePath: "/s.png", CoverImageAlt: "", DetailsHref: "/services/x",
             Intro: "intro", Status: ContentStatus.Published, Seo: new SeoMetadata(), Body: new ArticleBody());
         var created = await service.CreateAsync(upsert, CancellationToken.None);
         created.Ok.Should().BeTrue();
@@ -151,8 +151,8 @@ public sealed class MainContentServicesTests(PostgresFixture Postgres)
         };
 
         var upsert = new CaseUpsert(
-            Slug: marker, Name: $"Case {marker}", Industry: "Fintech", Description: "desc",
-            CoverImagePath: "/c.png", TechTags: ["React"], Status: ContentStatus.Draft,
+            Slug: marker, Name: $"Case {marker}", Summary: "", Industry: "Fintech", Description: "desc",
+            CoverImagePath: "/c.png", CoverImageAlt: "", TechTags: ["React"], Status: ContentStatus.Draft,
             Seo: new SeoMetadata(), DetailFields: detail);
 
         var created = await service.CreateAsync(upsert, CancellationToken.None);
@@ -207,8 +207,8 @@ public sealed class MainContentServicesTests(PostgresFixture Postgres)
         };
 
         var upsert = new ProductUpsert(
-            Slug: marker, Name: $"Product {marker}", Subtitle: "sub", Price: "$10",
-            Description: "desc", BulletPoints: ["a"], CoverImagePath: "/p.png",
+            Slug: marker, Name: $"Product {marker}", Summary: "", Subtitle: "sub", Price: "$10",
+            Description: "desc", BulletPoints: ["a"], CoverImagePath: "/p.png", CoverImageAlt: "",
             TryForFreeHref: "/contact", LearnMoreHref: "#", Status: ContentStatus.Draft,
             Seo: new SeoMetadata(), DetailFields: detail);
 
@@ -254,8 +254,8 @@ public sealed class MainContentServicesTests(PostgresFixture Postgres)
         };
 
         var upsert = new BlogPostUpsert(
-            Slug: marker, Title: marker, Description: "", Category: "",
-            AuthorId: null, CoverImagePath: "", ReadTimeMinutes: 1,
+            Slug: marker, Title: marker, Summary: "", Description: "", Category: "",
+            AuthorId: null, CoverImagePath: "", CoverImageAlt: "", ReadTimeMinutes: 1,
             Tags: [], Intro: "", Status: ContentStatus.Draft, Seo: new SeoMetadata(),
             Body: body);
 
@@ -288,8 +288,8 @@ public sealed class MainContentServicesTests(PostgresFixture Postgres)
         var marker = $"slugdup-{Guid.NewGuid():N}";
 
         var input = new BlogPostUpsert(
-            Slug: "", Title: marker, Description: "", Category: "",
-            AuthorId: null, CoverImagePath: "", ReadTimeMinutes: 1,
+            Slug: "", Title: marker, Summary: "", Description: "", Category: "",
+            AuthorId: null, CoverImagePath: "", CoverImageAlt: "", ReadTimeMinutes: 1,
             Tags: [], Intro: "", Status: ContentStatus.Draft, Seo: new SeoMetadata(),
             Body: new ArticleBody());
 
