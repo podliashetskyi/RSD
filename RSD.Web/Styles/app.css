@@ -92,3 +92,57 @@
         @apply text-brand-500 underline hover:text-brand-700;
     }
 }
+
+/* Quill Snow CSS is loaded from CDN with no dark variant. These rules
+   re-skin the toolbar + editor body when html.dark is active so the rich-text
+   editor in admin (Blog body, legal pages, etc.) doesn't render as a white
+   block on a dark page. Scoped to html.dark so the public site (light-only)
+   is unaffected. */
+html.dark .ql-toolbar.ql-snow {
+    border-color: #1f2937;
+    background-color: #0b1220;
+}
+html.dark .ql-container.ql-snow {
+    border-color: #1f2937;
+    background-color: #0f172a;
+}
+html.dark .ql-editor {
+    color: #e5e7eb;
+}
+html.dark .ql-editor.ql-blank::before {
+    color: #6b7280;
+}
+html.dark .ql-snow .ql-stroke {
+    stroke: #9ca3af;
+}
+html.dark .ql-snow .ql-fill,
+html.dark .ql-snow .ql-stroke.ql-fill {
+    fill: #9ca3af;
+}
+html.dark .ql-snow .ql-picker {
+    color: #e5e7eb;
+}
+html.dark .ql-snow .ql-picker-options {
+    background-color: #0f172a;
+    border-color: #1f2937;
+}
+html.dark .ql-snow.ql-toolbar button:hover,
+html.dark .ql-snow.ql-toolbar button.ql-active,
+html.dark .ql-snow .ql-picker-label:hover,
+html.dark .ql-snow .ql-picker-label.ql-active,
+html.dark .ql-snow .ql-picker-item:hover,
+html.dark .ql-snow .ql-picker-item.ql-selected {
+    color: #67e8f9;
+}
+html.dark .ql-snow.ql-toolbar button:hover .ql-stroke,
+html.dark .ql-snow.ql-toolbar button.ql-active .ql-stroke,
+html.dark .ql-snow .ql-picker-label:hover .ql-stroke,
+html.dark .ql-snow .ql-picker-label.ql-active .ql-stroke {
+    stroke: #67e8f9;
+}
+html.dark .ql-snow.ql-toolbar button:hover .ql-fill,
+html.dark .ql-snow.ql-toolbar button.ql-active .ql-fill,
+html.dark .ql-snow .ql-picker-label:hover .ql-fill,
+html.dark .ql-snow .ql-picker-label.ql-active .ql-fill {
+    fill: #67e8f9;
+}
