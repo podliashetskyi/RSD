@@ -1,6 +1,6 @@
 # RSD
 
-The RemSoft.Dev (RSD) marketing site + admin panel — a Blazor Server app on .NET 9 backed by Postgres, packaged with Docker Compose.
+The RemSoft.Dev (RSD) marketing site + admin panel — a Blazor Server app on .NET 10 backed by Postgres, packaged with Docker Compose.
 
 ## Local development
 
@@ -13,8 +13,8 @@ The site listens on `http://localhost:8082`. Admin lives under `/admin/login`.
 
 ## Stack reference
 
-- ASP.NET Core 9 (Blazor Server)
-- EF Core 9 + Npgsql
+- ASP.NET Core 10 (Blazor Server)
+- EF Core 10 + Npgsql
 - Postgres 17 (Docker volume `pgdata`)
 - Static assets under `wwwroot/`; uploaded media under `wwwroot/uploads/...` (Docker volume `uploads`)
 - Output cache backed by Microsoft.AspNetCore.OutputCaching with tag-based invalidation
