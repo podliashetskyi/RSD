@@ -29,10 +29,17 @@ public partial class ContactPointEdit(IContactPointService Service, NavigationMa
 
     private async Task SaveAsync()
     {
-        var entity = Input.ToEntity(Id);
-        var (ok, error) = await PersistAsync(entity);
-        if (!ok) { ErrorMessage = error; return; }
-        Nav.NavigateTo("/admin/contact-points");
+        try
+        {
+            var entity = Input.ToEntity(Id);
+            var (ok, error) = await PersistAsync(entity);
+            if (!ok) { ErrorMessage = error; return; }
+            Nav.NavigateTo("/admin/contact-points");
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Save failed: {ex.Message}";
+        }
     }
 
     private async Task<(bool Ok, string Error)> PersistAsync(ContactPoint entity)

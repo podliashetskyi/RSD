@@ -34,11 +34,18 @@ public partial class TermsOfServiceEdit(
 
     private async Task SaveAsync()
     {
-        var entity = Input.ToEntity(EntityId, EntitySlug, Sanitizer);
-        var result = await Service.UpdateAsync(entity, CancellationToken.None);
-        if (!result.Ok) { ErrorMessage = result.Error; return; }
-        Toasts.Show("Terms of Service saved.", ToastKind.Success);
-        ErrorMessage = "";
+        try
+        {
+            var entity = Input.ToEntity(EntityId, EntitySlug, Sanitizer);
+            var result = await Service.UpdateAsync(entity, CancellationToken.None);
+            if (!result.Ok) { ErrorMessage = result.Error; return; }
+            Toasts.Show("Terms of Service saved.", ToastKind.Success);
+            ErrorMessage = "";
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Save failed: {ex.Message}";
+        }
     }
 
     private void OnSeoChanged(SeoMetadata seo) => Input.Seo = seo;

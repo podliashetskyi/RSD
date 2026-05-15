@@ -45,13 +45,20 @@ public partial class ServiceEdit(
     private async Task SaveAsync()
     {
         if (!CanSave) { ErrorMessage = "Resolve validation errors before saving."; return; }
-        var upsert = Input.ToUpsert(Body.ToEntity());
-        var (ok, error) = IsCreate
-            ? await CreateAsync(upsert)
-            : await UpdateAsync(Id!.Value, upsert);
-        if (!ok) { ErrorMessage = error; return; }
-        Toasts.Show(IsCreate ? "Service created." : "Service saved.", ToastKind.Success);
-        Nav.NavigateTo("/admin/services");
+        try
+        {
+            var upsert = Input.ToUpsert(Body.ToEntity());
+            var (ok, error) = IsCreate
+                ? await CreateAsync(upsert)
+                : await UpdateAsync(Id!.Value, upsert);
+            if (!ok) { ErrorMessage = error; return; }
+            Toasts.Show(IsCreate ? "Service created." : "Service saved.", ToastKind.Success);
+            Nav.NavigateTo("/admin/services");
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Save failed: {ex.Message}";
+        }
     }
 
     private async Task<(bool Ok, string Error)> CreateAsync(ServiceUpsert upsert)

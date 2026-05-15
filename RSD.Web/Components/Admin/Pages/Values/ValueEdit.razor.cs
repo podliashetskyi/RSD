@@ -34,10 +34,17 @@ public partial class ValueEdit(IValueService Service, NavigationManager Nav)
 
     private async Task SaveAsync()
     {
-        var entity = Input.ToEntity(Id);
-        var (ok, error) = await PersistAsync(entity);
-        if (!ok) { ErrorMessage = error; return; }
-        Nav.NavigateTo("/admin/values");
+        try
+        {
+            var entity = Input.ToEntity(Id);
+            var (ok, error) = await PersistAsync(entity);
+            if (!ok) { ErrorMessage = error; return; }
+            Nav.NavigateTo("/admin/values");
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Save failed: {ex.Message}";
+        }
     }
 
     private async Task<(bool Ok, string Error)> PersistAsync(Value entity)

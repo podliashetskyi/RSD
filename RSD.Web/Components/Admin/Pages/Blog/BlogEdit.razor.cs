@@ -53,13 +53,20 @@ public partial class BlogEdit(
     private async Task SaveAsync()
     {
         if (!CanSave) { ErrorMessage = "Resolve validation errors before saving."; return; }
-        var upsert = Input.ToUpsert(Body.ToEntity());
-        var (ok, error) = IsCreate
-            ? await CreateAsync(upsert)
-            : await UpdateAsync(Id!.Value, upsert);
-        if (!ok) { ErrorMessage = error; return; }
-        Toasts.Show(IsCreate ? "Post created." : "Post saved.", ToastKind.Success);
-        Nav.NavigateTo("/admin/blog");
+        try
+        {
+            var upsert = Input.ToUpsert(Body.ToEntity());
+            var (ok, error) = IsCreate
+                ? await CreateAsync(upsert)
+                : await UpdateAsync(Id!.Value, upsert);
+            if (!ok) { ErrorMessage = error; return; }
+            Toasts.Show(IsCreate ? "Post created." : "Post saved.", ToastKind.Success);
+            Nav.NavigateTo("/admin/blog");
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Save failed: {ex.Message}";
+        }
     }
 
     private async Task<(bool Ok, string Error)> CreateAsync(BlogPostUpsert upsert)

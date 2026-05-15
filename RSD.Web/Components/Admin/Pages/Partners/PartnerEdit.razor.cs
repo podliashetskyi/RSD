@@ -34,10 +34,17 @@ public partial class PartnerEdit(IPartnerService Service, NavigationManager Nav)
 
     private async Task SaveAsync()
     {
-        var entity = Input.ToEntity(Id);
-        var (ok, error) = await PersistAsync(entity);
-        if (!ok) { ErrorMessage = error; return; }
-        Nav.NavigateTo("/admin/partners");
+        try
+        {
+            var entity = Input.ToEntity(Id);
+            var (ok, error) = await PersistAsync(entity);
+            if (!ok) { ErrorMessage = error; return; }
+            Nav.NavigateTo("/admin/partners");
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Save failed: {ex.Message}";
+        }
     }
 
     private async Task<(bool Ok, string Error)> PersistAsync(Partner entity)

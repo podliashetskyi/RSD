@@ -29,10 +29,17 @@ public partial class MissionStatEdit(IMissionStatService Service, NavigationMana
 
     private async Task SaveAsync()
     {
-        var entity = Input.ToEntity(Id);
-        var (ok, error) = await PersistAsync(entity);
-        if (!ok) { ErrorMessage = error; return; }
-        Nav.NavigateTo("/admin/stats");
+        try
+        {
+            var entity = Input.ToEntity(Id);
+            var (ok, error) = await PersistAsync(entity);
+            if (!ok) { ErrorMessage = error; return; }
+            Nav.NavigateTo("/admin/stats");
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Save failed: {ex.Message}";
+        }
     }
 
     private async Task<(bool Ok, string Error)> PersistAsync(MissionStat entity)

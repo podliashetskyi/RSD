@@ -34,10 +34,17 @@ public partial class TestimonialEdit(ITestimonialService Service, NavigationMana
 
     private async Task SaveAsync()
     {
-        var entity = Input.ToEntity(Id);
-        var (ok, error) = await PersistAsync(entity);
-        if (!ok) { ErrorMessage = error; return; }
-        Nav.NavigateTo("/admin/testimonials");
+        try
+        {
+            var entity = Input.ToEntity(Id);
+            var (ok, error) = await PersistAsync(entity);
+            if (!ok) { ErrorMessage = error; return; }
+            Nav.NavigateTo("/admin/testimonials");
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Save failed: {ex.Message}";
+        }
     }
 
     private async Task<(bool Ok, string Error)> PersistAsync(Testimonial entity)
