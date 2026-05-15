@@ -80,40 +80,50 @@
             </div>
         }
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            @foreach (var c in DisplayedCases)
-            {
-                var href = string.IsNullOrEmpty(c.Slug) ? null : $"/cases/{c.Slug}";
-                <article class="flex flex-col rounded-base overflow-hidden bg-white border border-line shadow-sm @(href is null ? "" : "transition hover:shadow-md focus-within:shadow-md")">
-                    <div class="relative h-60 flex items-center justify-center overflow-hidden">
-                        <ResponsiveImage FallbackSrc="@c.CoverImagePath" Alt="@(c.Name + " project screenshot")" CssClass="absolute inset-0 w-full h-full object-cover" />
-                        <div class="absolute inset-0 pointer-events-none"
-                             style="background: linear-gradient(0deg, rgb(255,255,255) 1.5%, rgba(255,255,255,0.738) 18.5%, rgba(255,255,255,0.2) 41%, rgba(255,255,255,0) 100%);"></div>
-                        <img src="images/cases/rsd-watermark.svg" alt="" aria-hidden="true" class="relative" style="width: 103.27px; height: 71px;"  loading="lazy" decoding="async" />
-                    </div>
-                    <div class="flex flex-col gap-4 p-6">
-                        <span class="inline-flex w-fit bg-[#f0faff] border border-[#b2e6ff] text-brand-900 text-[12px] font-medium leading-4 px-1.5 py-0.5 rounded-[12px]">@c.Industry</span>
-                        <div class="flex flex-col gap-2">
-                            @if (href is not null)
-                            {
-                                <a href="@href" class="text-ink text-[30px] font-semibold leading-[1.25] hover:text-brand-900">@c.Name</a>
-                            }
-                            else
-                            {
-                                <h3 class="text-ink text-[30px] font-semibold leading-[1.25]">@c.Name</h3>
-                            }
-                            <p class="text-ink-soft text-body leading-6">@(string.IsNullOrWhiteSpace(c.Summary) ? c.Description : c.Summary)</p>
+        @if (DisplayedCases.Count > 0)
+        {
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                @foreach (var c in DisplayedCases)
+                {
+                    var href = string.IsNullOrEmpty(c.Slug) ? null : $"/cases/{c.Slug}";
+                    <article class="flex flex-col rounded-base overflow-hidden bg-white border border-line shadow-sm @(href is null ? "" : "transition hover:shadow-md focus-within:shadow-md")">
+                        <div class="relative h-60 flex items-center justify-center overflow-hidden">
+                            <ResponsiveImage FallbackSrc="@c.CoverImagePath" Alt="@(c.Name + " project screenshot")" CssClass="absolute inset-0 w-full h-full object-cover" />
+                            <div class="absolute inset-0 pointer-events-none"
+                                 style="background: linear-gradient(0deg, rgb(255,255,255) 1.5%, rgba(255,255,255,0.738) 18.5%, rgba(255,255,255,0.2) 41%, rgba(255,255,255,0) 100%);"></div>
+                            <img src="images/cases/rsd-watermark.svg" alt="" aria-hidden="true" class="relative" style="width: 103.27px; height: 71px;"  loading="lazy" decoding="async" />
                         </div>
-                        <div class="flex flex-wrap gap-3">
-                            @foreach (var tag in c.TechTags)
-                            {
-                                <span class="inline-flex items-center bg-[#f9fafb] border border-line h-6 px-2 py-1 rounded-[12px] text-ink text-body-sm font-medium leading-4">@tag</span>
-                            }
+                        <div class="flex flex-col gap-4 p-6">
+                            <span class="inline-flex w-fit bg-[#f0faff] border border-[#b2e6ff] text-brand-900 text-[12px] font-medium leading-4 px-1.5 py-0.5 rounded-[12px]">@c.Industry</span>
+                            <div class="flex flex-col gap-2">
+                                @if (href is not null)
+                                {
+                                    <a href="@href" class="text-ink text-[30px] font-semibold leading-[1.25] hover:text-brand-900">@c.Name</a>
+                                }
+                                else
+                                {
+                                    <h3 class="text-ink text-[30px] font-semibold leading-[1.25]">@c.Name</h3>
+                                }
+                                <p class="text-ink-soft text-body leading-6">@(string.IsNullOrWhiteSpace(c.Summary) ? c.Description : c.Summary)</p>
+                            </div>
+                            <div class="flex flex-wrap gap-3">
+                                @foreach (var tag in c.TechTags)
+                                {
+                                    <span class="inline-flex items-center bg-[#f9fafb] border border-line h-6 px-2 py-1 rounded-[12px] text-ink text-body-sm font-medium leading-4">@tag</span>
+                                }
+                            </div>
                         </div>
-                    </div>
-                </article>
-            }
-        </div>
+                    </article>
+                }
+            </div>
+        }
+        else if (ShowFilters && HasAnyFilter)
+        {
+            <div class="text-center py-12 text-ink-muted" role="status" aria-live="polite">
+                <p class="text-body">No cases match these filters.</p>
+                <button type="button" @onclick="ClearAll" class="mt-4 text-body-sm text-ink-soft hover:text-ink underline">Clear filters</button>
+            </div>
+        }
 
         @if (ShowViewAllButton)
         {
