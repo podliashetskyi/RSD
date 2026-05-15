@@ -65,6 +65,16 @@ public partial class UsersList(
     private void ApplyToast(bool ok, string text) =>
         Toasts.Show(text, ok ? ToastKind.Success : ToastKind.Error);
 
+    private static string StatusLabel(AdminUserRow row) =>
+        row.IsDisabled ? "Disabled"
+        : row.LastLoginAt is null ? "Invited"
+        : "Active";
+
+    private static string StatusBadgeClasses(AdminUserRow row) =>
+        row.IsDisabled ? "bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300"
+        : row.LastLoginAt is null ? "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300"
+        : "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300";
+
     private void ShowInline(string kind, string text, string url)
     {
         Message = text;

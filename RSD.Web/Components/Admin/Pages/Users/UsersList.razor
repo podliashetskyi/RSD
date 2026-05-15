@@ -64,8 +64,8 @@
                             }
                         </td>
                         <td class="px-3 py-2">
-                            <span class="@($"rounded-full px-2 py-0.5 text-xs {(row.IsDisabled ? "bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300" : "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300")}")">
-                                @(row.IsDisabled ? "Disabled" : "Active")
+                            <span class="@($"rounded-full px-2 py-0.5 text-xs {StatusBadgeClasses(row)}")">
+                                @StatusLabel(row)
                             </span>
                         </td>
                         <td class="px-3 py-2 text-right">
