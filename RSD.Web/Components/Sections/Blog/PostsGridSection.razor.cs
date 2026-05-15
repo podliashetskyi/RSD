@@ -8,6 +8,31 @@ namespace RSD.Web.Components.Sections.Blog;
 public partial class PostsGridSection(IBlogService Blog, ITeamMemberService Team)
 {
     private IReadOnlyList<BlogPostRow> Posts { get; set; } = [];
+    private string Search { get; set; } = "";
+    private string? Category { get; set; }
+
+    private IReadOnlyList<string> Categories =>
+        [.. Posts.Select(p => p.Category)
+            .Where(s => !string.IsNullOrWhiteSpace(s))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(s => s)];
+
+    private IReadOnlyList<BlogPostRow> DisplayedPosts
+    {
+        get
+        {
+            IEnumerable<BlogPostRow> q = Posts;
+            if (Category is { } cat) q = q.Where(p => string.Equals(p.Category, cat, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrWhiteSpace(Search))
+            {
+                var s = Search.Trim();
+                q = q.Where(p =>
+                    p.Title.Contains(s, StringComparison.OrdinalIgnoreCase) ||
+                    p.Description.Contains(s, StringComparison.OrdinalIgnoreCase));
+            }
+            return [.. q];
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -15,6 +40,8 @@ public partial class PostsGridSection(IBlogService Blog, ITeamMemberService Team
         var team = await Team.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 200), CancellationToken.None);
         Posts = [.. posts.OrderByDescending(p => p.PublishedAt ?? p.CreatedAt).Select(p => BlogPostRow.From(p, team))];
     }
+
+    private void SetCategory(string? cat) => Category = cat;
 }
 
 public sealed record BlogPostRow(

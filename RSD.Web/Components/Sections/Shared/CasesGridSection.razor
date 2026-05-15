@@ -10,26 +10,72 @@
         @if (ShowFilters)
         {
             <div class="flex flex-wrap gap-3 items-center">
-                @for (var i = 0; i < Filters.Count; i++)
-                {
-                    var f = Filters[i];
-                    var dropdownId = $"case-filter-{i}";
-                    <button data-dropdown-toggle="@dropdownId"
-                            type="button"
+                <div class="relative">
+                    <button type="button" @onclick="() => ToggleDropdown(FilterKey.Industry)"
+                            aria-haspopup="listbox" aria-expanded="@(OpenFilter == FilterKey.Industry ? "true" : "false")"
                             class="inline-flex items-center gap-2 bg-white border border-line rounded-full px-4 py-2 text-ink-soft text-body-sm hover:bg-line-subtle">
-                        @f.Label
+                        @(Industry ?? "Industry")
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
-                    <div id="@dropdownId" class="z-10 hidden bg-white border border-line rounded-base shadow-lg w-44">
-                        <ul class="py-2 text-body-sm text-ink-soft">
-                            @foreach (var opt in f.Options)
+                    @if (OpenFilter == FilterKey.Industry)
+                    {
+                        <ul role="listbox" class="absolute z-10 mt-1 bg-white border border-line rounded-base shadow-lg w-44 py-2 text-body-sm text-ink-soft">
+                            <li><button type="button" @onclick="() => ApplyIndustry(null)" class="block w-full text-left px-4 py-2 hover:bg-line-subtle">All</button></li>
+                            @foreach (var opt in IndustryOptions)
                             {
-                                <li><a href="#" class="block px-4 py-2 hover:bg-line-subtle">@opt</a></li>
+                                <li><button type="button" @onclick="() => ApplyIndustry(opt)" class="block w-full text-left px-4 py-2 hover:bg-line-subtle">@opt</button></li>
                             }
                         </ul>
-                    </div>
+                    }
+                </div>
+
+                <div class="relative">
+                    <button type="button" @onclick="() => ToggleDropdown(FilterKey.TechStack)"
+                            aria-haspopup="listbox" aria-expanded="@(OpenFilter == FilterKey.TechStack ? "true" : "false")"
+                            class="inline-flex items-center gap-2 bg-white border border-line rounded-full px-4 py-2 text-ink-soft text-body-sm hover:bg-line-subtle">
+                        @(TechStack ?? "Tech Stack")
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    @if (OpenFilter == FilterKey.TechStack)
+                    {
+                        <ul role="listbox" class="absolute z-10 mt-1 bg-white border border-line rounded-base shadow-lg w-44 py-2 text-body-sm text-ink-soft">
+                            <li><button type="button" @onclick="() => ApplyTechStack(null)" class="block w-full text-left px-4 py-2 hover:bg-line-subtle">All</button></li>
+                            @foreach (var opt in TechStackOptions)
+                            {
+                                <li><button type="button" @onclick="() => ApplyTechStack(opt)" class="block w-full text-left px-4 py-2 hover:bg-line-subtle">@opt</button></li>
+                            }
+                        </ul>
+                    }
+                </div>
+
+                <div class="relative">
+                    <button type="button" @onclick="() => ToggleDropdown(FilterKey.Year)"
+                            aria-haspopup="listbox" aria-expanded="@(OpenFilter == FilterKey.Year ? "true" : "false")"
+                            class="inline-flex items-center gap-2 bg-white border border-line rounded-full px-4 py-2 text-ink-soft text-body-sm hover:bg-line-subtle">
+                        @(Year?.ToString() ?? "Year")
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    @if (OpenFilter == FilterKey.Year)
+                    {
+                        <ul role="listbox" class="absolute z-10 mt-1 bg-white border border-line rounded-base shadow-lg w-44 py-2 text-body-sm text-ink-soft">
+                            <li><button type="button" @onclick="() => ApplyYear(null)" class="block w-full text-left px-4 py-2 hover:bg-line-subtle">All</button></li>
+                            @foreach (var opt in YearOptions)
+                            {
+                                <li><button type="button" @onclick="() => ApplyYear(opt)" class="block w-full text-left px-4 py-2 hover:bg-line-subtle">@opt</button></li>
+                            }
+                        </ul>
+                    }
+                </div>
+
+                @if (HasAnyFilter)
+                {
+                    <button type="button" @onclick="ClearAll" class="text-body-sm text-ink-soft hover:text-ink underline">Clear all</button>
                 }
             </div>
         }

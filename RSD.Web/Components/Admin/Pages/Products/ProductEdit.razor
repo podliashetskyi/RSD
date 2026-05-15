@@ -35,7 +35,7 @@
             <ValidationMessage For="() => Input.Name" class="form-error" />
         </FormField>
 
-        <SlugField TEntity="Product" Value="Input.Slug" TitleSource="Input.Name" CurrentEntityId="Id"
+        <SlugField TEntity="Product" Value="@Input.Slug" TitleSource="@Input.Name" CurrentEntityId="@Id"
                    ValueChanged="OnSlugChanged" IsValidChanged="OnSlugValidityChanged" />
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">

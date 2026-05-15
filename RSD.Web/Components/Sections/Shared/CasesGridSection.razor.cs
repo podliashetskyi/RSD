@@ -13,8 +13,35 @@ public partial class CasesGridSection(ICaseService Cases)
     [Parameter] public int  MaxItems          { get; set; }
 
     private IReadOnlyList<Case> CaseList { get; set; } = [];
-    private IReadOnlyList<Case> DisplayedCases =>
-        MaxItems > 0 ? [.. CaseList.Take(MaxItems)] : CaseList;
+
+    private string? Industry { get; set; }
+    private string? TechStack { get; set; }
+    private int? Year { get; set; }
+    private FilterKey? OpenFilter { get; set; }
+
+    private IReadOnlyList<string> IndustryOptions =>
+        [.. CaseList.Select(c => c.Industry).Where(s => !string.IsNullOrWhiteSpace(s)).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(s => s)];
+
+    private IReadOnlyList<string> TechStackOptions =>
+        [.. CaseList.SelectMany(c => c.TechTags).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(s => s)];
+
+    private IReadOnlyList<int> YearOptions =>
+        [.. CaseList.Select(c => (c.PublishedAt ?? c.CreatedAt).Year).Distinct().OrderByDescending(y => y)];
+
+    private bool HasAnyFilter => Industry is not null || TechStack is not null || Year is not null;
+
+    private IReadOnlyList<Case> DisplayedCases
+    {
+        get
+        {
+            IEnumerable<Case> q = CaseList;
+            if (Industry is { } ind) q = q.Where(c => string.Equals(c.Industry, ind, StringComparison.OrdinalIgnoreCase));
+            if (TechStack is { } tech) q = q.Where(c => c.TechTags.Contains(tech, StringComparer.OrdinalIgnoreCase));
+            if (Year is { } yr) q = q.Where(c => (c.PublishedAt ?? c.CreatedAt).Year == yr);
+            var list = q.ToList();
+            return MaxItems > 0 ? [.. list.Take(MaxItems)] : list;
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -22,13 +49,19 @@ public partial class CasesGridSection(ICaseService Cases)
         CaseList = [.. rows.OrderByDescending(c => c.PublishedAt ?? c.CreatedAt)];
     }
 
-    private static readonly IReadOnlyList<FilterDropdown> Filters =
-    [
-        new FilterDropdown("Industry",     ["All", "Fintech", "Logistics", "Healthcare", "EdTech", "E-Commerce", "Industrial"]),
-        new FilterDropdown("Tech Stack",   ["All", "React", "Python", "TypeScript", "Cloud", "AI/ML"]),
-        new FilterDropdown("Project Type", ["All", "Web Platform", "Mobile App", "Cloud System"]),
-        new FilterDropdown("Year",         ["All", "2025", "2024", "2023", "2022"]),
-    ];
-}
+    private void ToggleDropdown(FilterKey key) => OpenFilter = OpenFilter == key ? null : key;
 
-public record FilterDropdown(string Label, IReadOnlyList<string> Options);
+    private void ApplyIndustry(string? value) { Industry = value; OpenFilter = null; }
+    private void ApplyTechStack(string? value) { TechStack = value; OpenFilter = null; }
+    private void ApplyYear(int? value) { Year = value; OpenFilter = null; }
+
+    private void ClearAll()
+    {
+        Industry = null;
+        TechStack = null;
+        Year = null;
+        OpenFilter = null;
+    }
+
+    private enum FilterKey { Industry, TechStack, Year }
+}

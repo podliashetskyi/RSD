@@ -21,12 +21,30 @@ public partial class SlugField<TEntity>(ISlugger Slugger) : ComponentBase where 
     private string CurrentValue { get; set; } = "";
     private string Message { get; set; } = "";
     private bool IsAvailable { get; set; } = true;
+    private bool Initialized { get; set; }
     private string FieldId { get; } = $"slug-{Guid.NewGuid():N}";
 
     private string MessageClass => IsAvailable ? "text-gray-500 dark:text-gray-400" : "text-red-600 dark:text-red-400";
 
     protected override async Task OnParametersSetAsync()
     {
+        // First render with real data. For an existing entity loaded async, this is the
+        // post-LoadAsync render. Preserve the loaded slug verbatim (it may be a custom
+        // slug that differs from Slugify(Title)) and auto-unlock so subsequent title
+        // edits don't clobber the persisted URL.
+        if (!Initialized && !string.IsNullOrEmpty(Value))
+        {
+            Initialized = true;
+            CurrentValue = Value;
+            if (Locked)
+            {
+                Locked = false;
+                await LockedChanged.InvokeAsync(false);
+            }
+            await CheckAvailabilityAsync(CurrentValue);
+            return;
+        }
+        if (!Initialized && !string.IsNullOrEmpty(TitleSource)) Initialized = true;
         var derived = Locked ? Slugger.Slugify(TitleSource) : Value;
         if (derived == CurrentValue) return;
         CurrentValue = derived;
