@@ -10,9 +10,14 @@ namespace RSD.Web.Components.Admin.Pages.Values;
 public partial class ValueEdit(IValueService Service, NavigationManager Nav)
 {
     [Parameter] public Guid? Id { get; set; }
-    [SupplyParameterFromForm] private ValueInput Input { get; set; } = new();
+    private ValueInput Input { get; set; } = new();
     private string ErrorMessage { get; set; } = "";
     private bool IsCreate => Id is null;
+
+    private void OnIconUploaded(UploadedFile? file)
+    {
+        if (file is not null) Input.IconPath = file.Path;
+    }
 
     protected override async Task OnInitializedAsync()
     {

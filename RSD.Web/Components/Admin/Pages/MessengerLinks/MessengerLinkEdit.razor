@@ -2,6 +2,7 @@
 @page "/admin/messenger-links/{Id:guid}"
 @attribute [Authorize(Roles = AdminRoles.Admin)]
 @layout AdminLayout
+@rendermode InteractiveServer
 
 <PageTitle>@(IsCreate ? "New messenger link" : "Edit messenger link") &middot; RSD Admin</PageTitle>
 
@@ -13,12 +14,20 @@
         <div role="alert" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">@ErrorMessage</div>
     }
 
-    <EditForm Model="Input" method="post" OnValidSubmit="SaveAsync" FormName="messenger-edit" class="space-y-4">
+    <EditForm Model="Input" OnValidSubmit="SaveAsync" FormName="messenger-edit" class="space-y-4">
         <DataAnnotationsValidator />
         <FormField Label="Label"><InputText @bind-Value="Input.Label" required aria-required="true" class="form-input" /></FormField>
         <FormField Label="Href"><InputText @bind-Value="Input.Href" class="form-input" /></FormField>
-        <FormField Label="Large icon path"><InputText @bind-Value="Input.LargeIconPath" class="form-input" /></FormField>
-        <FormField Label="Small icon path"><InputText @bind-Value="Input.SmallIconPath" class="form-input" /></FormField>
+        <FormField Label="Large icon">
+            <ImageUploader Subfolder="messenger-links" CurrentFileChanged="OnLargeIconUploaded" />
+            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>
+            <InputText @bind-Value="Input.LargeIconPath" class="form-input" />
+        </FormField>
+        <FormField Label="Small icon">
+            <ImageUploader Subfolder="messenger-links" CurrentFileChanged="OnSmallIconUploaded" />
+            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>
+            <InputText @bind-Value="Input.SmallIconPath" class="form-input" />
+        </FormField>
         <FormField Label="Background color" Hint="e.g. #06d94c"><InputText @bind-Value="Input.BgColor" class="form-input" /></FormField>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">

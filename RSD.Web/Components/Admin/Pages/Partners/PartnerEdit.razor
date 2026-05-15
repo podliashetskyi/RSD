@@ -2,6 +2,7 @@
 @page "/admin/partners/{Id:guid}"
 @attribute [Authorize(Roles = AdminRoles.Admin)]
 @layout AdminLayout
+@rendermode InteractiveServer
 
 <PageTitle>@(IsCreate ? "New partner" : "Edit partner") &middot; RSD Admin</PageTitle>
 
@@ -13,11 +14,15 @@
         <div role="alert" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">@ErrorMessage</div>
     }
 
-    <EditForm Model="Input" method="post" OnValidSubmit="SaveAsync" FormName="partner-edit" class="space-y-4">
+    <EditForm Model="Input" OnValidSubmit="SaveAsync" FormName="partner-edit" class="space-y-4">
         <DataAnnotationsValidator />
         <FormField Label="Name"><InputText @bind-Value="Input.Name" required aria-required="true" class="form-input" /></FormField>
         <FormField Label="Role"><InputText @bind-Value="Input.Role" class="form-input" /></FormField>
-        <FormField Label="Photo path" Hint="e.g. images/about/partners/portrait-bonnie-green.png"><InputText @bind-Value="Input.PhotoPath" class="form-input" /></FormField>
+        <FormField Label="Photo">
+            <ImageUploader Subfolder="partners" CurrentFileChanged="OnPhotoUploaded" />
+            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>
+            <InputText @bind-Value="Input.PhotoPath" placeholder="images/about/partners/portrait-bonnie-green.png" class="form-input" />
+        </FormField>
         <FormField Label="Contact href" Hint="URL or path"><InputText @bind-Value="Input.ContactHref" class="form-input" /></FormField>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">

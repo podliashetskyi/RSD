@@ -10,9 +10,14 @@ namespace RSD.Web.Components.Admin.Pages.SocialLinks;
 public partial class SocialLinkEdit(ISocialLinkService Service, NavigationManager Nav)
 {
     [Parameter] public Guid? Id { get; set; }
-    [SupplyParameterFromForm] private SocialInput Input { get; set; } = new();
+    private SocialInput Input { get; set; } = new();
     private string ErrorMessage { get; set; } = "";
     private bool IsCreate => Id is null;
+
+    private void OnIconUploaded(UploadedFile? file)
+    {
+        if (file is not null) Input.IconPath = file.Path;
+    }
 
     protected override async Task OnInitializedAsync()
     {

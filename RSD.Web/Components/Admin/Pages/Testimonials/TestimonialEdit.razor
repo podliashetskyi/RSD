@@ -2,6 +2,7 @@
 @page "/admin/testimonials/{Id:guid}"
 @attribute [Authorize(Roles = AdminRoles.Admin)]
 @layout AdminLayout
+@rendermode InteractiveServer
 
 <PageTitle>@(IsCreate ? "New testimonial" : "Edit testimonial") &middot; RSD Admin</PageTitle>
 
@@ -16,7 +17,7 @@
         <div role="alert" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">@ErrorMessage</div>
     }
 
-    <EditForm Model="Input" method="post" OnValidSubmit="SaveAsync" FormName="testimonial-edit" class="space-y-4">
+    <EditForm Model="Input" OnValidSubmit="SaveAsync" FormName="testimonial-edit" class="space-y-4">
         <DataAnnotationsValidator />
 
         <div>
@@ -47,10 +48,11 @@
         </div>
 
         <div>
-            <label for="avatarPath" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Avatar path</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Avatar</label>
+            <ImageUploader Subfolder="testimonials" CurrentFileChanged="OnAvatarUploaded" />
+            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>
             <InputText id="avatarPath" @bind-Value="Input.AvatarPath" placeholder="e.g. images/avatars/avatar-joseph.png"
                        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-gray-900 dark:text-white" />
-            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Drag-and-drop upload lands in Phase 3 alongside ImageUploader integration on this page.</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
