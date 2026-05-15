@@ -9,7 +9,7 @@ public sealed class PrivacyPolicyConfiguration : IEntityTypeConfiguration<Privac
     public void Configure(EntityTypeBuilder<PrivacyPolicy> b)
     {
         ContentEntityConfiguration.Apply(b, "privacy_policies");
-        b.Property(x => x.Title).HasMaxLength(200).IsRequired();
+        b.Property(x => x.Title).HasMaxLength(FieldLimits.PrivacyPolicy.Title).IsRequired();
         b.Property(x => x.LastUpdatedAt).HasColumnType("date");
         b.Property(x => x.BodyHtml).HasColumnType("text");
     }

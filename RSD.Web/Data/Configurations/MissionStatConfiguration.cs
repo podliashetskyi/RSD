@@ -9,9 +9,9 @@ public sealed class MissionStatConfiguration : IEntityTypeConfiguration<MissionS
     public void Configure(EntityTypeBuilder<MissionStat> b)
     {
         ContentEntityConfiguration.Apply(b, "mission_stats");
-        b.Property(x => x.Label).HasMaxLength(200).IsRequired();
-        b.Property(x => x.Number).HasMaxLength(20);
-        b.Property(x => x.Symbol).HasMaxLength(5);
+        b.Property(x => x.Label).HasMaxLength(FieldLimits.MissionStat.Label).IsRequired();
+        b.Property(x => x.Number).HasMaxLength(FieldLimits.MissionStat.Number);
+        b.Property(x => x.Symbol).HasMaxLength(FieldLimits.MissionStat.Symbol);
         b.HasIndex(x => x.DisplayOrder);
     }
 }

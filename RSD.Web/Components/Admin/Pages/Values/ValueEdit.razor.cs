@@ -2,6 +2,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
+using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
 
@@ -52,11 +53,16 @@ public partial class ValueEdit(IValueService Service, NavigationManager Nav)
 
     public sealed record class ValueInput
     {
-        [Required] public string Title { get; set; } = "";
+        [Required]
+        [StringLength(FieldLimits.Value.Title)]
+        public string Title { get; set; } = "";
+        [StringLength(FieldLimits.Value.Description)]
         public string Description { get; set; } = "";
+        [StringLength(FieldLimits.Value.IconPath)]
         public string IconPath { get; set; } = "";
         public ContentStatus Status { get; set; } = ContentStatus.Published;
         public int DisplayOrder { get; set; }
+        [StringLength(FieldLimits.Slug)]
         public string Slug { get; set; } = "";
 
         public static ValueInput From(Value v) => new()

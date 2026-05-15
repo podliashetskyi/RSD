@@ -9,10 +9,10 @@ public sealed class PartnerConfiguration : IEntityTypeConfiguration<Partner>
     public void Configure(EntityTypeBuilder<Partner> b)
     {
         ContentEntityConfiguration.Apply(b, "partners");
-        b.Property(x => x.Name).HasMaxLength(200).IsRequired();
-        b.Property(x => x.Role).HasMaxLength(200);
-        b.Property(x => x.PhotoPath).HasMaxLength(500);
-        b.Property(x => x.ContactHref).HasMaxLength(500);
+        b.Property(x => x.Name).HasMaxLength(FieldLimits.Partner.Name).IsRequired();
+        b.Property(x => x.Role).HasMaxLength(FieldLimits.Partner.Role);
+        b.Property(x => x.PhotoPath).HasMaxLength(FieldLimits.Partner.PhotoPath);
+        b.Property(x => x.ContactHref).HasMaxLength(FieldLimits.Partner.ContactHref);
         b.HasIndex(x => x.DisplayOrder);
     }
 }

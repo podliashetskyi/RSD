@@ -2,6 +2,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
+using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
 
@@ -52,12 +53,17 @@ public partial class SocialLinkEdit(ISocialLinkService Service, NavigationManage
 
     public sealed record class SocialInput
     {
-        [Required] public string Label { get; set; } = "";
+        [Required]
+        [StringLength(FieldLimits.SocialLink.Label)]
+        public string Label { get; set; } = "";
+        [StringLength(FieldLimits.SocialLink.IconPath)]
         public string IconPath { get; set; } = "";
+        [StringLength(FieldLimits.SocialLink.Href)]
         public string Href { get; set; } = "";
         public SocialLinkScope Scope { get; set; } = SocialLinkScope.Footer;
         public ContentStatus Status { get; set; } = ContentStatus.Published;
         public int DisplayOrder { get; set; }
+        [StringLength(FieldLimits.Slug)]
         public string Slug { get; set; } = "";
 
         public static SocialInput From(SocialLink s) => new()

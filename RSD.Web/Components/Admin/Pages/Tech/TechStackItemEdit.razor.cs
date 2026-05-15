@@ -2,6 +2,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
+using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
 
@@ -52,10 +53,14 @@ public partial class TechStackItemEdit(ITechStackItemService Service, Navigation
 
     public sealed record class TechInput
     {
-        [Required] public string Label { get; set; } = "";
+        [Required]
+        [StringLength(FieldLimits.TechStackItem.Label)]
+        public string Label { get; set; } = "";
+        [StringLength(FieldLimits.TechStackItem.LogoPath)]
         public string LogoPath { get; set; } = "";
         public ContentStatus Status { get; set; } = ContentStatus.Published;
         public int DisplayOrder { get; set; }
+        [StringLength(FieldLimits.Slug)]
         public string Slug { get; set; } = "";
 
         public static TechInput From(TechStackItem t) => new()

@@ -16,14 +16,14 @@ public static class ContentEntityConfiguration
     {
         b.ToTable(tableName);
         b.HasKey(x => x.Id);
-        b.Property(x => x.Slug).HasMaxLength(200).IsRequired();
-        b.Property(x => x.Status).HasConversion<string>().HasMaxLength(20);
+        b.Property(x => x.Slug).HasMaxLength(FieldLimits.Slug).IsRequired();
+        b.Property(x => x.Status).HasConversion<string>().HasMaxLength(FieldLimits.Status);
         b.OwnsOne(x => x.Seo, seo =>
         {
-            seo.Property(p => p.MetaTitle).HasMaxLength(200).HasColumnName("SeoMetaTitle");
-            seo.Property(p => p.MetaDescription).HasMaxLength(500).HasColumnName("SeoMetaDescription");
-            seo.Property(p => p.OgImagePath).HasMaxLength(500).HasColumnName("SeoOgImagePath");
-            seo.Property(p => p.OgImageAlt).HasMaxLength(200).HasColumnName("SeoOgImageAlt");
+            seo.Property(p => p.MetaTitle).HasMaxLength(FieldLimits.Seo.MetaTitle).HasColumnName("SeoMetaTitle");
+            seo.Property(p => p.MetaDescription).HasMaxLength(FieldLimits.Seo.MetaDescription).HasColumnName("SeoMetaDescription");
+            seo.Property(p => p.OgImagePath).HasMaxLength(FieldLimits.Seo.OgImagePath).HasColumnName("SeoOgImagePath");
+            seo.Property(p => p.OgImageAlt).HasMaxLength(FieldLimits.Seo.OgImageAlt).HasColumnName("SeoOgImageAlt");
         });
 
         b.HasIndex(x => x.Slug)

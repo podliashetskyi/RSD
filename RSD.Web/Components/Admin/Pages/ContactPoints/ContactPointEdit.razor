@@ -15,7 +15,7 @@
 
     <EditForm Model="Input" method="post" OnValidSubmit="SaveAsync" FormName="contact-point-edit" class="space-y-4">
         <DataAnnotationsValidator />
-        <FormField Label="Label" Hint="e.g. Phone, Email, Address"><InputText @bind-Value="Input.Label" required aria-required="true" class="form-input" /></FormField>
+        <FormField Label="Label" Hint="e.g. Phone, Email, Address"><InputText @bind-Value="Input.Label" required aria-required="true" maxlength="@FieldLimits.ContactPoint.Label" class="form-input" /></FormField>
         <FormField Label="Lines" Hint="One line per row. Joined with newlines on the public page.">
             <InputTextArea @bind-Value="Input.LinesText" rows="4" class="form-input" />
         </FormField>

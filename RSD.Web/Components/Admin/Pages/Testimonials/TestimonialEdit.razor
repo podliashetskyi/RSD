@@ -22,27 +22,26 @@
 
         <div>
             <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
-            <InputText id="title" @bind-Value="Input.Title" required aria-required="true"
+            <InputText id="title" @bind-Value="Input.Title" required aria-required="true" maxlength="@FieldLimits.Testimonial.Title"
                        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-gray-900 dark:text-white" />
             <ValidationMessage For="() => Input.Title" class="mt-1 text-xs text-red-600 dark:text-red-400" />
         </div>
 
-        <div>
-            <label for="quote" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quote</label>
-            <InputTextArea id="quote" @bind-Value="Input.Quote" rows="4" required aria-required="true"
+        <FieldField Label="Quote" MaxLength="FieldLimits.Testimonial.Quote" Value="@Input.Quote">
+            <InputTextArea id="quote" @bind-Value="Input.Quote" rows="4" required aria-required="true" maxlength="@FieldLimits.Testimonial.Quote"
                            class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-gray-900 dark:text-white" />
             <ValidationMessage For="() => Input.Quote" class="mt-1 text-xs text-red-600 dark:text-red-400" />
-        </div>
+        </FieldField>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
                 <label for="authorName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Author name</label>
-                <InputText id="authorName" @bind-Value="Input.AuthorName" required aria-required="true"
+                <InputText id="authorName" @bind-Value="Input.AuthorName" required aria-required="true" maxlength="@FieldLimits.Testimonial.AuthorName"
                            class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-gray-900 dark:text-white" />
             </div>
             <div>
                 <label for="authorRole" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Author role</label>
-                <InputText id="authorRole" @bind-Value="Input.AuthorRole"
+                <InputText id="authorRole" @bind-Value="Input.AuthorRole" maxlength="@FieldLimits.Testimonial.AuthorRole"
                            class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-gray-900 dark:text-white" />
             </div>
         </div>
@@ -51,7 +50,7 @@
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Avatar</label>
             <ImageUploader Subfolder="testimonials" CurrentFileChanged="OnAvatarUploaded" />
             <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>
-            <InputText id="avatarPath" @bind-Value="Input.AvatarPath" placeholder="e.g. images/avatars/avatar-joseph.png"
+            <InputText id="avatarPath" @bind-Value="Input.AvatarPath" placeholder="e.g. images/avatars/avatar-joseph.png" maxlength="@FieldLimits.Testimonial.AvatarPath"
                        class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-gray-900 dark:text-white" />
         </div>
 

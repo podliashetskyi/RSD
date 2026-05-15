@@ -1,0 +1,15 @@
+<div>
+    <label class="form-label">@Label</label>
+    @ChildContent
+    <div class="mt-1 flex items-start justify-between gap-3">
+        @if (!string.IsNullOrEmpty(Hint))
+        {
+            <p class="form-hint mt-0">@Hint</p>
+        }
+        else
+        {
+            <span></span>
+        }
+        <p class="@($"mt-0 text-xs tabular-nums {CounterClass}")" aria-live="polite">@Length / @MaxLength</p>
+    </div>
+</div>

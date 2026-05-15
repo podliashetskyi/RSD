@@ -15,10 +15,10 @@
 
     <EditForm Model="Input" method="post" OnValidSubmit="SaveAsync" FormName="stat-edit" class="space-y-4">
         <DataAnnotationsValidator />
-        <FormField Label="Label"><InputText @bind-Value="Input.Label" required aria-required="true" class="form-input" /></FormField>
+        <FormField Label="Label"><InputText @bind-Value="Input.Label" required aria-required="true" maxlength="@FieldLimits.MissionStat.Label" class="form-input" /></FormField>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField Label="Number" Hint="e.g. 200"><InputText @bind-Value="Input.Number" class="form-input" /></FormField>
-            <FormField Label="Symbol" Hint="e.g. +"><InputText @bind-Value="Input.Symbol" class="form-input" /></FormField>
+            <FormField Label="Number" Hint="e.g. 200"><InputText @bind-Value="Input.Number" maxlength="@FieldLimits.MissionStat.Number" class="form-input" /></FormField>
+            <FormField Label="Symbol" Hint="e.g. +"><InputText @bind-Value="Input.Symbol" maxlength="@FieldLimits.MissionStat.Symbol" class="form-input" /></FormField>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -9,11 +9,11 @@ public sealed class TestimonialConfiguration : IEntityTypeConfiguration<Testimon
     public void Configure(EntityTypeBuilder<Testimonial> b)
     {
         ContentEntityConfiguration.Apply(b, "testimonials");
-        b.Property(x => x.Title).HasMaxLength(200).IsRequired();
-        b.Property(x => x.Quote).HasMaxLength(2000).IsRequired();
-        b.Property(x => x.AvatarPath).HasMaxLength(500);
-        b.Property(x => x.AuthorName).HasMaxLength(200).IsRequired();
-        b.Property(x => x.AuthorRole).HasMaxLength(200);
+        b.Property(x => x.Title).HasMaxLength(FieldLimits.Testimonial.Title).IsRequired();
+        b.Property(x => x.Quote).HasMaxLength(FieldLimits.Testimonial.Quote).IsRequired();
+        b.Property(x => x.AvatarPath).HasMaxLength(FieldLimits.Testimonial.AvatarPath);
+        b.Property(x => x.AuthorName).HasMaxLength(FieldLimits.Testimonial.AuthorName).IsRequired();
+        b.Property(x => x.AuthorRole).HasMaxLength(FieldLimits.Testimonial.AuthorRole);
         b.HasIndex(x => x.DisplayOrder);
     }
 }
