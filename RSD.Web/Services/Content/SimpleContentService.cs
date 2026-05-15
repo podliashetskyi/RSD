@@ -76,11 +76,7 @@ public abstract class SimpleContentService<TEntity>(
         MutateAsync(id, e => e.IsDeleted = true, ct);
 
     public Task<Result<Unit>> RestoreAsync(Guid id, CancellationToken ct) =>
-        MutateAsync(id, e =>
-        {
-            e.IsDeleted = false;
-            e.Status = ContentStatus.Draft;
-        }, ct, ignoreFilters: true);
+        MutateAsync(id, e => e.IsDeleted = false, ct, ignoreFilters: true);
 
     public async Task<Result<Unit>> HardDeleteAsync(Guid id, CancellationToken ct)
     {
