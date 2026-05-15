@@ -43,8 +43,7 @@
                             class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-1 text-xs hover:bg-gray-50 dark:hover:bg-gray-800">&darr;</button>
                     <a href="/admin/testimonials/@t.Id"
                        class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-1 text-xs hover:bg-gray-50 dark:hover:bg-gray-800">Edit</a>
-                    <button type="button" @onclick="() => DeleteAsync(t.Id)" aria-label="Delete"
-                            class="rounded-md border border-red-300 dark:border-red-700 px-2 py-1 text-xs text-red-700 dark:text-red-300 hover:bg-red-50 dark:hover:bg-red-950">Delete</button>
+                    <DeleteRowButton EntityLabel="@t.AuthorName" OnConfirm="@(() => DeleteAsync(t.Id))" />
                 </div>
             </td>
         </RowTemplate>

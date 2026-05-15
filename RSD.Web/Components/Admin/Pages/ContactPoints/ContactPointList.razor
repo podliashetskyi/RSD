@@ -27,7 +27,7 @@
                     <button type="button" @onclick="() => MoveUpAsync(c.Id)" aria-label="Move up" class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-1 text-xs hover:bg-gray-50 dark:hover:bg-gray-800">&uarr;</button>
                     <button type="button" @onclick="() => MoveDownAsync(c.Id)" aria-label="Move down" class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-1 text-xs hover:bg-gray-50 dark:hover:bg-gray-800">&darr;</button>
                     <a href="/admin/contact-points/@c.Id" class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-1 text-xs hover:bg-gray-50 dark:hover:bg-gray-800">Edit</a>
-                    <button type="button" @onclick="() => DeleteAsync(c.Id)" aria-label="Delete" class="rounded-md border border-red-300 dark:border-red-700 px-2 py-1 text-xs text-red-700 dark:text-red-300 hover:bg-red-50 dark:hover:bg-red-950">Delete</button>
+                    <DeleteRowButton EntityLabel="@c.Label" OnConfirm="@(() => DeleteAsync(c.Id))" />
                 </div>
             </td>
         </RowTemplate>
