@@ -2,6 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    /* Only show a focus ring for keyboard / AT users. Suppresses the browser
+       default outline on non-keyboard focus. */
+    *:focus:not(:focus-visible) {
+        outline: none;
+    }
+
+    /* FocusOnNavigate (Routes.razor) sets tabindex="-1" on the matched <h1>
+       and focuses it for screen-reader page-announcement on every client-side
+       navigation. Browsers classify that as :focus-visible because it follows
+       a user gesture (the link click), so the rule above doesn't catch it.
+       These elements are programmatic-focus-only by definition (tabindex=-1
+       removes them from Tab order), so always suppress the outline. */
+    [tabindex="-1"]:focus,
+    [tabindex="-1"]:focus-visible {
+        outline: none;
+    }
+}
+
 @layer components {
     .nav-link {
         @apply px-4 py-2 text-ink-soft text-body hover:text-ink transition-colors;
