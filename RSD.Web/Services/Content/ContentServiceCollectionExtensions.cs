@@ -13,6 +13,7 @@ public static class ContentServiceCollectionExtensions
         services.AddScoped<ITeamMemberService, TeamMemberService>();
         services.AddScoped<IPartnerService, PartnerService>();
         services.AddScoped<IValueService, ValueService>();
+        services.AddScoped<IFilterService, FilterService>();
         services.AddScoped<IMissionStatService, MissionStatService>();
         services.AddScoped<ITechStackItemService, TechStackItemService>();
         services.AddScoped<IContactPointService, ContactPointService>();

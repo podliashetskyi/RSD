@@ -47,8 +47,14 @@
         </FieldField>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField Label="Industry">
-                <InputText id="industry" @bind-Value="Input.Industry" maxlength="@FieldLimits.Case.Industry" class="form-input" />
+            <FormField Label="Industry" Hint="@(IndustryOptions.Count == 0 ? "No industries defined yet. Add some at /admin/filters." : "Pick from admin-managed industries.")">
+                <InputSelect id="industry" @bind-Value="Input.Industry" class="form-input">
+                    <option value="">— Select industry —</option>
+                    @foreach (var option in IndustryOptions)
+                    {
+                        <option value="@option">@option</option>
+                    }
+                </InputSelect>
             </FormField>
             <FormField Label="Status">
                 <InputSelect id="status" @bind-Value="Input.Status" class="form-input">
@@ -59,7 +65,13 @@
             </FormField>
         </div>
 
-        <TagInput Label="Tech tags" Value="Input.TechTags" ValueChanged="OnTechTagsChanged" />
+        <ConstrainedTagPicker Label="Tech tags"
+                              Hint="Pick from admin-managed tech tags. Click to toggle."
+                              EmptyOptionsText="No tech tags defined yet."
+                              ManageHref="/admin/filters"
+                              Value="Input.TechTags"
+                              ValueChanged="OnTechTagsChanged"
+                              Options="TechTagOptions" />
 
         <div class="space-y-2">
             <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Cover image</p>

@@ -5,17 +5,13 @@ using RSD.Web.Services.Content;
 
 namespace RSD.Web.Components.Sections.Blog;
 
-public partial class PostsGridSection(IBlogService Blog, ITeamMemberService Team)
+public partial class PostsGridSection(IBlogService Blog, ITeamMemberService Team, IFilterService Filters)
 {
     private IReadOnlyList<BlogPostRow> Posts { get; set; } = [];
     private string Search { get; set; } = "";
     private string? Category { get; set; }
 
-    private IReadOnlyList<string> Categories =>
-        [.. Posts.Select(p => p.Category)
-            .Where(s => !string.IsNullOrWhiteSpace(s))
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .OrderBy(s => s)];
+    private IReadOnlyList<string> Categories { get; set; } = [];
 
     private IReadOnlyList<BlogPostRow> DisplayedPosts
     {
@@ -38,7 +34,9 @@ public partial class PostsGridSection(IBlogService Blog, ITeamMemberService Team
     {
         var posts = await Blog.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 200), CancellationToken.None);
         var team = await Team.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 200), CancellationToken.None);
+        var categories = await Filters.ListByTypeAsync(FilterType.BlogCategory, CancellationToken.None);
         Posts = [.. posts.OrderByDescending(p => p.PublishedAt ?? p.CreatedAt).Select(p => BlogPostRow.From(p, team))];
+        Categories = [.. categories.Select(f => f.Label)];
     }
 
     private void SetCategory(string? cat) => Category = cat;

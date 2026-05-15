@@ -1,0 +1,36 @@
+<div>
+    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">@Label</label>
+    @if (Options.Count == 0)
+    {
+        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            @EmptyOptionsText
+            @if (!string.IsNullOrEmpty(ManageHref))
+            {
+                <span> </span><a href="@ManageHref" class="underline hover:text-gray-700 dark:hover:text-gray-200">Manage</a>
+            }
+        </p>
+    }
+    else
+    {
+        <div class="mt-1 flex flex-wrap gap-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-2 py-2">
+            @foreach (var option in Options)
+            {
+                var active = IsSelected(option);
+                <button type="button" @onclick="() => ToggleAsync(option)" aria-pressed="@(active ? "true" : "false")"
+                        class="@($"inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs transition-colors {(active ? "bg-gray-900 dark:bg-white text-white dark:text-gray-900" : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700")}")">
+                    @if (active)
+                    {
+                        <svg class="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                        </svg>
+                    }
+                    @option
+                </button>
+            }
+        </div>
+        @if (!string.IsNullOrEmpty(Hint))
+        {
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">@Hint</p>
+        }
+    }
+</div>

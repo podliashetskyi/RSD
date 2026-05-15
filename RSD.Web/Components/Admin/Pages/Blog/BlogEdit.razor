@@ -47,8 +47,14 @@
         </FieldField>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <FormField Label="Category">
-                <InputText id="category" @bind-Value="Input.Category" maxlength="@FieldLimits.BlogPost.Category" class="form-input" />
+            <FormField Label="Category" Hint="@(CategoryOptions.Count == 0 ? "No categories defined yet. Add some at /admin/filters." : "Pick from admin-managed categories.")">
+                <InputSelect id="category" @bind-Value="Input.Category" class="form-input">
+                    <option value="">— Select category —</option>
+                    @foreach (var option in CategoryOptions)
+                    {
+                        <option value="@option">@option</option>
+                    }
+                </InputSelect>
             </FormField>
             <FormField Label="Read time (minutes)">
                 <InputNumber id="readTime" @bind-Value="Input.ReadTimeMinutes" class="form-input" />
@@ -62,7 +68,13 @@
             </FormField>
         </div>
 
-        <TagInput Label="Tags" Value="Input.Tags" ValueChanged="OnTagsChanged" />
+        <ConstrainedTagPicker Label="Tags"
+                              Hint="Pick from admin-managed tags. Click to toggle."
+                              EmptyOptionsText="No tags defined yet."
+                              ManageHref="/admin/filters"
+                              Value="Input.Tags"
+                              ValueChanged="OnTagsChanged"
+                              Options="TagOptions" />
 
         <div class="space-y-2">
             <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Cover image</p>

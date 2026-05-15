@@ -12,6 +12,7 @@ namespace RSD.Web.Components.Admin.Pages.Cases;
 
 public partial class CaseEdit(
     ICaseService Service,
+    IFilterService Filters,
     NavigationManager Nav,
     IToastService Toasts,
     PreviewLink Preview) : ComponentBase
@@ -27,8 +28,15 @@ public partial class CaseEdit(
     private bool CanSave => SlugIsValid;
     private string PreviewUrl => string.IsNullOrEmpty(LoadedSlug) ? "" : Preview.Build("cases", LoadedSlug);
 
+    private IReadOnlyList<string> IndustryOptions { get; set; } = [];
+    private IReadOnlyList<string> TechTagOptions { get; set; } = [];
+
     protected override async Task OnInitializedAsync()
     {
+        var industries = await Filters.ListByTypeAsync(FilterType.CaseIndustry, CancellationToken.None);
+        var techTags = await Filters.ListByTypeAsync(FilterType.CaseTechTag, CancellationToken.None);
+        IndustryOptions = [.. industries.Select(f => f.Label)];
+        TechTagOptions = [.. techTags.Select(f => f.Label)];
         if (Id is { } id) await LoadAsync(id);
     }
 

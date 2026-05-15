@@ -1,0 +1,57 @@
+@page "/admin/filters/new"
+@page "/admin/filters/{Id:guid}"
+@attribute [Authorize(Roles = AdminRoles.Admin)]
+@layout AdminLayout
+@rendermode InteractiveServer
+
+<PageTitle>@(IsCreate ? "New filter" : "Edit filter") &middot; RSD Admin</PageTitle>
+
+<section class="max-w-2xl space-y-6">
+    <header><h1 class="text-2xl font-semibold text-gray-900 dark:text-white">@(IsCreate ? "New filter" : "Edit filter")</h1></header>
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div role="alert" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">@ErrorMessage</div>
+    }
+
+    <EditForm Model="Input" OnValidSubmit="SaveAsync" FormName="filter-edit" class="space-y-4">
+        <DataAnnotationsValidator />
+
+        <FormField Label="Type" Hint="@(IsCreate ? "Picks which dropdown this filter appears in. Cannot be changed after create." : "Type is fixed after create — delete and recreate to move a filter to a different category.")">
+            @if (IsCreate)
+            {
+                <InputSelect @bind-Value="Input.Type" class="form-input">
+                    <option value="@FilterType.CaseIndustry">Case industry</option>
+                    <option value="@FilterType.CaseTechTag">Case tech tag</option>
+                    <option value="@FilterType.BlogCategory">Blog category</option>
+                    <option value="@FilterType.BlogTag">Blog tag</option>
+                </InputSelect>
+            }
+            else
+            {
+                <input type="text" value="@TypeLabel(Input.Type)" disabled class="form-input disabled:bg-gray-100 dark:disabled:bg-gray-800" />
+            }
+        </FormField>
+
+        <FormField Label="Label" Hint="Shown verbatim on the public dropdown and on each card.">
+            <InputText @bind-Value="Input.Label" required aria-required="true" maxlength="@FieldLimits.Filter.Label" class="form-input" />
+            <ValidationMessage For="() => Input.Label" class="form-error" />
+        </FormField>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormField Label="Status">
+                <InputSelect @bind-Value="Input.Status" class="form-input">
+                    <option value="@ContentStatus.Draft">Draft</option>
+                    <option value="@ContentStatus.Published">Published</option>
+                    <option value="@ContentStatus.Archived">Archived</option>
+                </InputSelect>
+            </FormField>
+            <FormField Label="Display order"><InputNumber @bind-Value="Input.DisplayOrder" class="form-input" /></FormField>
+        </div>
+
+        <div class="flex items-center gap-2 pt-4">
+            <button type="submit" class="rounded-md bg-gray-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-gray-900 hover:bg-black dark:hover:bg-gray-100">@(IsCreate ? "Create" : "Save changes")</button>
+            <a href="/admin/filters" class="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Cancel</a>
+        </div>
+    </EditForm>
+</section>
