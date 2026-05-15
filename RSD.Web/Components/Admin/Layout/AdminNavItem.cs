@@ -22,6 +22,7 @@ public static class AdminNav
         new("Contact points", "/admin/contact-points", ContentGroup),
         new("Messenger links", "/admin/messenger-links", ContentGroup),
         new("Social links", "/admin/social-links", ContentGroup),
+        new("Filters",      "/admin/filters",      ContentGroup),
         new("Terms of Service", "/admin/terms-of-service", ContentGroup),
         new("Privacy Policy", "/admin/privacy-policy", ContentGroup),
         new("Inbox",        "/admin/inbox",        OpsGroup),

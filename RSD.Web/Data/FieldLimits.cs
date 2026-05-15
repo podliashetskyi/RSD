@@ -99,6 +99,12 @@ public static class FieldLimits
         public const int IconPath = 500;
     }
 
+    public static class Filter
+    {
+        public const int Label = 200;
+        public const int Type = 40;
+    }
+
     public static class TechStackItem
     {
         public const int Label = 100;

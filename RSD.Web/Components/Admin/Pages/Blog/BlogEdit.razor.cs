@@ -13,6 +13,7 @@ namespace RSD.Web.Components.Admin.Pages.Blog;
 
 public partial class BlogEdit(
     IBlogService Service,
+    IFilterService Filters,
     NavigationManager Nav,
     IToastService Toasts,
     PreviewLink Preview) : ComponentBase
@@ -28,8 +29,15 @@ public partial class BlogEdit(
     private bool CanSave => SlugIsValid;
     private string PreviewUrl => string.IsNullOrEmpty(LoadedSlug) ? "" : Preview.Build("blog", LoadedSlug);
 
+    private IReadOnlyList<string> CategoryOptions { get; set; } = [];
+    private IReadOnlyList<string> TagOptions { get; set; } = [];
+
     protected override async Task OnInitializedAsync()
     {
+        var categories = await Filters.ListByTypeAsync(FilterType.BlogCategory, CancellationToken.None);
+        var tags = await Filters.ListByTypeAsync(FilterType.BlogTag, CancellationToken.None);
+        CategoryOptions = [.. categories.Select(f => f.Label)];
+        TagOptions = [.. tags.Select(f => f.Label)];
         if (Id is { } id) await LoadAsync(id);
     }
 

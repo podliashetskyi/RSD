@@ -5,7 +5,7 @@ using RSD.Web.Services.Content;
 
 namespace RSD.Web.Components.Sections.Shared;
 
-public partial class CasesGridSection(ICaseService Cases)
+public partial class CasesGridSection(ICaseService Cases, IFilterService Filters)
 {
     [Parameter] public bool ShowHeader        { get; set; } = true;
     [Parameter] public bool ShowFilters       { get; set; }
@@ -19,11 +19,8 @@ public partial class CasesGridSection(ICaseService Cases)
     private int? Year { get; set; }
     private FilterKey? OpenFilter { get; set; }
 
-    private IReadOnlyList<string> IndustryOptions =>
-        [.. CaseList.Select(c => c.Industry).Where(s => !string.IsNullOrWhiteSpace(s)).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(s => s)];
-
-    private IReadOnlyList<string> TechStackOptions =>
-        [.. CaseList.SelectMany(c => c.TechTags).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(s => s)];
+    private IReadOnlyList<string> IndustryOptions { get; set; } = [];
+    private IReadOnlyList<string> TechStackOptions { get; set; } = [];
 
     private IReadOnlyList<int> YearOptions =>
         [.. CaseList.Select(c => (c.PublishedAt ?? c.CreatedAt).Year).Distinct().OrderByDescending(y => y)];
@@ -47,6 +44,13 @@ public partial class CasesGridSection(ICaseService Cases)
     {
         var rows = await Cases.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 200), CancellationToken.None);
         CaseList = [.. rows.OrderByDescending(c => c.PublishedAt ?? c.CreatedAt)];
+        if (ShowFilters)
+        {
+            var industries = await Filters.ListByTypeAsync(FilterType.CaseIndustry, CancellationToken.None);
+            var techTags = await Filters.ListByTypeAsync(FilterType.CaseTechTag, CancellationToken.None);
+            IndustryOptions = [.. industries.Select(f => f.Label)];
+            TechStackOptions = [.. techTags.Select(f => f.Label)];
+        }
     }
 
     private void ToggleDropdown(FilterKey key) => OpenFilter = OpenFilter == key ? null : key;
