@@ -23,15 +23,19 @@
                             <p class="text-ink text-body-lg font-semibold leading-none">@m.Name</p>
                             <p class="text-ink-soft text-body leading-none">@m.Role</p>
                         </div>
-                        <div class="w-full h-px bg-gradient-to-r from-line-subtle/50 via-line to-line-subtle/50" aria-hidden="true"></div>
-                        <div class="flex gap-4 items-center justify-center w-full">
-                            @foreach (var icon in SocialIcons)
-                            {
-                                <a href="@(string.IsNullOrEmpty(icon.Href) ? "#" : icon.Href)" aria-label="@icon.Label" class="inline-flex">
-                                    <img src="@icon.IconPath" alt="" aria-hidden="true" class="size-5"  loading="lazy" decoding="async" />
-                                </a>
-                            }
-                        </div>
+                        @{ var icons = IconsFor(m).ToList(); }
+                        @if (icons.Count > 0)
+                        {
+                            <div class="w-full h-px bg-gradient-to-r from-line-subtle/50 via-line to-line-subtle/50" aria-hidden="true"></div>
+                            <div class="flex gap-4 items-center justify-center w-full">
+                                @foreach (var icon in icons)
+                                {
+                                    <a href="@icon.Href" aria-label="@icon.Label" class="inline-flex" target="@(icon.Platform == "Email" ? null : "_blank")" rel="@(icon.Platform == "Email" ? null : "noopener")">
+                                        <img src="@icon.IconPath" alt="" aria-hidden="true" class="size-5" loading="lazy" decoding="async" />
+                                    </a>
+                                }
+                            </div>
+                        }
                     </div>
                 </div>
             }

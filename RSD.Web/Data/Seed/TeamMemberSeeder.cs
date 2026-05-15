@@ -20,21 +20,23 @@ public sealed class TeamMemberSeeder(AppDbContext Db, ISlugger Slugger) : Seeder
             Team("Kathryn Murphy",  "Back-End Engineer",  "images/about/team/avatar-09.png", 9),
             Team("Robert Fox",      "Back-End Engineer",  "images/about/team/avatar-10.png", 10),
             Team("Kathryn Murphy",  "Back-End Engineer",  "images/about/team/avatar-11.png", 11),
-            Management("Bonnie Green",  "Front-end Developer", "images/about/management/portrait-bonnie-green.png",  1),
-            Management("Robert Fox",    "Front-end Developer", "images/about/management/portrait-robert-fox.png",    2),
-            Management("Eleanor Pena",  "Front-end Developer", "images/about/management/portrait-eleanor-pena.png",  3),
-            Management("Esther Howard", "Front-end Developer", "images/about/management/portrait-esther-howard.png", 4),
+            Management("Bonnie Green",  "Front-end Developer", "images/about/management/portrait-bonnie-green.png",  1, linkedIn: "https://www.linkedin.com/", x: "https://x.com/"),
+            Management("Robert Fox",    "Front-end Developer", "images/about/management/portrait-robert-fox.png",    2, linkedIn: "https://www.linkedin.com/", github: "https://github.com/"),
+            Management("Eleanor Pena",  "Front-end Developer", "images/about/management/portrait-eleanor-pena.png",  3, linkedIn: "https://www.linkedin.com/", email: "eleanor@example.com"),
+            Management("Esther Howard", "Front-end Developer", "images/about/management/portrait-esther-howard.png", 4, linkedIn: "https://www.linkedin.com/", x: "https://x.com/", github: "https://github.com/"),
         ];
         return Task.FromResult(items);
     }
 
     private static TeamMember Team(string name, string role, string avatar, int order) =>
-        Build(name, role, avatar, order, isManagement: false);
+        Build(name, role, avatar, order, isManagement: false, "", "", "", "");
 
-    private static TeamMember Management(string name, string role, string photo, int order) =>
-        Build(name, role, photo, order, isManagement: true);
+    private static TeamMember Management(string name, string role, string photo, int order,
+        string linkedIn = "", string x = "", string github = "", string email = "") =>
+        Build(name, role, photo, order, isManagement: true, linkedIn, x, github, email);
 
-    private static TeamMember Build(string name, string role, string avatar, int order, bool isManagement) => new()
+    private static TeamMember Build(string name, string role, string avatar, int order, bool isManagement,
+        string linkedIn, string x, string github, string email) => new()
     {
         Slug = isManagement ? $"management {name}" : name,
         Status = ContentStatus.Published,
@@ -44,5 +46,9 @@ public sealed class TeamMemberSeeder(AppDbContext Db, ISlugger Slugger) : Seeder
         AvatarPath = avatar,
         DisplayOrder = order,
         IsManagement = isManagement,
+        LinkedInUrl = linkedIn,
+        XUrl = x,
+        GitHubUrl = github,
+        Email = email,
     };
 }

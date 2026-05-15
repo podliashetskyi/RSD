@@ -43,6 +43,28 @@
             </div>
         </div>
 
+        @if (Input.IsManagement)
+        {
+            <fieldset class="rounded-md border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-4 space-y-3">
+                <legend class="px-2 text-sm font-medium text-gray-700 dark:text-gray-300">Social links</legend>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Shown under this manager's card on the public About → Management section. Leave blank to omit the icon.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <FormField Label="LinkedIn URL">
+                        <InputText @bind-Value="Input.LinkedInUrl" placeholder="https://www.linkedin.com/in/…" maxlength="@FieldLimits.Team.SocialUrl" class="form-input" />
+                    </FormField>
+                    <FormField Label="X / Twitter URL">
+                        <InputText @bind-Value="Input.XUrl" placeholder="https://x.com/…" maxlength="@FieldLimits.Team.SocialUrl" class="form-input" />
+                    </FormField>
+                    <FormField Label="GitHub URL">
+                        <InputText @bind-Value="Input.GitHubUrl" placeholder="https://github.com/…" maxlength="@FieldLimits.Team.SocialUrl" class="form-input" />
+                    </FormField>
+                    <FormField Label="Email">
+                        <InputText @bind-Value="Input.Email" placeholder="name@example.com" type="email" maxlength="@FieldLimits.Team.Email" class="form-input" />
+                    </FormField>
+                </div>
+            </fieldset>
+        }
+
         <div class="flex items-center gap-2 pt-4">
             <button type="submit" class="rounded-md bg-gray-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-gray-900 hover:bg-black dark:hover:bg-gray-100">@(IsCreate ? "Create" : "Save changes")</button>
             <a href="/admin/team" class="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Cancel</a>

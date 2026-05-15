@@ -4,5 +4,4 @@ public enum SocialLinkScope
 {
     Footer,
     Contact,
-    Management,
 }

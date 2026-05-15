@@ -71,6 +71,8 @@ public static class FieldLimits
         public const int Name = 200;
         public const int Role = 200;
         public const int AvatarPath = 500;
+        public const int SocialUrl = 500;
+        public const int Email = 320;
     }
 
     public static class Testimonial

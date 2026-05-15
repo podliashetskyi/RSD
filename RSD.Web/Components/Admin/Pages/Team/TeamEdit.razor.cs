@@ -65,6 +65,14 @@ public partial class TeamEdit(ITeamMemberService Service, NavigationManager Nav)
         public bool IsManagement { get; set; }
         [StringLength(FieldLimits.Slug)]
         public string Slug { get; set; } = "";
+        [StringLength(FieldLimits.Team.SocialUrl)]
+        public string LinkedInUrl { get; set; } = "";
+        [StringLength(FieldLimits.Team.SocialUrl)]
+        public string XUrl { get; set; } = "";
+        [StringLength(FieldLimits.Team.SocialUrl)]
+        public string GitHubUrl { get; set; } = "";
+        [StringLength(FieldLimits.Team.Email)]
+        public string Email { get; set; } = "";
 
         public static TeamInput From(TeamMember m) => new()
         {
@@ -75,6 +83,10 @@ public partial class TeamEdit(ITeamMemberService Service, NavigationManager Nav)
             DisplayOrder = m.DisplayOrder,
             IsManagement = m.IsManagement,
             Slug = m.Slug,
+            LinkedInUrl = m.LinkedInUrl,
+            XUrl = m.XUrl,
+            GitHubUrl = m.GitHubUrl,
+            Email = m.Email,
         };
 
         public TeamMember ToEntity(Guid? id) => new()
@@ -87,6 +99,10 @@ public partial class TeamEdit(ITeamMemberService Service, NavigationManager Nav)
             Status = Status,
             DisplayOrder = DisplayOrder,
             IsManagement = IsManagement,
+            LinkedInUrl = LinkedInUrl,
+            XUrl = XUrl,
+            GitHubUrl = GitHubUrl,
+            Email = Email,
         };
     }
 }
