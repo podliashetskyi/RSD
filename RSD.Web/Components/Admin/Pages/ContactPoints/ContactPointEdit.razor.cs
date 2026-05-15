@@ -2,6 +2,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
+using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
 
@@ -47,11 +48,14 @@ public partial class ContactPointEdit(IContactPointService Service, NavigationMa
 
     public sealed record class ContactInput
     {
-        [Required] public string Label { get; set; } = "";
+        [Required]
+        [StringLength(FieldLimits.ContactPoint.Label)]
+        public string Label { get; set; } = "";
         public string LinesText { get; set; } = "";
         public bool IsLink { get; set; }
         public ContentStatus Status { get; set; } = ContentStatus.Published;
         public int DisplayOrder { get; set; }
+        [StringLength(FieldLimits.Slug)]
         public string Slug { get; set; } = "";
 
         public static ContactInput From(ContactPoint c) => new()

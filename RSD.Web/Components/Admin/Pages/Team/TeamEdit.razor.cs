@@ -2,6 +2,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
+using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
 
@@ -52,12 +53,17 @@ public partial class TeamEdit(ITeamMemberService Service, NavigationManager Nav)
 
     public sealed record class TeamInput
     {
-        [Required] public string Name { get; set; } = "";
+        [Required]
+        [StringLength(FieldLimits.Team.Name)]
+        public string Name { get; set; } = "";
+        [StringLength(FieldLimits.Team.Role)]
         public string Role { get; set; } = "";
+        [StringLength(FieldLimits.Team.AvatarPath)]
         public string AvatarPath { get; set; } = "";
         public ContentStatus Status { get; set; } = ContentStatus.Published;
         public int DisplayOrder { get; set; }
         public bool IsManagement { get; set; }
+        [StringLength(FieldLimits.Slug)]
         public string Slug { get; set; } = "";
 
         public static TeamInput From(TeamMember m) => new()

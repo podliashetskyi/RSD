@@ -3,6 +3,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
 using RSD.Web.Components.Admin.Shared;
+using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Common;
 using RSD.Web.Services.Content;
@@ -45,6 +46,7 @@ public partial class PrivacyPolicyEdit(
     public sealed record class PrivacyPolicyInput
     {
         [Required(ErrorMessage = "Title is required.")]
+        [StringLength(FieldLimits.PrivacyPolicy.Title)]
         public string Title { get; set; } = "Privacy Policy";
 
         public DateOnly LastUpdatedAt { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);

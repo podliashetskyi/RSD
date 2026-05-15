@@ -3,6 +3,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
 using RSD.Web.Components.Admin.Shared;
+using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
 using RSD.Web.Services.Preview;
@@ -75,11 +76,19 @@ public partial class CaseEdit(
     public sealed record class CaseInput
     {
         [Required(ErrorMessage = "Name is required.")]
+        [StringLength(FieldLimits.Case.Name)]
         public string Name { get; set; } = "";
+        [StringLength(FieldLimits.Slug)]
         public string Slug { get; set; } = "";
+        [StringLength(FieldLimits.Case.Summary)]
+        public string Summary { get; set; } = "";
+        [StringLength(FieldLimits.Case.Industry)]
         public string Industry { get; set; } = "";
+        [StringLength(FieldLimits.Case.Description)]
         public string Description { get; set; } = "";
+        [StringLength(FieldLimits.Case.CoverImagePath)]
         public string CoverImagePath { get; set; } = "";
+        [StringLength(FieldLimits.Case.CoverImageAlt)]
         public string CoverImageAlt { get; set; } = "";
         public List<string> TechTags { get; set; } = [];
         public ContentStatus Status { get; set; } = ContentStatus.Draft;
@@ -89,6 +98,7 @@ public partial class CaseEdit(
         {
             Name = c.Name,
             Slug = c.Slug,
+            Summary = c.Summary,
             Industry = c.Industry,
             Description = c.Description,
             CoverImagePath = c.CoverImagePath,
@@ -99,6 +109,6 @@ public partial class CaseEdit(
         };
 
         public CaseUpsert ToUpsert(CaseDetailFields detail) => new(
-            Slug, Name, Industry, Description, CoverImagePath, CoverImageAlt, [.. TechTags], Status, Seo, detail);
+            Slug, Name, Summary, Industry, Description, CoverImagePath, CoverImageAlt, [.. TechTags], Status, Seo, detail);
     }
 }

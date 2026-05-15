@@ -10,7 +10,7 @@
                     <div class="lg:flex-1 lg:min-w-0 flex flex-col gap-4">
                         <h2 class="text-ink text-[36px] font-bold tracking-[-0.9px] leading-10">@feature.Title</h2>
                         <div class="flex flex-col gap-8">
-                            <p class="text-ink-soft text-[18px] leading-7">@feature.Description</p>
+                            <p class="text-ink-soft text-[18px] leading-7">@(string.IsNullOrWhiteSpace(feature.Summary) ? feature.Description : feature.Summary)</p>
                             <ul class="flex flex-col gap-3">
                                 @foreach (var bullet in feature.BulletPoints)
                                 {

@@ -9,14 +9,15 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
     public void Configure(EntityTypeBuilder<Product> b)
     {
         ContentEntityConfiguration.Apply(b, "products");
-        b.Property(x => x.Name).HasMaxLength(300).IsRequired();
-        b.Property(x => x.Subtitle).HasMaxLength(300);
-        b.Property(x => x.Price).HasMaxLength(100);
-        b.Property(x => x.Description).HasMaxLength(2000);
-        b.Property(x => x.CoverImagePath).HasMaxLength(500);
-        b.Property(x => x.CoverImageAlt).HasMaxLength(200);
-        b.Property(x => x.TryForFreeHref).HasMaxLength(500);
-        b.Property(x => x.LearnMoreHref).HasMaxLength(500);
+        b.Property(x => x.Name).HasMaxLength(FieldLimits.Product.Name).IsRequired();
+        b.Property(x => x.Summary).HasMaxLength(FieldLimits.Product.Summary);
+        b.Property(x => x.Subtitle).HasMaxLength(FieldLimits.Product.Subtitle);
+        b.Property(x => x.Price).HasMaxLength(FieldLimits.Product.Price);
+        b.Property(x => x.Description).HasMaxLength(FieldLimits.Product.Description);
+        b.Property(x => x.CoverImagePath).HasMaxLength(FieldLimits.Product.CoverImagePath);
+        b.Property(x => x.CoverImageAlt).HasMaxLength(FieldLimits.Product.CoverImageAlt);
+        b.Property(x => x.TryForFreeHref).HasMaxLength(FieldLimits.Product.TryForFreeHref);
+        b.Property(x => x.LearnMoreHref).HasMaxLength(FieldLimits.Product.LearnMoreHref);
         b.Property(x => x.BulletPoints).HasColumnType("text[]");
 
         b.Property(x => x.DetailFields)

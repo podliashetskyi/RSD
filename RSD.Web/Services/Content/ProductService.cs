@@ -18,6 +18,7 @@ public sealed class ProductService(
     {
         Slug = input.Slug,
         Name = input.Name,
+        Summary = input.Summary,
         Subtitle = input.Subtitle,
         Price = input.Price,
         Description = input.Description,
@@ -34,6 +35,7 @@ public sealed class ProductService(
     protected override void ApplyUpdate(Product entity, ProductUpsert input)
     {
         entity.Name = input.Name;
+        entity.Summary = input.Summary;
         entity.Subtitle = input.Subtitle;
         entity.Price = input.Price;
         entity.Description = input.Description;

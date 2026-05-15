@@ -2,6 +2,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
+using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
 
@@ -57,13 +58,20 @@ public partial class MessengerLinkEdit(IMessengerLinkService Service, Navigation
 
     public sealed record class MessengerInput
     {
-        [Required] public string Label { get; set; } = "";
+        [Required]
+        [StringLength(FieldLimits.MessengerLink.Label)]
+        public string Label { get; set; } = "";
+        [StringLength(FieldLimits.MessengerLink.LargeIconPath)]
         public string LargeIconPath { get; set; } = "";
+        [StringLength(FieldLimits.MessengerLink.SmallIconPath)]
         public string SmallIconPath { get; set; } = "";
+        [StringLength(FieldLimits.MessengerLink.BgColor)]
         public string BgColor { get; set; } = "";
+        [StringLength(FieldLimits.MessengerLink.Href)]
         public string Href { get; set; } = "";
         public ContentStatus Status { get; set; } = ContentStatus.Published;
         public int DisplayOrder { get; set; }
+        [StringLength(FieldLimits.Slug)]
         public string Slug { get; set; } = "";
 
         public static MessengerInput From(MessengerLink m) => new()

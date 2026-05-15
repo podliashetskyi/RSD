@@ -9,9 +9,9 @@ public sealed class TeamMemberConfiguration : IEntityTypeConfiguration<TeamMembe
     public void Configure(EntityTypeBuilder<TeamMember> b)
     {
         ContentEntityConfiguration.Apply(b, "team_members");
-        b.Property(x => x.Name).HasMaxLength(200).IsRequired();
-        b.Property(x => x.Role).HasMaxLength(200);
-        b.Property(x => x.AvatarPath).HasMaxLength(500);
+        b.Property(x => x.Name).HasMaxLength(FieldLimits.Team.Name).IsRequired();
+        b.Property(x => x.Role).HasMaxLength(FieldLimits.Team.Role);
+        b.Property(x => x.AvatarPath).HasMaxLength(FieldLimits.Team.AvatarPath);
         b.HasIndex(x => x.DisplayOrder);
         b.HasIndex(x => x.IsManagement);
     }

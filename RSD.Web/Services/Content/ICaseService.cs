@@ -5,6 +5,7 @@ namespace RSD.Web.Services.Content;
 public record CaseUpsert(
     string Slug,
     string Name,
+    string Summary,
     string Industry,
     string Description,
     string CoverImagePath,

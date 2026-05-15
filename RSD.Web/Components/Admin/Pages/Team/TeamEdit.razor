@@ -18,12 +18,12 @@
 
     <EditForm Model="Input" OnValidSubmit="SaveAsync" FormName="team-edit" class="space-y-4">
         <DataAnnotationsValidator />
-        <FormField Label="Name"><InputText @bind-Value="Input.Name" required aria-required="true" class="form-input" /></FormField>
-        <FormField Label="Role"><InputText @bind-Value="Input.Role" class="form-input" /></FormField>
+        <FormField Label="Name"><InputText @bind-Value="Input.Name" required aria-required="true" maxlength="@FieldLimits.Team.Name" class="form-input" /></FormField>
+        <FormField Label="Role"><InputText @bind-Value="Input.Role" maxlength="@FieldLimits.Team.Role" class="form-input" /></FormField>
         <FormField Label="Avatar">
             <ImageUploader Subfolder="team" CurrentFileChanged="OnAvatarUploaded" />
             <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>
-            <InputText @bind-Value="Input.AvatarPath" placeholder="images/about/team/avatar-01.png" class="form-input" />
+            <InputText @bind-Value="Input.AvatarPath" placeholder="images/about/team/avatar-01.png" maxlength="@FieldLimits.Team.AvatarPath" class="form-input" />
         </FormField>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">

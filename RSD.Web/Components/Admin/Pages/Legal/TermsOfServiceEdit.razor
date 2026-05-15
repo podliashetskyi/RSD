@@ -22,7 +22,7 @@
             <DataAnnotationsValidator />
 
             <FormField Label="Page title">
-                <InputText id="title" @bind-Value="Input.Title" required aria-required="true" class="form-input" />
+                <InputText id="title" @bind-Value="Input.Title" required aria-required="true" maxlength="@FieldLimits.TermsOfService.Title" class="form-input" />
                 <ValidationMessage For="() => Input.Title" class="form-error" />
             </FormField>
 

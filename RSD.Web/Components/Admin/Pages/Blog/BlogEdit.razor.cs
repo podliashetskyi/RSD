@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
 using RSD.Web.Components.Admin.Shared;
 using RSD.Web.Components.Admin.Shared.Blocks;
+using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
 using RSD.Web.Services.Preview;
@@ -76,15 +77,24 @@ public partial class BlogEdit(
     public sealed record class BlogPostInput
     {
         [Required(ErrorMessage = "Title is required.")]
+        [StringLength(FieldLimits.BlogPost.Title)]
         public string Title { get; set; } = "";
+        [StringLength(FieldLimits.Slug)]
         public string Slug { get; set; } = "";
+        [StringLength(FieldLimits.BlogPost.Summary)]
+        public string Summary { get; set; } = "";
+        [StringLength(FieldLimits.BlogPost.Description)]
         public string Description { get; set; } = "";
+        [StringLength(FieldLimits.BlogPost.Category)]
         public string Category { get; set; } = "";
         public Guid? AuthorId { get; set; }
+        [StringLength(FieldLimits.BlogPost.CoverImagePath)]
         public string CoverImagePath { get; set; } = "";
+        [StringLength(FieldLimits.BlogPost.CoverImageAlt)]
         public string CoverImageAlt { get; set; } = "";
         public int ReadTimeMinutes { get; set; }
         public List<string> Tags { get; set; } = [];
+        [StringLength(FieldLimits.BlogPost.Intro)]
         public string Intro { get; set; } = "";
         public ContentStatus Status { get; set; } = ContentStatus.Draft;
         public SeoMetadata Seo { get; set; } = new();
@@ -93,6 +103,7 @@ public partial class BlogEdit(
         {
             Title = p.Title,
             Slug = p.Slug,
+            Summary = p.Summary,
             Description = p.Description,
             Category = p.Category,
             AuthorId = p.AuthorId,
@@ -106,7 +117,7 @@ public partial class BlogEdit(
         };
 
         public BlogPostUpsert ToUpsert(ArticleBody body) => new(
-            Slug, Title, Description, Category, AuthorId, CoverImagePath, CoverImageAlt,
+            Slug, Title, Summary, Description, Category, AuthorId, CoverImagePath, CoverImageAlt,
             ReadTimeMinutes, [.. Tags], Intro, Status, Seo, body);
     }
 }

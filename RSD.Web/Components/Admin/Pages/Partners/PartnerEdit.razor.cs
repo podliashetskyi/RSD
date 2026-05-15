@@ -2,6 +2,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
+using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
 
@@ -52,12 +53,18 @@ public partial class PartnerEdit(IPartnerService Service, NavigationManager Nav)
 
     public sealed record class PartnerInput
     {
-        [Required] public string Name { get; set; } = "";
+        [Required]
+        [StringLength(FieldLimits.Partner.Name)]
+        public string Name { get; set; } = "";
+        [StringLength(FieldLimits.Partner.Role)]
         public string Role { get; set; } = "";
+        [StringLength(FieldLimits.Partner.PhotoPath)]
         public string PhotoPath { get; set; } = "";
+        [StringLength(FieldLimits.Partner.ContactHref)]
         public string ContactHref { get; set; } = "";
         public ContentStatus Status { get; set; } = ContentStatus.Published;
         public int DisplayOrder { get; set; }
+        [StringLength(FieldLimits.Slug)]
         public string Slug { get; set; } = "";
 
         public static PartnerInput From(Partner p) => new()

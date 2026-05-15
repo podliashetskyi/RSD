@@ -5,6 +5,7 @@ namespace RSD.Web.Services.Content;
 public record BlogPostUpsert(
     string Slug,
     string Title,
+    string Summary,
     string Description,
     string Category,
     Guid? AuthorId,

@@ -18,6 +18,7 @@ public sealed class CaseService(
     {
         Slug = input.Slug,
         Name = input.Name,
+        Summary = input.Summary,
         Industry = input.Industry,
         Description = input.Description,
         CoverImagePath = input.CoverImagePath,
@@ -31,6 +32,7 @@ public sealed class CaseService(
     protected override void ApplyUpdate(Case entity, CaseUpsert input)
     {
         entity.Name = input.Name;
+        entity.Summary = input.Summary;
         entity.Industry = input.Industry;
         entity.Description = input.Description;
         entity.CoverImagePath = input.CoverImagePath;

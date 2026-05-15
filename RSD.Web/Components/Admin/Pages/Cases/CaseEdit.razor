@@ -31,20 +31,24 @@
         <DataAnnotationsValidator />
 
         <FormField Label="Name">
-            <InputText id="name" @bind-Value="Input.Name" required aria-required="true" class="form-input" />
+            <InputText id="name" @bind-Value="Input.Name" required aria-required="true" maxlength="@FieldLimits.Case.Name" class="form-input" />
             <ValidationMessage For="() => Input.Name" class="form-error" />
         </FormField>
 
         <SlugField TEntity="Case" Value="@Input.Slug" TitleSource="@Input.Name" CurrentEntityId="@Id"
                    ValueChanged="OnSlugChanged" IsValidChanged="OnSlugValidityChanged" />
 
-        <FormField Label="Description" Hint="Short summary shown in the list grid.">
-            <InputTextArea id="description" @bind-Value="Input.Description" rows="3" class="form-input" />
-        </FormField>
+        <FieldField Label="Summary" Hint="Short blurb shown on listing cards. Falls back to Description if blank." MaxLength="FieldLimits.Case.Summary" Value="@Input.Summary">
+            <InputTextArea id="summary" @bind-Value="Input.Summary" rows="2" maxlength="@FieldLimits.Case.Summary" class="form-input" />
+        </FieldField>
+
+        <FieldField Label="Description" Hint="Long-form description shown on the detail page." MaxLength="FieldLimits.Case.Description" Value="@Input.Description">
+            <InputTextArea id="description" @bind-Value="Input.Description" rows="3" maxlength="@FieldLimits.Case.Description" class="form-input" />
+        </FieldField>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField Label="Industry">
-                <InputText id="industry" @bind-Value="Input.Industry" class="form-input" />
+                <InputText id="industry" @bind-Value="Input.Industry" maxlength="@FieldLimits.Case.Industry" class="form-input" />
             </FormField>
             <FormField Label="Status">
                 <InputSelect id="status" @bind-Value="Input.Status" class="form-input">
@@ -70,7 +74,7 @@
             <ImageUploader Subfolder="cases" CurrentFileChanged="OnCoverUploaded"
                            Alt="@Input.CoverImageAlt" AltChanged="OnCoverAltChanged" />
             <p class="text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>
-            <InputText id="cover" @bind-Value="Input.CoverImagePath" placeholder="images/cases/case-foo.png" class="form-input" />
+            <InputText id="cover" @bind-Value="Input.CoverImagePath" placeholder="images/cases/case-foo.png" maxlength="@FieldLimits.Case.CoverImagePath" class="form-input" />
         </div>
 
         <CaseBodyEditor Value="Body" />

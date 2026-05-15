@@ -17,10 +17,10 @@ public sealed class UploadedFileConfiguration : IEntityTypeConfiguration<Uploade
     {
         b.ToTable("uploaded_files");
         b.HasKey(x => x.Id);
-        b.Property(x => x.Path).HasMaxLength(500).IsRequired();
-        b.Property(x => x.OriginalName).HasMaxLength(500).IsRequired();
-        b.Property(x => x.ContentType).HasMaxLength(100).IsRequired();
-        b.Property(x => x.UploadedByUserId).HasMaxLength(450);
+        b.Property(x => x.Path).HasMaxLength(FieldLimits.UploadedFile.Path).IsRequired();
+        b.Property(x => x.OriginalName).HasMaxLength(FieldLimits.UploadedFile.OriginalName).IsRequired();
+        b.Property(x => x.ContentType).HasMaxLength(FieldLimits.UploadedFile.ContentType).IsRequired();
+        b.Property(x => x.UploadedByUserId).HasMaxLength(FieldLimits.UploadedFile.UploadedByUserId);
         b.Property(x => x.Variants)
             .HasColumnType("jsonb")
             .HasConversion(

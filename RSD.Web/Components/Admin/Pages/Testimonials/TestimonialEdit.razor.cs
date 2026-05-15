@@ -2,6 +2,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
+using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
 
@@ -52,14 +53,23 @@ public partial class TestimonialEdit(ITestimonialService Service, NavigationMana
 
     public sealed record class TestimonialInput
     {
-        [Required] public string Title { get; set; } = "";
-        [Required] public string Quote { get; set; } = "";
-        [Required] public string AuthorName { get; set; } = "";
+        [Required]
+        [StringLength(FieldLimits.Testimonial.Title)]
+        public string Title { get; set; } = "";
+        [Required]
+        [StringLength(FieldLimits.Testimonial.Quote)]
+        public string Quote { get; set; } = "";
+        [Required]
+        [StringLength(FieldLimits.Testimonial.AuthorName)]
+        public string AuthorName { get; set; } = "";
+        [StringLength(FieldLimits.Testimonial.AuthorRole)]
         public string AuthorRole { get; set; } = "";
+        [StringLength(FieldLimits.Testimonial.AvatarPath)]
         public string AvatarPath { get; set; } = "";
         public ContentStatus Status { get; set; } = ContentStatus.Published;
         public int DisplayOrder { get; set; }
         public bool DisplayOnHome { get; set; } = true;
+        [StringLength(FieldLimits.Slug)]
         public string Slug { get; set; } = "";
 
         public static TestimonialInput From(Testimonial t) => new()

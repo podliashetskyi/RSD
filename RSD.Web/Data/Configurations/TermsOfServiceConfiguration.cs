@@ -9,7 +9,7 @@ public sealed class TermsOfServiceConfiguration : IEntityTypeConfiguration<Terms
     public void Configure(EntityTypeBuilder<TermsOfService> b)
     {
         ContentEntityConfiguration.Apply(b, "terms_of_service");
-        b.Property(x => x.Title).HasMaxLength(200).IsRequired();
+        b.Property(x => x.Title).HasMaxLength(FieldLimits.TermsOfService.Title).IsRequired();
         b.Property(x => x.LastUpdatedAt).HasColumnType("date");
         b.Property(x => x.BodyHtml).HasColumnType("text");
     }

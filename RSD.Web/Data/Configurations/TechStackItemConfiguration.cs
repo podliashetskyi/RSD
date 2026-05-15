@@ -9,8 +9,8 @@ public sealed class TechStackItemConfiguration : IEntityTypeConfiguration<TechSt
     public void Configure(EntityTypeBuilder<TechStackItem> b)
     {
         ContentEntityConfiguration.Apply(b, "tech_stack_items");
-        b.Property(x => x.Label).HasMaxLength(100).IsRequired();
-        b.Property(x => x.LogoPath).HasMaxLength(500);
+        b.Property(x => x.Label).HasMaxLength(FieldLimits.TechStackItem.Label).IsRequired();
+        b.Property(x => x.LogoPath).HasMaxLength(FieldLimits.TechStackItem.LogoPath);
         b.HasIndex(x => x.DisplayOrder);
     }
 }

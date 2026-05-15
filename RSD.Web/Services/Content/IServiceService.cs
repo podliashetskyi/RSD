@@ -5,6 +5,7 @@ namespace RSD.Web.Services.Content;
 public record ServiceUpsert(
     string Slug,
     string Title,
+    string Summary,
     string Description,
     List<string> BulletPoints,
     string CoverImagePath,

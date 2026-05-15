@@ -16,11 +16,11 @@
 
     <EditForm Model="Input" OnValidSubmit="SaveAsync" FormName="tech-edit" class="space-y-4">
         <DataAnnotationsValidator />
-        <FormField Label="Label"><InputText @bind-Value="Input.Label" required aria-required="true" class="form-input" /></FormField>
+        <FormField Label="Label"><InputText @bind-Value="Input.Label" required aria-required="true" maxlength="@FieldLimits.TechStackItem.Label" class="form-input" /></FormField>
         <FormField Label="Logo">
             <ImageUploader Subfolder="tech" CurrentFileChanged="OnLogoUploaded" />
             <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>
-            <InputText @bind-Value="Input.LogoPath" placeholder="images/services/tech/dotnet.png" class="form-input" />
+            <InputText @bind-Value="Input.LogoPath" placeholder="images/services/tech/dotnet.png" maxlength="@FieldLimits.TechStackItem.LogoPath" class="form-input" />
         </FormField>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -2,6 +2,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
+using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
 
@@ -47,11 +48,16 @@ public partial class MissionStatEdit(IMissionStatService Service, NavigationMana
 
     public sealed record class StatInput
     {
-        [Required] public string Label { get; set; } = "";
+        [Required]
+        [StringLength(FieldLimits.MissionStat.Label)]
+        public string Label { get; set; } = "";
+        [StringLength(FieldLimits.MissionStat.Number)]
         public string Number { get; set; } = "";
+        [StringLength(FieldLimits.MissionStat.Symbol)]
         public string Symbol { get; set; } = "";
         public ContentStatus Status { get; set; } = ContentStatus.Published;
         public int DisplayOrder { get; set; }
+        [StringLength(FieldLimits.Slug)]
         public string Slug { get; set; } = "";
 
         public static StatInput From(MissionStat s) => new()

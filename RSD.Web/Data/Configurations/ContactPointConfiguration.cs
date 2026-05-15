@@ -9,7 +9,7 @@ public sealed class ContactPointConfiguration : IEntityTypeConfiguration<Contact
     public void Configure(EntityTypeBuilder<ContactPoint> b)
     {
         ContentEntityConfiguration.Apply(b, "contact_points");
-        b.Property(x => x.Label).HasMaxLength(100).IsRequired();
+        b.Property(x => x.Label).HasMaxLength(FieldLimits.ContactPoint.Label).IsRequired();
         b.Property(x => x.Lines).HasColumnType("text[]");
         b.HasIndex(x => x.DisplayOrder);
     }

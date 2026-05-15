@@ -31,7 +31,7 @@
         <DataAnnotationsValidator />
 
         <FormField Label="Name">
-            <InputText id="name" @bind-Value="Input.Name" required aria-required="true" class="form-input" />
+            <InputText id="name" @bind-Value="Input.Name" required aria-required="true" maxlength="@FieldLimits.Product.Name" class="form-input" />
             <ValidationMessage For="() => Input.Name" class="form-error" />
         </FormField>
 
@@ -40,26 +40,30 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField Label="Subtitle">
-                <InputText id="subtitle" @bind-Value="Input.Subtitle" class="form-input" />
+                <InputText id="subtitle" @bind-Value="Input.Subtitle" maxlength="@FieldLimits.Product.Subtitle" class="form-input" />
             </FormField>
             <FormField Label="Price (display string)" Hint="e.g. from $49/mo">
-                <InputText id="price" @bind-Value="Input.Price" class="form-input" />
+                <InputText id="price" @bind-Value="Input.Price" maxlength="@FieldLimits.Product.Price" class="form-input" />
             </FormField>
         </div>
 
-        <FormField Label="Description" Hint="Short summary shown on the products list page.">
-            <InputTextArea id="description" @bind-Value="Input.Description" rows="3" class="form-input" />
-        </FormField>
+        <FieldField Label="Summary" Hint="Short blurb shown on listing cards. Falls back to Description if blank." MaxLength="FieldLimits.Product.Summary" Value="@Input.Summary">
+            <InputTextArea id="summary" @bind-Value="Input.Summary" rows="2" maxlength="@FieldLimits.Product.Summary" class="form-input" />
+        </FieldField>
+
+        <FieldField Label="Description" Hint="Long-form description shown on the detail page." MaxLength="FieldLimits.Product.Description" Value="@Input.Description">
+            <InputTextArea id="description" @bind-Value="Input.Description" rows="3" maxlength="@FieldLimits.Product.Description" class="form-input" />
+        </FieldField>
 
         <TagInput Label="Bullet points" Placeholder="Add highlight…" Hint="Press Enter to add a bullet."
                   Value="Input.BulletPoints" ValueChanged="OnBulletsChanged" />
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField Label="Try-for-free href" Hint="Where the primary CTA links.">
-                <InputText id="try" @bind-Value="Input.TryForFreeHref" placeholder="/contact" class="form-input" />
+                <InputText id="try" @bind-Value="Input.TryForFreeHref" placeholder="/contact" maxlength="@FieldLimits.Product.TryForFreeHref" class="form-input" />
             </FormField>
             <FormField Label="Learn-more href" Hint="Where the secondary CTA links.">
-                <InputText id="learn" @bind-Value="Input.LearnMoreHref" placeholder="#" class="form-input" />
+                <InputText id="learn" @bind-Value="Input.LearnMoreHref" placeholder="#" maxlength="@FieldLimits.Product.LearnMoreHref" class="form-input" />
             </FormField>
         </div>
 
@@ -84,7 +88,7 @@
             <ImageUploader Subfolder="products" CurrentFileChanged="OnCoverUploaded"
                            Alt="@Input.CoverImageAlt" AltChanged="OnCoverAltChanged" />
             <p class="text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>
-            <InputText id="cover" @bind-Value="Input.CoverImagePath" placeholder="images/products/product-foo.png" class="form-input" />
+            <InputText id="cover" @bind-Value="Input.CoverImagePath" placeholder="images/products/product-foo.png" maxlength="@FieldLimits.Product.CoverImagePath" class="form-input" />
         </div>
 
         <ProductBodyEditor Value="Body" />
