@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
 using RSD.Web.Components.Admin.Shared;
 using RSD.Web.Components.Admin.Shared.Blocks;
+using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
 using RSD.Web.Services.Preview;
@@ -76,13 +77,22 @@ public partial class ServiceEdit(
     public sealed record class ServiceInput
     {
         [Required(ErrorMessage = "Title is required.")]
+        [StringLength(FieldLimits.Service.Title)]
         public string Title { get; set; } = "";
+        [StringLength(FieldLimits.Slug)]
         public string Slug { get; set; } = "";
+        [StringLength(FieldLimits.Service.Summary)]
+        public string Summary { get; set; } = "";
+        [StringLength(FieldLimits.Service.Description)]
         public string Description { get; set; } = "";
         public List<string> BulletPoints { get; set; } = [];
+        [StringLength(FieldLimits.Service.CoverImagePath)]
         public string CoverImagePath { get; set; } = "";
+        [StringLength(FieldLimits.Service.CoverImageAlt)]
         public string CoverImageAlt { get; set; } = "";
+        [StringLength(FieldLimits.Service.DetailsHref)]
         public string DetailsHref { get; set; } = "";
+        [StringLength(FieldLimits.Service.Intro)]
         public string Intro { get; set; } = "";
         public ContentStatus Status { get; set; } = ContentStatus.Draft;
         public SeoMetadata Seo { get; set; } = new();
@@ -91,6 +101,7 @@ public partial class ServiceEdit(
         {
             Title = s.Title,
             Slug = s.Slug,
+            Summary = s.Summary,
             Description = s.Description,
             BulletPoints = [.. s.BulletPoints],
             CoverImagePath = s.CoverImagePath,
@@ -102,6 +113,6 @@ public partial class ServiceEdit(
         };
 
         public ServiceUpsert ToUpsert(ArticleBody body) => new(
-            Slug, Title, Description, [.. BulletPoints], CoverImagePath, CoverImageAlt, DetailsHref, Intro, Status, Seo, body);
+            Slug, Title, Summary, Description, [.. BulletPoints], CoverImagePath, CoverImageAlt, DetailsHref, Intro, Status, Seo, body);
     }
 }

@@ -20,6 +20,7 @@ public sealed class BlogService(
     {
         Slug = input.Slug,
         Title = input.Title,
+        Summary = input.Summary,
         Description = input.Description,
         Category = input.Category,
         AuthorId = input.AuthorId,
@@ -36,6 +37,7 @@ public sealed class BlogService(
     protected override void ApplyUpdate(BlogPost entity, BlogPostUpsert input)
     {
         entity.Title = input.Title;
+        entity.Summary = input.Summary;
         entity.Description = input.Description;
         entity.Category = input.Category;
         entity.AuthorId = input.AuthorId;

@@ -102,7 +102,7 @@
                             {
                                 <h3 class="text-ink text-[30px] font-semibold leading-[1.25]">@c.Name</h3>
                             }
-                            <p class="text-ink-soft text-body leading-6">@c.Description</p>
+                            <p class="text-ink-soft text-body leading-6">@(string.IsNullOrWhiteSpace(c.Summary) ? c.Description : c.Summary)</p>
                         </div>
                         <div class="flex flex-wrap gap-3">
                             @foreach (var tag in c.TechTags)

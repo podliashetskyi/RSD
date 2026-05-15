@@ -9,12 +9,13 @@ public sealed class BlogPostConfiguration : IEntityTypeConfiguration<BlogPost>
     public void Configure(EntityTypeBuilder<BlogPost> b)
     {
         ContentEntityConfiguration.Apply(b, "blog_posts");
-        b.Property(x => x.Title).HasMaxLength(300).IsRequired();
-        b.Property(x => x.Description).HasMaxLength(2000);
-        b.Property(x => x.Category).HasMaxLength(100);
-        b.Property(x => x.CoverImagePath).HasMaxLength(500);
-        b.Property(x => x.CoverImageAlt).HasMaxLength(200);
-        b.Property(x => x.Intro).HasMaxLength(4000);
+        b.Property(x => x.Title).HasMaxLength(FieldLimits.BlogPost.Title).IsRequired();
+        b.Property(x => x.Summary).HasMaxLength(FieldLimits.BlogPost.Summary);
+        b.Property(x => x.Description).HasMaxLength(FieldLimits.BlogPost.Description);
+        b.Property(x => x.Category).HasMaxLength(FieldLimits.BlogPost.Category);
+        b.Property(x => x.CoverImagePath).HasMaxLength(FieldLimits.BlogPost.CoverImagePath);
+        b.Property(x => x.CoverImageAlt).HasMaxLength(FieldLimits.BlogPost.CoverImageAlt);
+        b.Property(x => x.Intro).HasMaxLength(FieldLimits.BlogPost.Intro);
         b.Property(x => x.Tags).HasColumnType("text[]");
 
         b.Property(x => x.BodyBlocks)

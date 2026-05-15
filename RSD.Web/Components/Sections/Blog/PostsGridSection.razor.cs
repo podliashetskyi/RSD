@@ -28,7 +28,7 @@ public partial class PostsGridSection(IBlogService Blog, ITeamMemberService Team
                 var s = Search.Trim();
                 q = q.Where(p =>
                     p.Title.Contains(s, StringComparison.OrdinalIgnoreCase) ||
-                    p.Description.Contains(s, StringComparison.OrdinalIgnoreCase));
+                    p.CardBlurb.Contains(s, StringComparison.OrdinalIgnoreCase));
             }
             return [.. q];
         }
@@ -47,7 +47,7 @@ public partial class PostsGridSection(IBlogService Blog, ITeamMemberService Team
 public sealed record BlogPostRow(
     string Slug,
     string Title,
-    string Description,
+    string CardBlurb,
     string Category,
     IReadOnlyList<string> Tags,
     string CoverImagePath,
@@ -62,7 +62,7 @@ public sealed record BlogPostRow(
         return new BlogPostRow(
             post.Slug,
             post.Title,
-            post.Description,
+            string.IsNullOrWhiteSpace(post.Summary) ? post.Description : post.Summary,
             post.Category,
             post.Tags,
             post.CoverImagePath,

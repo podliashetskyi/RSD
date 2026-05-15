@@ -23,7 +23,7 @@
                             </div>
                             <h3 class="text-ink text-h3 font-semibold leading-none">@p.Name</h3>
                             <p class="text-ink-soft text-body-sm">@p.Subtitle</p>
-                            <p class="text-ink-soft text-body leading-relaxed">@p.Description</p>
+                            <p class="text-ink-soft text-body leading-relaxed">@(string.IsNullOrWhiteSpace(p.Summary) ? p.Description : p.Summary)</p>
                         </div>
                         <ul class="flex flex-col gap-2.5">
                             @foreach (var bullet in p.BulletPoints)

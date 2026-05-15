@@ -20,6 +20,7 @@ public sealed class ServiceService(
     {
         Slug = input.Slug,
         Title = input.Title,
+        Summary = input.Summary,
         Description = input.Description,
         BulletPoints = [.. input.BulletPoints],
         CoverImagePath = input.CoverImagePath,
@@ -34,6 +35,7 @@ public sealed class ServiceService(
     protected override void ApplyUpdate(Service entity, ServiceUpsert input)
     {
         entity.Title = input.Title;
+        entity.Summary = input.Summary;
         entity.Description = input.Description;
         entity.BulletPoints = [.. input.BulletPoints];
         entity.CoverImagePath = input.CoverImagePath;

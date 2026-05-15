@@ -3,6 +3,7 @@ namespace RSD.Web.Data.Entities;
 public record class BlogPost : ContentEntity
 {
     public required string Title { get; set; }
+    public string Summary { get; set; } = "";
     public string Description { get; set; } = "";
     public string Category { get; set; } = "";
     public Guid? AuthorId { get; set; }

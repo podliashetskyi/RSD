@@ -5,6 +5,7 @@ namespace RSD.Web.Services.Content;
 public record ProductUpsert(
     string Slug,
     string Name,
+    string Summary,
     string Subtitle,
     string Price,
     string Description,

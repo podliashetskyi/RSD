@@ -3,6 +3,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
 using RSD.Web.Components.Admin.Shared;
+using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
 using RSD.Web.Services.Preview;
@@ -75,15 +76,26 @@ public partial class ProductEdit(
     public sealed record class ProductInput
     {
         [Required(ErrorMessage = "Name is required.")]
+        [StringLength(FieldLimits.Product.Name)]
         public string Name { get; set; } = "";
+        [StringLength(FieldLimits.Slug)]
         public string Slug { get; set; } = "";
+        [StringLength(FieldLimits.Product.Summary)]
+        public string Summary { get; set; } = "";
+        [StringLength(FieldLimits.Product.Subtitle)]
         public string Subtitle { get; set; } = "";
+        [StringLength(FieldLimits.Product.Price)]
         public string Price { get; set; } = "";
+        [StringLength(FieldLimits.Product.Description)]
         public string Description { get; set; } = "";
         public List<string> BulletPoints { get; set; } = [];
+        [StringLength(FieldLimits.Product.CoverImagePath)]
         public string CoverImagePath { get; set; } = "";
+        [StringLength(FieldLimits.Product.CoverImageAlt)]
         public string CoverImageAlt { get; set; } = "";
+        [StringLength(FieldLimits.Product.TryForFreeHref)]
         public string TryForFreeHref { get; set; } = "";
+        [StringLength(FieldLimits.Product.LearnMoreHref)]
         public string LearnMoreHref { get; set; } = "";
         public ContentStatus Status { get; set; } = ContentStatus.Draft;
         public SeoMetadata Seo { get; set; } = new();
@@ -92,6 +104,7 @@ public partial class ProductEdit(
         {
             Name = p.Name,
             Slug = p.Slug,
+            Summary = p.Summary,
             Subtitle = p.Subtitle,
             Price = p.Price,
             Description = p.Description,
@@ -105,7 +118,7 @@ public partial class ProductEdit(
         };
 
         public ProductUpsert ToUpsert(ProductDetailFields detail) => new(
-            Slug, Name, Subtitle, Price, Description, [.. BulletPoints],
+            Slug, Name, Summary, Subtitle, Price, Description, [.. BulletPoints],
             CoverImagePath, CoverImageAlt, TryForFreeHref, LearnMoreHref, Status, Seo, detail);
     }
 }

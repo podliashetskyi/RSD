@@ -31,20 +31,24 @@
         <DataAnnotationsValidator />
 
         <FormField Label="Title">
-            <InputText id="title" @bind-Value="Input.Title" required aria-required="true" class="form-input" />
+            <InputText id="title" @bind-Value="Input.Title" required aria-required="true" maxlength="@FieldLimits.BlogPost.Title" class="form-input" />
             <ValidationMessage For="() => Input.Title" class="form-error" />
         </FormField>
 
         <SlugField TEntity="BlogPost" Value="@Input.Slug" TitleSource="@Input.Title" CurrentEntityId="@Id"
                    ValueChanged="OnSlugChanged" IsValidChanged="OnSlugValidityChanged" />
 
-        <FormField Label="Description" Hint="Short summary shown in the list grid.">
-            <InputTextArea id="description" @bind-Value="Input.Description" rows="3" class="form-input" />
-        </FormField>
+        <FieldField Label="Summary" Hint="Short blurb shown on listing cards. Falls back to Description if blank." MaxLength="FieldLimits.BlogPost.Summary" Value="@Input.Summary">
+            <InputTextArea id="summary" @bind-Value="Input.Summary" rows="2" maxlength="@FieldLimits.BlogPost.Summary" class="form-input" />
+        </FieldField>
+
+        <FieldField Label="Description" Hint="Long-form description shown on the detail page." MaxLength="FieldLimits.BlogPost.Description" Value="@Input.Description">
+            <InputTextArea id="description" @bind-Value="Input.Description" rows="3" maxlength="@FieldLimits.BlogPost.Description" class="form-input" />
+        </FieldField>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <FormField Label="Category">
-                <InputText id="category" @bind-Value="Input.Category" class="form-input" />
+                <InputText id="category" @bind-Value="Input.Category" maxlength="@FieldLimits.BlogPost.Category" class="form-input" />
             </FormField>
             <FormField Label="Read time (minutes)">
                 <InputNumber id="readTime" @bind-Value="Input.ReadTimeMinutes" class="form-input" />
@@ -73,7 +77,7 @@
             <ImageUploader Subfolder="blog" CurrentFileChanged="OnCoverUploaded"
                            Alt="@Input.CoverImageAlt" AltChanged="OnCoverAltChanged" />
             <p class="text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>
-            <InputText id="cover" @bind-Value="Input.CoverImagePath" placeholder="images/blog/post-cover.png" class="form-input" />
+            <InputText id="cover" @bind-Value="Input.CoverImagePath" placeholder="images/blog/post-cover.png" maxlength="@FieldLimits.BlogPost.CoverImagePath" class="form-input" />
         </div>
 
         <BlogBodyEditor Value="Body" />

@@ -31,23 +31,27 @@
         <DataAnnotationsValidator />
 
         <FormField Label="Title">
-            <InputText id="title" @bind-Value="Input.Title" required aria-required="true" class="form-input" />
+            <InputText id="title" @bind-Value="Input.Title" required aria-required="true" maxlength="@FieldLimits.Service.Title" class="form-input" />
             <ValidationMessage For="() => Input.Title" class="form-error" />
         </FormField>
 
         <SlugField TEntity="RSD.Web.Data.Entities.Service" Value="@Input.Slug" TitleSource="@Input.Title" CurrentEntityId="@Id"
                    ValueChanged="OnSlugChanged" IsValidChanged="OnSlugValidityChanged" />
 
-        <FormField Label="Description" Hint="Short summary shown on the services list page.">
-            <InputTextArea id="description" @bind-Value="Input.Description" rows="3" class="form-input" />
-        </FormField>
+        <FieldField Label="Summary" Hint="Short blurb shown on listing cards. Falls back to Description if blank." MaxLength="FieldLimits.Service.Summary" Value="@Input.Summary">
+            <InputTextArea id="summary" @bind-Value="Input.Summary" rows="2" maxlength="@FieldLimits.Service.Summary" class="form-input" />
+        </FieldField>
+
+        <FieldField Label="Description" Hint="Long-form description shown on the detail page." MaxLength="FieldLimits.Service.Description" Value="@Input.Description">
+            <InputTextArea id="description" @bind-Value="Input.Description" rows="3" maxlength="@FieldLimits.Service.Description" class="form-input" />
+        </FieldField>
 
         <TagInput Label="Bullet points" Placeholder="Add capability…" Hint="Press Enter to add a bullet."
                   Value="Input.BulletPoints" ValueChanged="OnBulletsChanged" />
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField Label="Details href" Hint="Public detail page route.">
-                <InputText id="detailsHref" @bind-Value="Input.DetailsHref" placeholder="/services/foo" class="form-input" />
+                <InputText id="detailsHref" @bind-Value="Input.DetailsHref" placeholder="/services/foo" maxlength="@FieldLimits.Service.DetailsHref" class="form-input" />
             </FormField>
             <FormField Label="Status">
                 <InputSelect id="status" @bind-Value="Input.Status" class="form-input">
@@ -71,7 +75,7 @@
             <ImageUploader Subfolder="services" CurrentFileChanged="OnCoverUploaded"
                            Alt="@Input.CoverImageAlt" AltChanged="OnCoverAltChanged" />
             <p class="text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>
-            <InputText id="cover" @bind-Value="Input.CoverImagePath" placeholder="images/services/foo.png" class="form-input" />
+            <InputText id="cover" @bind-Value="Input.CoverImagePath" placeholder="images/services/foo.png" maxlength="@FieldLimits.Service.CoverImagePath" class="form-input" />
         </div>
 
         <ServiceBodyEditor Value="Body" />
