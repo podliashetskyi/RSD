@@ -2,10 +2,11 @@
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 
 namespace RSD.Web.Components.Admin.Shared;
 
-public partial class TagInput : ComponentBase
+public partial class TagInput(IJSRuntime Js) : ComponentBase, IAsyncDisposable
 {
     [Parameter] public string Label { get; set; } = "Tags";
     [Parameter] public string Hint { get; set; } = "Press Enter or comma to add a tag.";
@@ -15,6 +16,23 @@ public partial class TagInput : ComponentBase
 
     private string Draft { get; set; } = "";
     private string FieldId { get; } = $"tags-{Guid.NewGuid():N}";
+    private ElementReference InputRef { get; set; }
+    private IJSObjectReference? JsModule { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        JsModule = await Js.InvokeAsync<IJSObjectReference>("import", "/js/admin/tag-input.js");
+        await JsModule.InvokeVoidAsync("attach", InputRef);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (JsModule is null) return;
+        try { await JsModule.InvokeVoidAsync("detach", InputRef); }
+        catch { /* component already gone */ }
+        await JsModule.DisposeAsync();
+    }
 
     private async Task OnKeyDownAsync(KeyboardEventArgs e)
     {

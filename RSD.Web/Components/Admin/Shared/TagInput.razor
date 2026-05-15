@@ -11,7 +11,7 @@
                         class="rounded-full px-1 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700">&times;</button>
             </span>
         }
-        <input id="@FieldId" type="text" @bind="Draft" @bind:event="oninput" @onkeydown="OnKeyDownAsync"
+        <input id="@FieldId" type="text" @ref="InputRef" @bind="Draft" @bind:event="oninput" @onkeydown="OnKeyDownAsync"
                placeholder="@Placeholder"
                class="flex-1 min-w-[8rem] border-0 bg-transparent px-1 py-0.5 text-sm focus:outline-none focus:ring-0 text-gray-900 dark:text-white" />
     </div>
