@@ -19,4 +19,5 @@ RSD.Web/wwwroot/uploads/
 .vs/
 .vscode/
 *.swp
+*.lscache
 .DS_Store
