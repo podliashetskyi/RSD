@@ -47,12 +47,8 @@ public partial class ProductEdit(
         try
         {
             var upsert = Input.ToUpsert(Body.ToEntity());
-            var (ok, error) = IsCreate
-                ? await CreateAsync(upsert)
-                : await UpdateAsync(Id!.Value, upsert);
-            if (!ok) { ErrorMessage = error; return; }
-            Toasts.Show(IsCreate ? "Product created." : "Product saved.", ToastKind.Success);
-            Nav.NavigateTo("/admin/products");
+            if (IsCreate) await HandleCreateAsync(upsert);
+            else await HandleUpdateAsync(Id!.Value, upsert);
         }
         catch (Exception ex)
         {
@@ -60,16 +56,20 @@ public partial class ProductEdit(
         }
     }
 
-    private async Task<(bool Ok, string Error)> CreateAsync(ProductUpsert upsert)
+    private async Task HandleCreateAsync(ProductUpsert upsert)
     {
-        var r = await Service.CreateAsync(upsert, CancellationToken.None);
-        return (r.Ok, r.Error);
+        var created = await Service.CreateAsync(upsert, CancellationToken.None);
+        if (!created.Ok) { ErrorMessage = created.Error; return; }
+        Toasts.Show("Product created.", ToastKind.Success);
+        Nav.NavigateTo($"/admin/products/{created.Value}");
     }
 
-    private async Task<(bool Ok, string Error)> UpdateAsync(Guid id, ProductUpsert upsert)
+    private async Task HandleUpdateAsync(Guid id, ProductUpsert upsert)
     {
-        var r = await Service.UpdateAsync(id, upsert, CancellationToken.None);
-        return (r.Ok, r.Error);
+        var updated = await Service.UpdateAsync(id, upsert, CancellationToken.None);
+        if (!updated.Ok) { ErrorMessage = updated.Error; return; }
+        Toasts.Show("Product saved.", ToastKind.Success);
+        Nav.NavigateTo("/admin/products");
     }
 
     private void OnSlugChanged(string slug) => Input.Slug = slug;

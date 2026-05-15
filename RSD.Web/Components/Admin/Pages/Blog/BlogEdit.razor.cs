@@ -56,12 +56,8 @@ public partial class BlogEdit(
         try
         {
             var upsert = Input.ToUpsert(Body.ToEntity());
-            var (ok, error) = IsCreate
-                ? await CreateAsync(upsert)
-                : await UpdateAsync(Id!.Value, upsert);
-            if (!ok) { ErrorMessage = error; return; }
-            Toasts.Show(IsCreate ? "Post created." : "Post saved.", ToastKind.Success);
-            Nav.NavigateTo("/admin/blog");
+            if (IsCreate) await HandleCreateAsync(upsert);
+            else await HandleUpdateAsync(Id!.Value, upsert);
         }
         catch (Exception ex)
         {
@@ -69,16 +65,20 @@ public partial class BlogEdit(
         }
     }
 
-    private async Task<(bool Ok, string Error)> CreateAsync(BlogPostUpsert upsert)
+    private async Task HandleCreateAsync(BlogPostUpsert upsert)
     {
-        var r = await Service.CreateAsync(upsert, CancellationToken.None);
-        return (r.Ok, r.Error);
+        var created = await Service.CreateAsync(upsert, CancellationToken.None);
+        if (!created.Ok) { ErrorMessage = created.Error; return; }
+        Toasts.Show("Post created.", ToastKind.Success);
+        Nav.NavigateTo($"/admin/blog/{created.Value}");
     }
 
-    private async Task<(bool Ok, string Error)> UpdateAsync(Guid id, BlogPostUpsert upsert)
+    private async Task HandleUpdateAsync(Guid id, BlogPostUpsert upsert)
     {
-        var r = await Service.UpdateAsync(id, upsert, CancellationToken.None);
-        return (r.Ok, r.Error);
+        var updated = await Service.UpdateAsync(id, upsert, CancellationToken.None);
+        if (!updated.Ok) { ErrorMessage = updated.Error; return; }
+        Toasts.Show("Post saved.", ToastKind.Success);
+        Nav.NavigateTo("/admin/blog");
     }
 
     private void OnSlugChanged(string slug) => Input.Slug = slug;

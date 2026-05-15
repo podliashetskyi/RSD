@@ -55,12 +55,8 @@ public partial class CaseEdit(
         try
         {
             var upsert = Input.ToUpsert(Body.ToEntity());
-            var (ok, error) = IsCreate
-                ? await CreateAsync(upsert)
-                : await UpdateAsync(Id!.Value, upsert);
-            if (!ok) { ErrorMessage = error; return; }
-            Toasts.Show(IsCreate ? "Case created." : "Case saved.", ToastKind.Success);
-            Nav.NavigateTo("/admin/cases");
+            if (IsCreate) await HandleCreateAsync(upsert);
+            else await HandleUpdateAsync(Id!.Value, upsert);
         }
         catch (Exception ex)
         {
@@ -68,16 +64,20 @@ public partial class CaseEdit(
         }
     }
 
-    private async Task<(bool Ok, string Error)> CreateAsync(CaseUpsert upsert)
+    private async Task HandleCreateAsync(CaseUpsert upsert)
     {
-        var r = await Service.CreateAsync(upsert, CancellationToken.None);
-        return (r.Ok, r.Error);
+        var created = await Service.CreateAsync(upsert, CancellationToken.None);
+        if (!created.Ok) { ErrorMessage = created.Error; return; }
+        Toasts.Show("Case created.", ToastKind.Success);
+        Nav.NavigateTo($"/admin/cases/{created.Value}");
     }
 
-    private async Task<(bool Ok, string Error)> UpdateAsync(Guid id, CaseUpsert upsert)
+    private async Task HandleUpdateAsync(Guid id, CaseUpsert upsert)
     {
-        var r = await Service.UpdateAsync(id, upsert, CancellationToken.None);
-        return (r.Ok, r.Error);
+        var updated = await Service.UpdateAsync(id, upsert, CancellationToken.None);
+        if (!updated.Ok) { ErrorMessage = updated.Error; return; }
+        Toasts.Show("Case saved.", ToastKind.Success);
+        Nav.NavigateTo("/admin/cases");
     }
 
     private void OnSlugChanged(string slug) => Input.Slug = slug;
