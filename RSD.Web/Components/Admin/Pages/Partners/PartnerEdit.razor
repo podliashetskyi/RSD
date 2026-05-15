@@ -23,7 +23,9 @@
             <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>
             <InputText @bind-Value="Input.PhotoPath" placeholder="images/about/partners/portrait-bonnie-green.png" maxlength="@FieldLimits.Partner.PhotoPath" class="form-input" />
         </FormField>
-        <FormField Label="Contact href" Hint="URL or path"><InputText @bind-Value="Input.ContactHref" maxlength="@FieldLimits.Partner.ContactHref" class="form-input" /></FormField>
+        <FormField Label="Contact link" Hint="Full URL (https://…) or email address. Leave blank to hide the 'Contact me' button on the public page.">
+            <InputText @bind-Value="Input.ContactHref" placeholder="https://linkedin.com/in/… or name@example.com" maxlength="@FieldLimits.Partner.ContactHref" class="form-input" />
+        </FormField>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField Label="Status">
