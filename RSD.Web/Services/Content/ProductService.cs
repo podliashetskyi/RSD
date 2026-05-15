@@ -23,6 +23,7 @@ public sealed class ProductService(
         Description = input.Description,
         BulletPoints = [.. input.BulletPoints],
         CoverImagePath = input.CoverImagePath,
+        CoverImageAlt = input.CoverImageAlt,
         TryForFreeHref = input.TryForFreeHref,
         LearnMoreHref = input.LearnMoreHref,
         Status = input.Status,
@@ -38,6 +39,7 @@ public sealed class ProductService(
         entity.Description = input.Description;
         entity.BulletPoints = [.. input.BulletPoints];
         entity.CoverImagePath = input.CoverImagePath;
+        entity.CoverImageAlt = input.CoverImageAlt;
         entity.TryForFreeHref = input.TryForFreeHref;
         entity.LearnMoreHref = input.LearnMoreHref;
         entity.Status = input.Status;

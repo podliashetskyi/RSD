@@ -20,6 +20,7 @@ public partial class ProductDetail(
     private Product? Product { get; set; }
 
     private string HeroImage => string.IsNullOrEmpty(Product?.CoverImagePath) ? "images/products/nexacrm/hero-dashboard.png" : Product!.CoverImagePath;
+    private string HeroAlt => string.IsNullOrEmpty(Product?.CoverImageAlt) ? (Product?.Name ?? "") : Product!.CoverImageAlt;
 
     protected override async Task OnInitializedAsync()
     {

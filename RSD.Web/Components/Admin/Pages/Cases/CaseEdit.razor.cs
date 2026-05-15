@@ -69,6 +69,7 @@ public partial class CaseEdit(
     private void OnTechTagsChanged(List<string> tags) => Input.TechTags = tags;
     private void OnSeoChanged(SeoMetadata seo) => Input.Seo = seo;
     private void OnCoverUploaded(UploadedFile? file) { if (file is not null) Input.CoverImagePath = file.Path; }
+    private void OnCoverAltChanged(string alt) => Input.CoverImageAlt = alt;
     private void ClearCover() => Input.CoverImagePath = "";
 
     public sealed record class CaseInput
@@ -79,6 +80,7 @@ public partial class CaseEdit(
         public string Industry { get; set; } = "";
         public string Description { get; set; } = "";
         public string CoverImagePath { get; set; } = "";
+        public string CoverImageAlt { get; set; } = "";
         public List<string> TechTags { get; set; } = [];
         public ContentStatus Status { get; set; } = ContentStatus.Draft;
         public SeoMetadata Seo { get; set; } = new();
@@ -90,12 +92,13 @@ public partial class CaseEdit(
             Industry = c.Industry,
             Description = c.Description,
             CoverImagePath = c.CoverImagePath,
+            CoverImageAlt = c.CoverImageAlt,
             TechTags = [.. c.TechTags],
             Status = c.Status,
             Seo = c.Seo
         };
 
         public CaseUpsert ToUpsert(CaseDetailFields detail) => new(
-            Slug, Name, Industry, Description, CoverImagePath, [.. TechTags], Status, Seo, detail);
+            Slug, Name, Industry, Description, CoverImagePath, CoverImageAlt, [.. TechTags], Status, Seo, detail);
     }
 }

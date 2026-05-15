@@ -12,6 +12,7 @@ public sealed class ServiceConfiguration : IEntityTypeConfiguration<Service>
         b.Property(x => x.Title).HasMaxLength(300).IsRequired();
         b.Property(x => x.Description).HasMaxLength(2000);
         b.Property(x => x.CoverImagePath).HasMaxLength(500);
+        b.Property(x => x.CoverImageAlt).HasMaxLength(200);
         b.Property(x => x.DetailsHref).HasMaxLength(500);
         b.Property(x => x.Intro).HasMaxLength(4000);
         b.Property(x => x.BulletPoints).HasColumnType("text[]");

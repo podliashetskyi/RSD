@@ -17,6 +17,11 @@ public partial class CaseBodyEditor : ComponentBase
     private void OnResultsChanged(List<string> items) => Value.Results = items;
     private void OnTechPillsChanged(List<string> items) => Value.TechPills = items;
     private void OnMetricsChanged(List<MetricRow> items) => Value.Metrics = items;
+
+    private void OnTestimonialAvatarUploaded(UploadedFile? file)
+    {
+        if (file is not null) Value.Testimonial.AvatarPath = file.Path;
+    }
 }
 
 public sealed record class CaseBodyForm

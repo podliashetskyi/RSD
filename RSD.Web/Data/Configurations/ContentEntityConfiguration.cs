@@ -23,6 +23,7 @@ public static class ContentEntityConfiguration
             seo.Property(p => p.MetaTitle).HasMaxLength(200).HasColumnName("SeoMetaTitle");
             seo.Property(p => p.MetaDescription).HasMaxLength(500).HasColumnName("SeoMetaDescription");
             seo.Property(p => p.OgImagePath).HasMaxLength(500).HasColumnName("SeoOgImagePath");
+            seo.Property(p => p.OgImageAlt).HasMaxLength(200).HasColumnName("SeoOgImageAlt");
         });
 
         b.HasIndex(x => x.Slug)

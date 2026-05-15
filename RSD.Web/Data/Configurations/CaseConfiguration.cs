@@ -13,6 +13,7 @@ public sealed class CaseConfiguration : IEntityTypeConfiguration<Case>
         b.Property(x => x.Industry).HasMaxLength(100);
         b.Property(x => x.Description).HasMaxLength(2000);
         b.Property(x => x.CoverImagePath).HasMaxLength(500);
+        b.Property(x => x.CoverImageAlt).HasMaxLength(200);
         b.Property(x => x.TechTags).HasColumnType("text[]");
 
         b.Property(x => x.DetailFields)

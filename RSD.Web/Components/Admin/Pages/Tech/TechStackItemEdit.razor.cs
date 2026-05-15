@@ -10,9 +10,14 @@ namespace RSD.Web.Components.Admin.Pages.Tech;
 public partial class TechStackItemEdit(ITechStackItemService Service, NavigationManager Nav)
 {
     [Parameter] public Guid? Id { get; set; }
-    [SupplyParameterFromForm] private TechInput Input { get; set; } = new();
+    private TechInput Input { get; set; } = new();
     private string ErrorMessage { get; set; } = "";
     private bool IsCreate => Id is null;
+
+    private void OnLogoUploaded(UploadedFile? file)
+    {
+        if (file is not null) Input.LogoPath = file.Path;
+    }
 
     protected override async Task OnInitializedAsync()
     {

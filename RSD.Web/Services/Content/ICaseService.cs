@@ -8,6 +8,7 @@ public record CaseUpsert(
     string Industry,
     string Description,
     string CoverImagePath,
+    string CoverImageAlt,
     List<string> TechTags,
     ContentStatus Status,
     SeoMetadata Seo,

@@ -10,9 +10,14 @@ namespace RSD.Web.Components.Admin.Pages.Partners;
 public partial class PartnerEdit(IPartnerService Service, NavigationManager Nav)
 {
     [Parameter] public Guid? Id { get; set; }
-    [SupplyParameterFromForm] private PartnerInput Input { get; set; } = new();
+    private PartnerInput Input { get; set; } = new();
     private string ErrorMessage { get; set; } = "";
     private bool IsCreate => Id is null;
+
+    private void OnPhotoUploaded(UploadedFile? file)
+    {
+        if (file is not null) Input.PhotoPath = file.Path;
+    }
 
     protected override async Task OnInitializedAsync()
     {

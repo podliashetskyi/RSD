@@ -10,9 +10,19 @@ namespace RSD.Web.Components.Admin.Pages.MessengerLinks;
 public partial class MessengerLinkEdit(IMessengerLinkService Service, NavigationManager Nav)
 {
     [Parameter] public Guid? Id { get; set; }
-    [SupplyParameterFromForm] private MessengerInput Input { get; set; } = new();
+    private MessengerInput Input { get; set; } = new();
     private string ErrorMessage { get; set; } = "";
     private bool IsCreate => Id is null;
+
+    private void OnLargeIconUploaded(UploadedFile? file)
+    {
+        if (file is not null) Input.LargeIconPath = file.Path;
+    }
+
+    private void OnSmallIconUploaded(UploadedFile? file)
+    {
+        if (file is not null) Input.SmallIconPath = file.Path;
+    }
 
     protected override async Task OnInitializedAsync()
     {

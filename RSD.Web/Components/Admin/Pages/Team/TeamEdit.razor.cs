@@ -10,9 +10,14 @@ namespace RSD.Web.Components.Admin.Pages.Team;
 public partial class TeamEdit(ITeamMemberService Service, NavigationManager Nav)
 {
     [Parameter] public Guid? Id { get; set; }
-    [SupplyParameterFromForm] private TeamInput Input { get; set; } = new();
+    private TeamInput Input { get; set; } = new();
     private string ErrorMessage { get; set; } = "";
     private bool IsCreate => Id is null;
+
+    private void OnAvatarUploaded(UploadedFile? file)
+    {
+        if (file is not null) Input.AvatarPath = file.Path;
+    }
 
     protected override async Task OnInitializedAsync()
     {

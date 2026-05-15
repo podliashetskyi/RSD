@@ -6,4 +6,5 @@ namespace RSD.Web.Components.Sections.Detail;
 public partial class HeroSection
 {
     [Parameter, EditorRequired] public string ImageSrc { get; set; } = "";
+    [Parameter] public string Alt { get; set; } = "";
 }

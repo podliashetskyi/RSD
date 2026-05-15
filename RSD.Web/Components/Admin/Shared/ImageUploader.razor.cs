@@ -23,13 +23,29 @@ public partial class ImageUploader(
     [Parameter] public UploadedFile? CurrentFile { get; set; }
     [Parameter] public EventCallback<UploadedFile?> CurrentFileChanged { get; set; }
     [Parameter] public long MaxBytes { get; set; } = 8 * 1024 * 1024;
+    [Parameter] public string Alt { get; set; } = "";
+    [Parameter] public EventCallback<string> AltChanged { get; set; }
 
     private string InputId { get; } = $"upload-{Guid.NewGuid():N}";
+    private string AltId { get; } = $"upload-alt-{Guid.NewGuid():N}";
+
+    private Task OnAltInput(ChangeEventArgs e) => AltChanged.InvokeAsync(e.Value?.ToString() ?? "");
     private bool IsUploading { get; set; }
     private string Error { get; set; } = "";
+    private UploadedFile? Preview { get; set; }
     private ElementReference DropzoneRef { get; set; }
     private IJSObjectReference? JsModule { get; set; }
     private DotNetObjectReference<ImageUploader>? Self { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (CurrentFile is not null) Preview = CurrentFile;
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (CurrentFile is not null && Preview is null) Preview = CurrentFile;
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -61,7 +77,12 @@ public partial class ImageUploader(
         StateHasChanged();
         var result = await TryProcessAsync(stream, name, contentType);
         IsUploading = false;
-        if (result is not null) await CurrentFileChanged.InvokeAsync(result);
+        if (result is not null)
+        {
+            Preview = result;
+            await CurrentFileChanged.InvokeAsync(result);
+        }
+        StateHasChanged();
     }
 
     private async Task<UploadedFile?> TryProcessAsync(Stream stream, string name, string contentType)
@@ -102,7 +123,11 @@ public partial class ImageUploader(
         return state.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
     }
 
-    private Task ClearAsync() => CurrentFileChanged.InvokeAsync(null);
+    private Task ClearAsync()
+    {
+        Preview = null;
+        return CurrentFileChanged.InvokeAsync(null);
+    }
 
     private static string FormatBytes(long bytes)
     {

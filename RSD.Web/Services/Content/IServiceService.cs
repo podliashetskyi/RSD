@@ -8,6 +8,7 @@ public record ServiceUpsert(
     string Description,
     List<string> BulletPoints,
     string CoverImagePath,
+    string CoverImageAlt,
     string DetailsHref,
     string Intro,
     ContentStatus Status,

@@ -70,6 +70,7 @@ public partial class ServiceEdit(
     private void OnBulletsChanged(List<string> items) => Input.BulletPoints = items;
     private void OnSeoChanged(SeoMetadata seo) => Input.Seo = seo;
     private void OnCoverUploaded(UploadedFile? file) { if (file is not null) Input.CoverImagePath = file.Path; }
+    private void OnCoverAltChanged(string alt) => Input.CoverImageAlt = alt;
     private void ClearCover() => Input.CoverImagePath = "";
 
     public sealed record class ServiceInput
@@ -80,6 +81,7 @@ public partial class ServiceEdit(
         public string Description { get; set; } = "";
         public List<string> BulletPoints { get; set; } = [];
         public string CoverImagePath { get; set; } = "";
+        public string CoverImageAlt { get; set; } = "";
         public string DetailsHref { get; set; } = "";
         public string Intro { get; set; } = "";
         public ContentStatus Status { get; set; } = ContentStatus.Draft;
@@ -92,6 +94,7 @@ public partial class ServiceEdit(
             Description = s.Description,
             BulletPoints = [.. s.BulletPoints],
             CoverImagePath = s.CoverImagePath,
+            CoverImageAlt = s.CoverImageAlt,
             DetailsHref = s.DetailsHref,
             Intro = s.Intro,
             Status = s.Status,
@@ -99,6 +102,6 @@ public partial class ServiceEdit(
         };
 
         public ServiceUpsert ToUpsert(ArticleBody body) => new(
-            Slug, Title, Description, [.. BulletPoints], CoverImagePath, DetailsHref, Intro, Status, Seo, body);
+            Slug, Title, Description, [.. BulletPoints], CoverImagePath, CoverImageAlt, DetailsHref, Intro, Status, Seo, body);
     }
 }

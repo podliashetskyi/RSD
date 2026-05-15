@@ -7,6 +7,7 @@ public record class BlogPost : ContentEntity
     public string Category { get; set; } = "";
     public Guid? AuthorId { get; set; }
     public string CoverImagePath { get; set; } = "";
+    public string CoverImageAlt { get; set; } = "";
     public int ReadTimeMinutes { get; set; }
     public List<string> Tags { get; set; } = [];
     public string Intro { get; set; } = "";

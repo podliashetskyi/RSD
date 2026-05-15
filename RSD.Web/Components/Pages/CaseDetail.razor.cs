@@ -20,6 +20,7 @@ public partial class CaseDetail(
     private Case? Case { get; set; }
 
     private string HeroImage => string.IsNullOrEmpty(Case?.CoverImagePath) ? "images/cases/healthcare-plus/hero.png" : Case!.CoverImagePath;
+    private string HeroAlt => string.IsNullOrEmpty(Case?.CoverImageAlt) ? (Case?.Name ?? "") : Case!.CoverImageAlt;
 
     protected override async Task OnInitializedAsync()
     {

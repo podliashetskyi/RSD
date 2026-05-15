@@ -21,6 +21,7 @@ public sealed class CaseService(
         Industry = input.Industry,
         Description = input.Description,
         CoverImagePath = input.CoverImagePath,
+        CoverImageAlt = input.CoverImageAlt,
         TechTags = [.. input.TechTags],
         Status = input.Status,
         Seo = input.Seo,
@@ -33,6 +34,7 @@ public sealed class CaseService(
         entity.Industry = input.Industry;
         entity.Description = input.Description;
         entity.CoverImagePath = input.CoverImagePath;
+        entity.CoverImageAlt = input.CoverImageAlt;
         entity.TechTags = [.. input.TechTags];
         entity.Status = input.Status;
         entity.Seo = input.Seo;

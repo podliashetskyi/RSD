@@ -6,6 +6,7 @@ public record class Case : ContentEntity
     public string Industry { get; set; } = "";
     public string Description { get; set; } = "";
     public string CoverImagePath { get; set; } = "";
+    public string CoverImageAlt { get; set; } = "";
     public List<string> TechTags { get; set; } = [];
     public CaseDetailFields DetailFields { get; set; } = new();
 }

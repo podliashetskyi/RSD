@@ -69,6 +69,7 @@ public partial class ProductEdit(
     private void OnBulletsChanged(List<string> items) => Input.BulletPoints = items;
     private void OnSeoChanged(SeoMetadata seo) => Input.Seo = seo;
     private void OnCoverUploaded(UploadedFile? file) { if (file is not null) Input.CoverImagePath = file.Path; }
+    private void OnCoverAltChanged(string alt) => Input.CoverImageAlt = alt;
     private void ClearCover() => Input.CoverImagePath = "";
 
     public sealed record class ProductInput
@@ -81,6 +82,7 @@ public partial class ProductEdit(
         public string Description { get; set; } = "";
         public List<string> BulletPoints { get; set; } = [];
         public string CoverImagePath { get; set; } = "";
+        public string CoverImageAlt { get; set; } = "";
         public string TryForFreeHref { get; set; } = "";
         public string LearnMoreHref { get; set; } = "";
         public ContentStatus Status { get; set; } = ContentStatus.Draft;
@@ -95,6 +97,7 @@ public partial class ProductEdit(
             Description = p.Description,
             BulletPoints = [.. p.BulletPoints],
             CoverImagePath = p.CoverImagePath,
+            CoverImageAlt = p.CoverImageAlt,
             TryForFreeHref = p.TryForFreeHref,
             LearnMoreHref = p.LearnMoreHref,
             Status = p.Status,
@@ -103,6 +106,6 @@ public partial class ProductEdit(
 
         public ProductUpsert ToUpsert(ProductDetailFields detail) => new(
             Slug, Name, Subtitle, Price, Description, [.. BulletPoints],
-            CoverImagePath, TryForFreeHref, LearnMoreHref, Status, Seo, detail);
+            CoverImagePath, CoverImageAlt, TryForFreeHref, LearnMoreHref, Status, Seo, detail);
     }
 }

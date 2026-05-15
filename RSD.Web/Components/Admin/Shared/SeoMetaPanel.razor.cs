@@ -16,6 +16,11 @@ public partial class SeoMetaPanel : ComponentBase
     private Task OnMetaDescriptionInput(ChangeEventArgs e) => EmitAsync(Value with { MetaDescription = e.Value?.ToString() ?? "" });
     private Task OnOgImageInput(ChangeEventArgs e) => EmitAsync(Value with { OgImagePath = e.Value?.ToString() ?? "" });
 
+    private Task OnOgImageUploaded(UploadedFile? file) =>
+        file is null ? Task.CompletedTask : EmitAsync(Value with { OgImagePath = file.Path });
+
+    private Task OnOgImageAltChanged(string alt) => EmitAsync(Value with { OgImageAlt = alt });
+
     private async Task EmitAsync(SeoMetadata next)
     {
         Value = next;

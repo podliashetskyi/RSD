@@ -9,6 +9,7 @@ public record BlogPostUpsert(
     string Category,
     Guid? AuthorId,
     string CoverImagePath,
+    string CoverImageAlt,
     int ReadTimeMinutes,
     List<string> Tags,
     string Intro,

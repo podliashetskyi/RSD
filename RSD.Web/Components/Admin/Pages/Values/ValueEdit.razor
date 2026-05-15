@@ -2,6 +2,7 @@
 @page "/admin/values/{Id:guid}"
 @attribute [Authorize(Roles = AdminRoles.Admin)]
 @layout AdminLayout
+@rendermode InteractiveServer
 
 <PageTitle>@(IsCreate ? "New value" : "Edit value") &middot; RSD Admin</PageTitle>
 
@@ -13,11 +14,15 @@
         <div role="alert" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">@ErrorMessage</div>
     }
 
-    <EditForm Model="Input" method="post" OnValidSubmit="SaveAsync" FormName="value-edit" class="space-y-4">
+    <EditForm Model="Input" OnValidSubmit="SaveAsync" FormName="value-edit" class="space-y-4">
         <DataAnnotationsValidator />
         <FormField Label="Title"><InputText @bind-Value="Input.Title" required aria-required="true" class="form-input" /></FormField>
         <FormField Label="Description"><InputTextArea @bind-Value="Input.Description" rows="3" class="form-input" /></FormField>
-        <FormField Label="Icon path" Hint="e.g. images/about/values/icon-rocket.svg"><InputText @bind-Value="Input.IconPath" class="form-input" /></FormField>
+        <FormField Label="Icon">
+            <ImageUploader Subfolder="values" CurrentFileChanged="OnIconUploaded" />
+            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>
+            <InputText @bind-Value="Input.IconPath" placeholder="images/about/values/icon-rocket.svg" class="form-input" />
+        </FormField>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField Label="Status">
