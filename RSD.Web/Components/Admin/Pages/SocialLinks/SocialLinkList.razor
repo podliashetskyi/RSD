@@ -15,7 +15,7 @@
             <input type="search" @bind-value="Search" @bind-value:event="oninput" @onkeyup="ReloadAsync" placeholder="Search slug…" aria-label="Search socials" class="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-1.5 text-sm" />
         </ToolbarTemplate>
         <ColumnHeaderTemplate>
-            <th class="px-4 py-2">Label</th><th class="px-4 py-2">Scope</th><th class="px-4 py-2">Href</th><th class="px-4 py-2">Status</th><th class="px-4 py-2">Order</th><th class="px-4 py-2 text-right">Actions</th>
+            <th class="px-4 py-2">Label</th><th class="px-4 py-2">Scope</th><th class="px-4 py-2">Link</th><th class="px-4 py-2">Status</th><th class="px-4 py-2">Order</th><th class="px-4 py-2 text-right">Actions</th>
         </ColumnHeaderTemplate>
         <RowTemplate Context="s">
             <td class="px-4 py-2 text-gray-900 dark:text-white">@s.Label</td>

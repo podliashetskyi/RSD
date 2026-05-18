@@ -65,8 +65,9 @@ public partial class SocialLinkEdit(ISocialLinkService Service, NavigationManage
         public string Label { get; set; } = "";
         [StringLength(FieldLimits.SocialLink.IconPath)]
         public string IconPath { get; set; } = "";
+        [Display(Name = "Link")]
         [StringLength(FieldLimits.SocialLink.Href)]
-        public string Href { get; set; } = "";
+        public string Link { get; set; } = "";
         public SocialLinkScope Scope { get; set; } = SocialLinkScope.Footer;
         public ContentStatus Status { get; set; } = ContentStatus.Published;
         public int DisplayOrder { get; set; }
@@ -75,14 +76,14 @@ public partial class SocialLinkEdit(ISocialLinkService Service, NavigationManage
 
         public static SocialInput From(SocialLink s) => new()
         {
-            Label = s.Label, IconPath = s.IconPath, Href = s.Href, Scope = s.Scope,
+            Label = s.Label, IconPath = s.IconPath, Link = s.Href, Scope = s.Scope,
             Status = s.Status, DisplayOrder = s.DisplayOrder, Slug = s.Slug,
         };
 
         public SocialLink ToEntity(Guid? id) => new()
         {
             Id = id ?? Guid.NewGuid(), Slug = Slug,
-            Label = Label, IconPath = IconPath, Href = Href, Scope = Scope,
+            Label = Label, IconPath = IconPath, Href = Link, Scope = Scope,
             Status = Status, DisplayOrder = DisplayOrder,
         };
     }
