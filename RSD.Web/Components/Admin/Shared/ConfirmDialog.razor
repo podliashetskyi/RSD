@@ -1,6 +1,6 @@
 @if (IsOpen)
 {
-    <div role="dialog" aria-modal="true" aria-labelledby="@TitleId"
+    <div @ref="DialogRef" role="dialog" aria-modal="true" aria-labelledby="@TitleId" tabindex="-1"
          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
         <div class="w-full max-w-md rounded-lg bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 p-6 shadow-lg">
             <h2 id="@TitleId" class="text-lg font-semibold text-gray-900 dark:text-white">@Title</h2>

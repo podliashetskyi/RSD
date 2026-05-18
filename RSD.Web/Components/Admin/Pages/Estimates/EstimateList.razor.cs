@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.JSInterop;
 using RSD.Web.Components.Admin.Shared;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Estimates;
@@ -13,7 +14,8 @@ namespace RSD.Web.Components.Admin.Pages.Estimates;
 public partial class EstimateList(
     IProjectEstimateService Service,
     AuthenticationStateProvider AuthState,
-    IToastService Toasts) : ComponentBase
+    IToastService Toasts,
+    IJSRuntime Js) : ComponentBase, IAsyncDisposable
 {
     private const int EstimatesPageSize = 25;
 
@@ -26,6 +28,10 @@ public partial class EstimateList(
     private ProjectEstimateFilter Filter { get; set; } = ProjectEstimateFilter.Open;
     private ProjectEstimate? Selected { get; set; }
     private bool DeleteDialogOpen { get; set; }
+    private ElementReference DetailDialogRef { get; set; }
+    private IJSObjectReference? JsModule { get; set; }
+    private DotNetObjectReference<EstimateList>? Self { get; set; }
+    private bool DetailFocusAttached { get; set; }
     private string ReplyMailto => Selected is null ? "#" : BuildMailto(Selected);
     private string DeleteDialogBody => Selected is null
         ? ""
@@ -39,6 +45,15 @@ public partial class EstimateList(
     ];
 
     protected override Task OnInitializedAsync() => ReloadAsync();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (Selected is not null && !DetailFocusAttached) await AttachDetailFocusAsync();
+        if (Selected is null && DetailFocusAttached) await DetachDetailFocusAsync();
+    }
+
+    [JSInvokable]
+    public Task HandleDetailEscapeAsync() => CloseDetail();
 
     private async Task ReloadAsync()
     {
@@ -83,7 +98,11 @@ public partial class EstimateList(
         Selected = await Service.GetByIdAsync(id, CancellationToken.None);
     }
 
-    private void CloseDetail() => Selected = null;
+    private async Task CloseDetail()
+    {
+        Selected = null;
+        await DetachDetailFocusAsync();
+    }
 
     private async Task MarkHandledAsync()
     {
@@ -116,6 +135,7 @@ public partial class EstimateList(
         ApplyOutcome(result, "Estimate deleted.");
         if (!result.Ok) return;
         Selected = null;
+        await DetachDetailFocusAsync();
         await ReloadAsync();
     }
 
@@ -146,6 +166,28 @@ public partial class EstimateList(
             + $"Preliminary range: $ {estimate.EstimateMin:N0} – $ {estimate.EstimateMax:N0}\n\n"
             + $"{estimate.ProjectDescription}");
         return $"mailto:{Uri.EscapeDataString(estimate.ContactEmail)}?subject={subject}&body={body}";
+    }
+
+    private async Task AttachDetailFocusAsync()
+    {
+        JsModule ??= await Js.InvokeAsync<IJSObjectReference>("import", "/js/admin/modal-focus.js");
+        Self ??= DotNetObjectReference.Create(this);
+        await JsModule.InvokeVoidAsync("attach", DetailDialogRef, Self, nameof(HandleDetailEscapeAsync));
+        DetailFocusAttached = true;
+    }
+
+    private async Task DetachDetailFocusAsync()
+    {
+        if (!DetailFocusAttached || JsModule is null) return;
+        await JsModule.InvokeVoidAsync("detach", DetailDialogRef);
+        DetailFocusAttached = false;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await DetachDetailFocusAsync();
+        if (JsModule is not null) await JsModule.DisposeAsync();
+        Self?.Dispose();
     }
 
     private sealed record FilterOption(string Label, ProjectEstimateFilter Value);

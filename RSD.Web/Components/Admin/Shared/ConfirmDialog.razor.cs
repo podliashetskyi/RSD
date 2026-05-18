@@ -1,10 +1,11 @@
 #pragma warning disable S1144, S4487, S2933
 
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace RSD.Web.Components.Admin.Shared;
 
-public partial class ConfirmDialog : ComponentBase
+public partial class ConfirmDialog(IJSRuntime Js) : ComponentBase, IAsyncDisposable
 {
     [Parameter] public bool IsOpen { get; set; }
     [Parameter] public string Title { get; set; } = "Confirm";
@@ -19,6 +20,10 @@ public partial class ConfirmDialog : ComponentBase
 
     private string TitleId { get; } = $"dlg-{Guid.NewGuid():N}";
     private string TypedConfirmation { get; set; } = "";
+    private ElementReference DialogRef { get; set; }
+    private IJSObjectReference? JsModule { get; set; }
+    private DotNetObjectReference<ConfirmDialog>? Self { get; set; }
+    private bool FocusAttached { get; set; }
 
     private string ConfirmClasses => IsDestructive
         ? "bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -31,6 +36,15 @@ public partial class ConfirmDialog : ComponentBase
     {
         if (!IsOpen) TypedConfirmation = "";
     }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (IsOpen && !FocusAttached) await AttachFocusAsync();
+        if (!IsOpen && FocusAttached) await DetachFocusAsync();
+    }
+
+    [JSInvokable]
+    public Task HandleEscapeAsync() => CancelAsync();
 
     private async Task ConfirmAsync()
     {
@@ -47,7 +61,30 @@ public partial class ConfirmDialog : ComponentBase
 
     private async Task CloseAsync()
     {
+        await DetachFocusAsync();
         IsOpen = false;
         await IsOpenChanged.InvokeAsync(false);
+    }
+
+    private async Task AttachFocusAsync()
+    {
+        JsModule ??= await Js.InvokeAsync<IJSObjectReference>("import", "/js/admin/modal-focus.js");
+        Self ??= DotNetObjectReference.Create(this);
+        await JsModule.InvokeVoidAsync("attach", DialogRef, Self, nameof(HandleEscapeAsync));
+        FocusAttached = true;
+    }
+
+    private async Task DetachFocusAsync()
+    {
+        if (!FocusAttached || JsModule is null) return;
+        await JsModule.InvokeVoidAsync("detach", DialogRef);
+        FocusAttached = false;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await DetachFocusAsync();
+        if (JsModule is not null) await JsModule.DisposeAsync();
+        Self?.Dispose();
     }
 }
