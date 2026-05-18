@@ -28,7 +28,10 @@
             <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>
             <InputText @bind-Value="Input.IconPath" maxlength="@FieldLimits.SocialLink.IconPath" class="form-input" />
         </FormField>
-        <FormField Label="Link"><InputText @bind-Value="Input.Link" maxlength="@FieldLimits.SocialLink.Href" class="form-input" /></FormField>
+        <FormField Label="Link" Hint="Use a full https:// URL. Leave blank to hide this link publicly.">
+            <InputText @bind-Value="Input.Link" maxlength="@FieldLimits.SocialLink.Href" class="form-input" />
+            <ValidationMessage For="() => Input.Link" class="form-error" />
+        </FormField>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField Label="Status">

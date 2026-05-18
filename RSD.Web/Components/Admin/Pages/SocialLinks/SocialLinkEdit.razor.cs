@@ -58,7 +58,7 @@ public partial class SocialLinkEdit(ISocialLinkService Service, NavigationManage
         return (updated.Ok, updated.Error);
     }
 
-    public sealed record class SocialInput
+    public sealed record class SocialInput : IValidatableObject
     {
         [Required]
         [StringLength(FieldLimits.SocialLink.Label)]
@@ -79,6 +79,12 @@ public partial class SocialLinkEdit(ISocialLinkService Service, NavigationManage
             Label = s.Label, IconPath = s.IconPath, Link = s.Href, Scope = s.Scope,
             Status = s.Status, DisplayOrder = s.DisplayOrder, Slug = s.Slug,
         };
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (LinkHrefValidator.IsValidSocialHref(Link)) yield break;
+            yield return new ValidationResult(LinkHrefValidator.SocialHrefMessage, [nameof(Link)]);
+        }
 
         public SocialLink ToEntity(Guid? id) => new()
         {

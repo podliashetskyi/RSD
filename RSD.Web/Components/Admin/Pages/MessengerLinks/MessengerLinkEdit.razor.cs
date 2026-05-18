@@ -63,7 +63,7 @@ public partial class MessengerLinkEdit(IMessengerLinkService Service, Navigation
         return (updated.Ok, updated.Error);
     }
 
-    public sealed record class MessengerInput
+    public sealed record class MessengerInput : IValidatableObject
     {
         [Required]
         [StringLength(FieldLimits.MessengerLink.Label)]
@@ -88,6 +88,12 @@ public partial class MessengerLinkEdit(IMessengerLinkService Service, Navigation
             BgColor = m.BgColor, Link = m.Href,
             Status = m.Status, DisplayOrder = m.DisplayOrder, Slug = m.Slug,
         };
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (LinkHrefValidator.IsValidMessengerHref(Link)) yield break;
+            yield return new ValidationResult(LinkHrefValidator.MessengerHrefMessage, [nameof(Link)]);
+        }
 
         public MessengerLink ToEntity(Guid? id) => new()
         {

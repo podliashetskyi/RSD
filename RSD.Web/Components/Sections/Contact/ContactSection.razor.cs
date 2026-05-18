@@ -20,9 +20,21 @@ public partial class ContactSection(
         Points = pts.OrderBy(p => p.DisplayOrder).ToList();
 
         var msgs = await MessengerService.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 100), CancellationToken.None);
-        Messengers = msgs.OrderBy(m => m.DisplayOrder).ToList();
+        Messengers = msgs.Where(HasPublicMessengerHref)
+                         .OrderBy(m => m.DisplayOrder)
+                         .ToList();
 
         var socials = await SocialService.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 100), CancellationToken.None);
-        Socials = socials.Where(s => s.Scope == SocialLinkScope.Contact).OrderBy(s => s.DisplayOrder).ToList();
+        Socials = socials.Where(HasPublicContactSocialHref)
+                         .OrderBy(s => s.DisplayOrder)
+                         .ToList();
     }
+
+    private static bool HasPublicMessengerHref(MessengerLink link) =>
+        LinkHrefValidator.IsValidMessengerHref(link.Href) && !string.IsNullOrWhiteSpace(link.Href);
+
+    private static bool HasPublicContactSocialHref(SocialLink link) =>
+        link.Scope == SocialLinkScope.Contact
+        && LinkHrefValidator.IsValidSocialHref(link.Href)
+        && !string.IsNullOrWhiteSpace(link.Href);
 }

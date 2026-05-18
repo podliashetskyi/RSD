@@ -36,6 +36,8 @@ public abstract class SimpleContentService<TEntity>(
 
     public async Task<Result<Guid>> CreateAsync(TEntity input, CancellationToken ct)
     {
+        var validation = Validate(input);
+        if (!validation.Ok) return Result.Fail<Guid>(validation.Error);
         await using var db = await DbFactory.CreateDbContextAsync(ct);
         var slugResult = await ResolveSlugAsync(input.Slug, NaturalKeyOf(input), currentId: null, ct);
         if (!slugResult.Ok) return Result.Fail<Guid>(slugResult.Error);
@@ -50,6 +52,8 @@ public abstract class SimpleContentService<TEntity>(
 
     public async Task<Result<Unit>> UpdateAsync(TEntity input, CancellationToken ct)
     {
+        var validation = Validate(input);
+        if (!validation.Ok) return Result.Fail(validation.Error);
         await using var db = await DbFactory.CreateDbContextAsync(ct);
         var existing = await db.Set<TEntity>().FirstOrDefaultAsync(e => e.Id == input.Id, ct);
         if (existing is null) return Result.Fail("Entity not found.");
@@ -120,6 +124,9 @@ public abstract class SimpleContentService<TEntity>(
 
     /// <summary>Per-entity hook for picking a natural source for the slug when one isn't supplied.</summary>
     protected abstract string NaturalKeyOf(TEntity entity);
+
+    /// <summary>Per-entity hook for validating user-editable fields before saving.</summary>
+    protected virtual Result<Unit> Validate(TEntity entity) => Result.Ok();
 
     private static IQueryable<TEntity> BaseQuery(AppDbContext db, ContentQuery query)
     {

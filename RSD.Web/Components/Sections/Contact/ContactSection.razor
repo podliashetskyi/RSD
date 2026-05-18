@@ -38,48 +38,57 @@
                     </ul>
                 </div>
 
-                <div class="flex flex-col gap-4 items-start">
-                    <p class="text-ink text-body-lg font-semibold leading-7">Contact via Messenger</p>
-                    <div class="flex gap-3 items-start w-full">
-                        @foreach (var m in Messengers)
-                        {
-                            <a href="#" class="flex-1 min-w-0 bg-line-subtle border border-line rounded-xl p-3 flex flex-col gap-2 items-center hover:bg-white transition-colors">
-                                <img src="@m.LargeIconPath" alt="" aria-hidden="true" class="size-12 lg:size-[60px]"  loading="lazy" decoding="async" />
-                                <span class="text-ink-soft text-body-lg leading-5">@m.Label</span>
-                            </a>
-                        }
+                @if (Messengers.Count > 0)
+                {
+                    <div class="flex flex-col gap-4 items-start">
+                        <p class="text-ink text-body-lg font-semibold leading-7">Contact via Messenger</p>
+                        <div class="flex gap-3 items-start w-full">
+                            @foreach (var m in Messengers)
+                            {
+                                <a href="@m.Href" class="flex-1 min-w-0 bg-line-subtle border border-line rounded-xl p-3 flex flex-col gap-2 items-center hover:bg-white transition-colors">
+                                    <img src="@m.LargeIconPath" alt="" aria-hidden="true" class="size-12 lg:size-[60px]"  loading="lazy" decoding="async" />
+                                    <span class="text-ink-soft text-body-lg leading-5">@m.Label</span>
+                                </a>
+                            }
+                        </div>
                     </div>
-                </div>
+                }
 
-                <div class="lg:hidden flex flex-col gap-4 items-start">
-                    <p class="text-ink text-body-lg font-semibold leading-7">Contact via Messenger</p>
-                    <div class="grid grid-cols-2 gap-3 w-full">
-                        @foreach (var m in Messengers)
-                        {
-                            <a href="#" class="bg-line-subtle border border-line rounded-xl p-3 flex gap-4 items-center hover:bg-white transition-colors">
-                                <span class="flex items-center justify-center rounded-xl size-10 shrink-0" style="background-color: @m.BgColor;">
-                                    <img src="@m.SmallIconPath" alt="" aria-hidden="true" class="size-6"  loading="lazy" decoding="async" />
-                                </span>
-                                <span class="text-ink-soft text-body-lg leading-5">@m.Label</span>
-                            </a>
-                        }
+                @if (Messengers.Count > 0)
+                {
+                    <div class="lg:hidden flex flex-col gap-4 items-start">
+                        <p class="text-ink text-body-lg font-semibold leading-7">Contact via Messenger</p>
+                        <div class="grid grid-cols-2 gap-3 w-full">
+                            @foreach (var m in Messengers)
+                            {
+                                <a href="@m.Href" class="bg-line-subtle border border-line rounded-xl p-3 flex gap-4 items-center hover:bg-white transition-colors">
+                                    <span class="flex items-center justify-center rounded-xl size-10 shrink-0" style="background-color: @m.BgColor;">
+                                        <img src="@m.SmallIconPath" alt="" aria-hidden="true" class="size-6"  loading="lazy" decoding="async" />
+                                    </span>
+                                    <span class="text-ink-soft text-body-lg leading-5">@m.Label</span>
+                                </a>
+                            }
+                        </div>
                     </div>
-                </div>
+                }
 
-                <div class="flex flex-col gap-4 items-start">
-                    <p class="text-ink text-body-lg font-semibold leading-7">Follow us in social media</p>
-                    <div class="grid grid-cols-2 lg:grid-cols-1 gap-3 w-full">
-                        @foreach (var s in Socials)
-                        {
-                            <a href="@s.Href" class="bg-line-subtle border border-line rounded-xl p-3 flex gap-4 items-center hover:bg-white transition-colors">
-                                <span class="bg-line flex items-center justify-center rounded-xl size-10 shrink-0">
-                                    <img src="@s.IconPath" alt="" aria-hidden="true" class="size-5"  loading="lazy" decoding="async" />
-                                </span>
-                                <span class="text-ink-soft text-body-lg leading-5">@s.Label</span>
-                            </a>
-                        }
+                @if (Socials.Count > 0)
+                {
+                    <div class="flex flex-col gap-4 items-start">
+                        <p class="text-ink text-body-lg font-semibold leading-7">Follow us in social media</p>
+                        <div class="grid grid-cols-2 lg:grid-cols-1 gap-3 w-full">
+                            @foreach (var s in Socials)
+                            {
+                                <a href="@s.Href" class="bg-line-subtle border border-line rounded-xl p-3 flex gap-4 items-center hover:bg-white transition-colors">
+                                    <span class="bg-line flex items-center justify-center rounded-xl size-10 shrink-0">
+                                        <img src="@s.IconPath" alt="" aria-hidden="true" class="size-5"  loading="lazy" decoding="async" />
+                                    </span>
+                                    <span class="text-ink-soft text-body-lg leading-5">@s.Label</span>
+                                </a>
+                            }
+                        </div>
                     </div>
-                </div>
+                }
             </div>
 
             <div class="hidden lg:block lg:order-2 self-stretch w-px bg-line" aria-hidden="true"></div>
@@ -87,20 +96,23 @@
             <div class="order-1 lg:order-3 w-full lg:flex-[2] lg:min-w-0 flex flex-col gap-10">
                 <ContactForm />
 
-                <div class="hidden lg:flex flex-col gap-4 items-start w-full">
-                    <p class="text-ink text-body-lg font-semibold leading-7">Contact via Messenger</p>
-                    <div class="flex gap-3 items-center w-full">
-                        @foreach (var m in Messengers)
-                        {
-                            <a href="#" class="flex-1 min-w-0 bg-line-subtle border border-line rounded-xl p-3 flex gap-4 items-center hover:bg-white transition-colors">
-                                <span class="flex items-center justify-center rounded-xl size-10 shrink-0" style="background-color: @m.BgColor;">
-                                    <img src="@m.SmallIconPath" alt="" aria-hidden="true" class="size-6"  loading="lazy" decoding="async" />
-                                </span>
-                                <span class="text-ink-soft text-body-lg leading-5">@m.Label</span>
-                            </a>
-                        }
+                @if (Messengers.Count > 0)
+                {
+                    <div class="hidden lg:flex flex-col gap-4 items-start w-full">
+                        <p class="text-ink text-body-lg font-semibold leading-7">Contact via Messenger</p>
+                        <div class="flex gap-3 items-center w-full">
+                            @foreach (var m in Messengers)
+                            {
+                                <a href="@m.Href" class="flex-1 min-w-0 bg-line-subtle border border-line rounded-xl p-3 flex gap-4 items-center hover:bg-white transition-colors">
+                                    <span class="flex items-center justify-center rounded-xl size-10 shrink-0" style="background-color: @m.BgColor;">
+                                        <img src="@m.SmallIconPath" alt="" aria-hidden="true" class="size-6"  loading="lazy" decoding="async" />
+                                    </span>
+                                    <span class="text-ink-soft text-body-lg leading-5">@m.Label</span>
+                                </a>
+                            }
+                        </div>
                     </div>
-                </div>
+                }
             </div>
         </div>
     </div>

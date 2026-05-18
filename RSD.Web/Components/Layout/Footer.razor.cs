@@ -13,6 +13,13 @@ public partial class Footer(ISocialLinkService Service) : ComponentBase
     protected override async Task OnInitializedAsync()
     {
         var list = await Service.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 100), CancellationToken.None);
-        Socials = list.Where(s => s.Scope == SocialLinkScope.Footer).OrderBy(s => s.DisplayOrder).ToList();
+        Socials = list.Where(HasPublicFooterHref)
+                      .OrderBy(s => s.DisplayOrder)
+                      .ToList();
     }
+
+    private static bool HasPublicFooterHref(SocialLink link) =>
+        link.Scope == SocialLinkScope.Footer
+        && LinkHrefValidator.IsValidSocialHref(link.Href)
+        && !string.IsNullOrWhiteSpace(link.Href);
 }

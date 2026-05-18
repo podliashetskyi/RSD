@@ -17,10 +17,10 @@ public sealed class SocialLinkSeeder(AppDbContext Db, ISlugger Slugger) : Seeder
             Build(SocialLinkScope.Footer, "Facebook",  "images/icon-facebook.svg",  "", 4),
             Build(SocialLinkScope.Footer, "Instagram", "images/icon-instagram.svg", "", 5),
             // Contact (Sections/Contact/ContactSection)
-            Build(SocialLinkScope.Contact, "LinkedIn", "images/contact/social/icon-linkedin.svg", "#", 1),
-            Build(SocialLinkScope.Contact, "Twitter",  "images/contact/social/icon-twitter.svg",  "#", 2),
-            Build(SocialLinkScope.Contact, "Reddit",   "images/contact/social/icon-reddit.svg",   "#", 3),
-            Build(SocialLinkScope.Contact, "Facebook", "images/contact/social/icon-facebook.svg", "#", 4),
+            Build(SocialLinkScope.Contact, "LinkedIn", "images/contact/social/icon-linkedin.svg", "", 1),
+            Build(SocialLinkScope.Contact, "Twitter",  "images/contact/social/icon-twitter.svg",  "", 2),
+            Build(SocialLinkScope.Contact, "Reddit",   "images/contact/social/icon-reddit.svg",   "", 3),
+            Build(SocialLinkScope.Contact, "Facebook", "images/contact/social/icon-facebook.svg", "", 4),
             // The Management scope used to live here; per-manager socials are now
             // edited on each TeamMember directly (BUG-009).
         ];

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Cache;
+using RSD.Web.Services.Common;
 using RSD.Web.Services.Slugs;
 using RSD.Web.Services.Storage;
 
@@ -11,4 +12,6 @@ public sealed class SocialLinkService(IDbContextFactory<AppDbContext> DbFactory,
     : SimpleContentService<SocialLink>(DbFactory, Slugger, Cache, RefCounts), ISocialLinkService
 {
     protected override string NaturalKeyOf(SocialLink entity) => $"{entity.Scope} {entity.Label}";
+
+    protected override Result<Unit> Validate(SocialLink entity) => LinkHrefValidator.ValidateSocialHref(entity.Href);
 }

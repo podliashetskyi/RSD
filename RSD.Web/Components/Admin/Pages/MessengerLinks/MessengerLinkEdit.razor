@@ -17,7 +17,10 @@
     <EditForm Model="Input" OnValidSubmit="SaveAsync" FormName="messenger-edit" class="space-y-4">
         <DataAnnotationsValidator />
         <FormField Label="Label"><InputText @bind-Value="Input.Label" required aria-required="true" maxlength="@FieldLimits.MessengerLink.Label" class="form-input" /></FormField>
-        <FormField Label="Link"><InputText @bind-Value="Input.Link" maxlength="@FieldLimits.MessengerLink.Href" class="form-input" /></FormField>
+        <FormField Label="Link" Hint="Use https://, tg://, viber://, or whatsapp://. Leave blank to hide this link publicly.">
+            <InputText @bind-Value="Input.Link" maxlength="@FieldLimits.MessengerLink.Href" class="form-input" />
+            <ValidationMessage For="() => Input.Link" class="form-error" />
+        </FormField>
         <FormField Label="Large icon">
             <ImageUploader Subfolder="messenger-links" CurrentFileChanged="OnLargeIconUploaded" />
             <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>

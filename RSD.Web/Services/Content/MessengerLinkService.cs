@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Cache;
+using RSD.Web.Services.Common;
 using RSD.Web.Services.Slugs;
 using RSD.Web.Services.Storage;
 
@@ -11,4 +12,6 @@ public sealed class MessengerLinkService(IDbContextFactory<AppDbContext> DbFacto
     : SimpleContentService<MessengerLink>(DbFactory, Slugger, Cache, RefCounts), IMessengerLinkService
 {
     protected override string NaturalKeyOf(MessengerLink entity) => entity.Label;
+
+    protected override Result<Unit> Validate(MessengerLink entity) => LinkHrefValidator.ValidateMessengerHref(entity.Href);
 }
