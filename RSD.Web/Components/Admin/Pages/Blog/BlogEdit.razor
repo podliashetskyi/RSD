@@ -111,8 +111,9 @@
             }
             <ImageUploader Subfolder="blog" CurrentFileChanged="OnCoverUploaded"
                            Alt="@Input.CoverImageAlt" AltChanged="OnCoverAltChanged" />
-            <p class="text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>
-            <InputText id="cover" @bind-Value="Input.CoverImagePath" placeholder="images/blog/post-cover.png" maxlength="@FieldLimits.BlogPost.CoverImagePath" class="form-input" />
+            <AdvancedPathField>
+                <InputText id="cover" @bind-Value="Input.CoverImagePath" placeholder="images/blog/post-cover.png" maxlength="@FieldLimits.BlogPost.CoverImagePath" class="form-input" />
+            </AdvancedPathField>
         </div>
 
         <BlogBodyEditor Value="Body" />

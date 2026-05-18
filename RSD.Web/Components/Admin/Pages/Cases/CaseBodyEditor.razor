@@ -102,8 +102,9 @@
             </div>
             <FormField Label="Avatar">
                 <ImageUploader Subfolder="testimonials" CurrentFileChanged="OnTestimonialAvatarUploaded" />
-                <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>
-                <InputText @bind-Value="Value.Testimonial.AvatarPath" placeholder="images/avatars/avatar-default.png" class="form-input" />
+                <AdvancedPathField>
+                    <InputText @bind-Value="Value.Testimonial.AvatarPath" placeholder="images/avatars/avatar-default.png" class="form-input" />
+                </AdvancedPathField>
             </FormField>
         }
     </fieldset>

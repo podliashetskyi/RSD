@@ -10,9 +10,9 @@
         </div>
     }
     <ImageUploader Subfolder="blog" CurrentFileChanged="OnUploaded" />
-    <FormField Label="Image path" Hint="Or paste a path manually.">
+    <AdvancedPathField>
         <InputText @bind-Value="Row.ImagePath" placeholder="images/blog/foo.png" class="form-input" />
-    </FormField>
+    </AdvancedPathField>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <FormField Label="Alt text">
             <InputText @bind-Value="Row.Alt" class="form-input" />

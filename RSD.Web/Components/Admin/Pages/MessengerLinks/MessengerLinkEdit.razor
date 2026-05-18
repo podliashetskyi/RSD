@@ -23,13 +23,15 @@
         </FormField>
         <FormField Label="Large icon">
             <ImageUploader Subfolder="messenger-links" CurrentFileChanged="OnLargeIconUploaded" />
-            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>
-            <InputText @bind-Value="Input.LargeIconPath" maxlength="@FieldLimits.MessengerLink.LargeIconPath" class="form-input" />
+            <AdvancedPathField>
+                <InputText @bind-Value="Input.LargeIconPath" maxlength="@FieldLimits.MessengerLink.LargeIconPath" class="form-input" />
+            </AdvancedPathField>
         </FormField>
         <FormField Label="Small icon">
             <ImageUploader Subfolder="messenger-links" CurrentFileChanged="OnSmallIconUploaded" />
-            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>
-            <InputText @bind-Value="Input.SmallIconPath" maxlength="@FieldLimits.MessengerLink.SmallIconPath" class="form-input" />
+            <AdvancedPathField>
+                <InputText @bind-Value="Input.SmallIconPath" maxlength="@FieldLimits.MessengerLink.SmallIconPath" class="form-input" />
+            </AdvancedPathField>
         </FormField>
         <FormField Label="Background color" Hint="e.g. #06d94c"><InputText @bind-Value="Input.BgColor" maxlength="@FieldLimits.MessengerLink.BgColor" class="form-input" /></FormField>
 

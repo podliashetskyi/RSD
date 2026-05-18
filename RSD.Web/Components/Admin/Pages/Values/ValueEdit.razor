@@ -22,8 +22,9 @@
         </FieldField>
         <FormField Label="Icon">
             <ImageUploader Subfolder="values" CurrentFileChanged="OnIconUploaded" />
-            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>
-            <InputText @bind-Value="Input.IconPath" placeholder="images/about/values/icon-rocket.svg" maxlength="@FieldLimits.Value.IconPath" class="form-input" />
+            <AdvancedPathField>
+                <InputText @bind-Value="Input.IconPath" placeholder="images/about/values/icon-rocket.svg" maxlength="@FieldLimits.Value.IconPath" class="form-input" />
+            </AdvancedPathField>
         </FormField>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">

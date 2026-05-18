@@ -20,8 +20,9 @@
         <FormField Label="Role"><InputText @bind-Value="Input.Role" maxlength="@FieldLimits.Partner.Role" class="form-input" /></FormField>
         <FormField Label="Photo">
             <ImageUploader Subfolder="partners" CurrentFileChanged="OnPhotoUploaded" />
-            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>
-            <InputText @bind-Value="Input.PhotoPath" placeholder="images/about/partners/portrait-bonnie-green.png" maxlength="@FieldLimits.Partner.PhotoPath" class="form-input" />
+            <AdvancedPathField>
+                <InputText @bind-Value="Input.PhotoPath" placeholder="images/about/partners/portrait-bonnie-green.png" maxlength="@FieldLimits.Partner.PhotoPath" class="form-input" />
+            </AdvancedPathField>
         </FormField>
         <FormField Label="Contact link" Hint="Full URL (https://…) or email address. Leave blank to hide the 'Contact me' button on the public page.">
             <InputText @bind-Value="Input.ContactHref" placeholder="https://linkedin.com/in/… or name@example.com" maxlength="@FieldLimits.Partner.ContactHref" class="form-input" />

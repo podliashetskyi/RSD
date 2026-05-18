@@ -25,8 +25,9 @@
         </FormField>
         <FormField Label="Icon">
             <ImageUploader Subfolder="social-links" CurrentFileChanged="OnIconUploaded" />
-            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Or paste a path manually:</p>
-            <InputText @bind-Value="Input.IconPath" maxlength="@FieldLimits.SocialLink.IconPath" class="form-input" />
+            <AdvancedPathField>
+                <InputText @bind-Value="Input.IconPath" maxlength="@FieldLimits.SocialLink.IconPath" class="form-input" />
+            </AdvancedPathField>
         </FormField>
         <FormField Label="Link" Hint="Use a full https:// URL. Leave blank to hide this link publicly.">
             <InputText @bind-Value="Input.Link" maxlength="@FieldLimits.SocialLink.Href" class="form-input" />
