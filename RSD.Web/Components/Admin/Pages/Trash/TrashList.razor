@@ -12,7 +12,8 @@
     </header>
 
     <div class="overflow-hidden rounded-md border border-gray-200 dark:border-gray-800">
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-800 text-sm">
+        <div class="overflow-x-auto">
+        <table class="min-w-[56rem] w-full divide-y divide-gray-200 dark:divide-gray-800 text-sm">
             <caption class="sr-only">Soft-deleted entities</caption>
             <thead class="bg-gray-50 dark:bg-gray-900/40 text-left">
                 <tr>
@@ -52,6 +53,7 @@
                 }
             </tbody>
         </table>
+        </div>
     </div>
 
     <ConfirmDialog IsOpen="DialogOpen"

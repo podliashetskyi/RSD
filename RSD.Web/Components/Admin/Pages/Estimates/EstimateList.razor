@@ -15,7 +15,7 @@
         </div>
     </header>
 
-    <AdminDataTable TItem="ProjectEstimate" Items="Items" EmptyText="No estimates match this filter.">
+    <AdminDataTable TItem="ProjectEstimate" Items="Items" EmptyText="No estimates match this filter." MinWidthClass="min-w-[72rem]">
         <ToolbarTemplate>
             <div class="flex items-center gap-2">
                 @foreach (var option in FilterOptions)

@@ -12,4 +12,5 @@ public partial class AdminDataTable<TItem> : ComponentBase
     [Parameter] public RenderFragment? HeaderTemplate { get; set; }
     [Parameter] public RenderFragment? ToolbarTemplate { get; set; }
     [Parameter] public string EmptyText { get; set; } = "No items yet.";
+    [Parameter] public string MinWidthClass { get; set; } = "min-w-[56rem]";
 }

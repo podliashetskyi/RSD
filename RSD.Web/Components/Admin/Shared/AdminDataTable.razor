@@ -3,40 +3,42 @@
 <div class="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
     @if (HeaderTemplate is not null || ToolbarTemplate is not null)
     {
-        <div class="flex items-center justify-between gap-4 border-b border-gray-200 dark:border-gray-800 px-4 py-3">
-            <div class="flex items-center gap-3">
+        <div class="flex flex-col gap-3 border-b border-gray-200 px-4 py-3 dark:border-gray-800 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex flex-wrap items-center gap-3">
                 @HeaderTemplate
             </div>
-            <div class="flex items-center gap-2">
+            <div class="flex flex-wrap items-center gap-2 sm:justify-end">
                 @ToolbarTemplate
             </div>
         </div>
     }
-    <table class="w-full text-left text-sm">
-        @if (ColumnHeaderTemplate is not null)
-        {
-            <thead class="bg-gray-50 dark:bg-gray-900/50 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                <tr>
-                    @ColumnHeaderTemplate
-                </tr>
-            </thead>
-        }
-        <tbody class="divide-y divide-gray-200 dark:divide-gray-800">
-            @if (Items.Count == 0)
+    <div class="overflow-x-auto">
+        <table class="@($"w-full {MinWidthClass} text-left text-sm")">
+            @if (ColumnHeaderTemplate is not null)
             {
-                <tr>
-                    <td colspan="99" class="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">@EmptyText</td>
-                </tr>
+                <thead class="bg-gray-50 dark:bg-gray-900/50 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                    <tr>
+                        @ColumnHeaderTemplate
+                    </tr>
+                </thead>
             }
-            else
-            {
-                @foreach (var item in Items)
+            <tbody class="divide-y divide-gray-200 dark:divide-gray-800">
+                @if (Items.Count == 0)
                 {
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-900/40">
-                        @RowTemplate(item)
+                    <tr>
+                        <td colspan="99" class="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">@EmptyText</td>
                     </tr>
                 }
-            }
-        </tbody>
-    </table>
+                else
+                {
+                    @foreach (var item in Items)
+                    {
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-900/40">
+                            @RowTemplate(item)
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
