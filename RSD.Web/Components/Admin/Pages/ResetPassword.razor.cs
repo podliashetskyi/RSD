@@ -15,11 +15,22 @@ public partial class ResetPassword(UserManager<AdminUser> Users)
 
     private bool Succeeded { get; set; }
     private string ErrorMessage { get; set; } = "";
+    private bool TokenValid { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         Input.Email = Email ?? Input.Email;
         Input.Token = Token ?? Input.Token;
+        TokenValid = await IsTokenValidAsync(Input.Email, Input.Token);
+    }
+
+    private async Task<bool> IsTokenValidAsync(string email, string token)
+    {
+        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(token)) return false;
+        var user = await Users.FindByEmailAsync(email);
+        if (user is null) return false;
+        var provider = Users.Options.Tokens.PasswordResetTokenProvider;
+        return await Users.VerifyUserTokenAsync(user, provider, "ResetPassword", token);
     }
 
     private async Task HandleResetAsync()

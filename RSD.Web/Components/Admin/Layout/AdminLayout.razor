@@ -1,13 +1,16 @@
 @inherits LayoutComponentBase
 @attribute [Authorize(Roles = AdminRoles.Admin)]
 
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
+<div data-admin-shell class="group min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
     <AdminNavbar DisplayName="@DisplayName" />
-    <div class="flex flex-1">
+    <div class="flex flex-1 relative">
         <AdminSidebar />
+        <button type="button" data-sidebar-backdrop aria-label="Close menu" tabindex="-1"
+                class="fixed inset-0 z-30 bg-black/40 hidden group-data-[sidebar-open=true]:block lg:!hidden"></button>
         <main class="flex-1 px-6 py-8">
             @Body
         </main>
     </div>
     <ToastHost @rendermode="InteractiveServer" />
 </div>
+<script src="js/admin/admin-sidebar.js" defer></script>

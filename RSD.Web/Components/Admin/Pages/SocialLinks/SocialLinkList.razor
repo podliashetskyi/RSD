@@ -15,7 +15,7 @@
             <input type="search" @bind-value="Search" @bind-value:event="oninput" @onkeyup="ReloadAsync" placeholder="Search slug…" aria-label="Search socials" class="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-1.5 text-sm" />
         </ToolbarTemplate>
         <ColumnHeaderTemplate>
-            <th class="px-4 py-2">Label</th><th class="px-4 py-2">Scope</th><th class="px-4 py-2">Href</th><th class="px-4 py-2">Status</th><th class="px-4 py-2">Order</th><th class="px-4 py-2 text-right">Actions</th>
+            <th class="px-4 py-2">Label</th><th class="px-4 py-2">Scope</th><th class="px-4 py-2">Link</th><th class="px-4 py-2">Status</th><th class="px-4 py-2">Order</th><th class="px-4 py-2 text-right">Actions</th>
         </ColumnHeaderTemplate>
         <RowTemplate Context="s">
             <td class="px-4 py-2 text-gray-900 dark:text-white">@s.Label</td>
@@ -28,7 +28,7 @@
                     <button type="button" @onclick="() => MoveUpAsync(s.Id)" aria-label="Move up" class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-1 text-xs hover:bg-gray-50 dark:hover:bg-gray-800">&uarr;</button>
                     <button type="button" @onclick="() => MoveDownAsync(s.Id)" aria-label="Move down" class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-1 text-xs hover:bg-gray-50 dark:hover:bg-gray-800">&darr;</button>
                     <a href="/admin/social-links/@s.Id" class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-1 text-xs hover:bg-gray-50 dark:hover:bg-gray-800">Edit</a>
-                    <button type="button" @onclick="() => DeleteAsync(s.Id)" aria-label="Delete" class="rounded-md border border-red-300 dark:border-red-700 px-2 py-1 text-xs text-red-700 dark:text-red-300 hover:bg-red-50 dark:hover:bg-red-950">Delete</button>
+                    <DeleteRowButton EntityLabel="@s.Label" OnConfirm="@(() => DeleteAsync(s.Id))" />
                 </div>
             </td>
         </RowTemplate>

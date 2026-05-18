@@ -39,10 +39,17 @@ public partial class MessengerLinkEdit(IMessengerLinkService Service, Navigation
 
     private async Task SaveAsync()
     {
-        var entity = Input.ToEntity(Id);
-        var (ok, error) = await PersistAsync(entity);
-        if (!ok) { ErrorMessage = error; return; }
-        Nav.NavigateTo("/admin/messenger-links");
+        try
+        {
+            var entity = Input.ToEntity(Id);
+            var (ok, error) = await PersistAsync(entity);
+            if (!ok) { ErrorMessage = error; return; }
+            Nav.NavigateTo("/admin/messenger-links");
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Save failed: {ex.Message}";
+        }
     }
 
     private async Task<(bool Ok, string Error)> PersistAsync(MessengerLink entity)
@@ -67,8 +74,9 @@ public partial class MessengerLinkEdit(IMessengerLinkService Service, Navigation
         public string SmallIconPath { get; set; } = "";
         [StringLength(FieldLimits.MessengerLink.BgColor)]
         public string BgColor { get; set; } = "";
+        [Display(Name = "Link")]
         [StringLength(FieldLimits.MessengerLink.Href)]
-        public string Href { get; set; } = "";
+        public string Link { get; set; } = "";
         public ContentStatus Status { get; set; } = ContentStatus.Published;
         public int DisplayOrder { get; set; }
         [StringLength(FieldLimits.Slug)]
@@ -77,7 +85,7 @@ public partial class MessengerLinkEdit(IMessengerLinkService Service, Navigation
         public static MessengerInput From(MessengerLink m) => new()
         {
             Label = m.Label, LargeIconPath = m.LargeIconPath, SmallIconPath = m.SmallIconPath,
-            BgColor = m.BgColor, Href = m.Href,
+            BgColor = m.BgColor, Link = m.Href,
             Status = m.Status, DisplayOrder = m.DisplayOrder, Slug = m.Slug,
         };
 
@@ -85,7 +93,7 @@ public partial class MessengerLinkEdit(IMessengerLinkService Service, Navigation
         {
             Id = id ?? Guid.NewGuid(), Slug = Slug,
             Label = Label, LargeIconPath = LargeIconPath, SmallIconPath = SmallIconPath,
-            BgColor = BgColor, Href = Href,
+            BgColor = BgColor, Href = Link,
             Status = Status, DisplayOrder = DisplayOrder,
         };
     }

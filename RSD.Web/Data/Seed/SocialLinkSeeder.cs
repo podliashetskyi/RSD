@@ -9,12 +9,13 @@ public sealed class SocialLinkSeeder(AppDbContext Db, ISlugger Slugger) : Seeder
     {
         IReadOnlyList<SocialLink> items =
         [
-            // Footer (from Layout/Footer.razor)
-            Build(SocialLinkScope.Footer, "LinkedIn",  "images/icon-linkedin.svg",  "#", 1),
-            Build(SocialLinkScope.Footer, "X",         "images/icon-x.svg",         "#", 2),
-            Build(SocialLinkScope.Footer, "GitHub",    "images/icon-github.svg",    "#", 3),
-            Build(SocialLinkScope.Footer, "Facebook",  "images/icon-facebook.svg",  "#", 4),
-            Build(SocialLinkScope.Footer, "Instagram", "images/icon-instagram.svg", "#", 5),
+            // Footer (from Layout/Footer.razor) — Href intentionally empty;
+            // Footer template skips rows without a real URL until an admin fills them in.
+            Build(SocialLinkScope.Footer, "LinkedIn",  "images/icon-linkedin.svg",  "", 1),
+            Build(SocialLinkScope.Footer, "X",         "images/icon-x.svg",         "", 2),
+            Build(SocialLinkScope.Footer, "GitHub",    "images/icon-github.svg",    "", 3),
+            Build(SocialLinkScope.Footer, "Facebook",  "images/icon-facebook.svg",  "", 4),
+            Build(SocialLinkScope.Footer, "Instagram", "images/icon-instagram.svg", "", 5),
             // Contact (Sections/Contact/ContactSection)
             Build(SocialLinkScope.Contact, "LinkedIn", "images/contact/social/icon-linkedin.svg", "#", 1),
             Build(SocialLinkScope.Contact, "Twitter",  "images/contact/social/icon-twitter.svg",  "#", 2),

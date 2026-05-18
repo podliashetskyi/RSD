@@ -37,7 +37,9 @@ public abstract class SimpleContentService<TEntity>(
     public async Task<Result<Guid>> CreateAsync(TEntity input, CancellationToken ct)
     {
         await using var db = await DbFactory.CreateDbContextAsync(ct);
-        input.Slug = await EnsureSlugAsync(input.Slug, NaturalKeyOf(input), currentId: null, ct);
+        var slugResult = await ResolveSlugAsync(input.Slug, NaturalKeyOf(input), currentId: null, ct);
+        if (!slugResult.Ok) return Result.Fail<Guid>(slugResult.Error);
+        input.Slug = slugResult.Value!;
         ApplyTimestamps(input, isCreate: true);
         db.Set<TEntity>().Add(input);
         await db.SaveChangesAsync(ct);
@@ -52,7 +54,9 @@ public abstract class SimpleContentService<TEntity>(
         var existing = await db.Set<TEntity>().FirstOrDefaultAsync(e => e.Id == input.Id, ct);
         if (existing is null) return Result.Fail("Entity not found.");
         var oldPaths = EntityPaths.OfAny(existing).ToList();
-        input.Slug = await EnsureSlugAsync(input.Slug, NaturalKeyOf(input), input.Id, ct);
+        var slugResult = await ResolveSlugAsync(input.Slug, NaturalKeyOf(input), input.Id, ct);
+        if (!slugResult.Ok) return Result.Fail(slugResult.Error);
+        input.Slug = slugResult.Value!;
         db.Entry(existing).CurrentValues.SetValues(input);
         ApplyTimestamps(existing, isCreate: false);
         await db.SaveChangesAsync(ct);
@@ -72,11 +76,7 @@ public abstract class SimpleContentService<TEntity>(
         MutateAsync(id, e => e.IsDeleted = true, ct);
 
     public Task<Result<Unit>> RestoreAsync(Guid id, CancellationToken ct) =>
-        MutateAsync(id, e =>
-        {
-            e.IsDeleted = false;
-            e.Status = ContentStatus.Draft;
-        }, ct, ignoreFilters: true);
+        MutateAsync(id, e => e.IsDeleted = false, ct, ignoreFilters: true);
 
     public async Task<Result<Unit>> HardDeleteAsync(Guid id, CancellationToken ct)
     {
@@ -134,10 +134,19 @@ public abstract class SimpleContentService<TEntity>(
     private static IQueryable<TEntity> ApplySearchFilter(IQueryable<TEntity> q, string search) =>
         string.IsNullOrWhiteSpace(search) ? q : q.Where(e => EF.Functions.ILike(e.Slug, $"%{search}%"));
 
-    private async Task<string> EnsureSlugAsync(string supplied, string fallback, Guid? currentId, CancellationToken ct)
+    private async Task<Result<string>> ResolveSlugAsync(string supplied, string fallback, Guid? currentId, CancellationToken ct)
     {
-        var seed = string.IsNullOrWhiteSpace(supplied) ? fallback : supplied;
-        return await Slugger.GenerateUniqueAsync<TEntity>(seed, currentId, ct);
+        if (string.IsNullOrWhiteSpace(supplied))
+        {
+            var generated = await Slugger.GenerateUniqueAsync<TEntity>(fallback, currentId, ct);
+            return Result.Ok(generated);
+        }
+        var slugified = Slugger.Slugify(supplied);
+        if (string.IsNullOrEmpty(slugified)) return Result.Fail<string>("Slug is required.");
+        var available = await Slugger.IsAvailableAsync<TEntity>(slugified, currentId, ct);
+        return available
+            ? Result.Ok(slugified)
+            : Result.Fail<string>($"The slug '{slugified}' is already in use. Choose a different one.");
     }
 
     private static void ApplyTimestamps(TEntity entity, bool isCreate)

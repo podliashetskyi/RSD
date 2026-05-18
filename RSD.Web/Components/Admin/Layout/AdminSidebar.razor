@@ -1,4 +1,8 @@
-<aside aria-label="Admin navigation" class="border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 w-56 shrink-0">
+<aside id="admin-sidebar" data-admin-sidebar aria-label="Admin navigation"
+       class="border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 w-56 shrink-0
+              fixed inset-y-0 left-0 z-40 -translate-x-full transition-transform duration-200
+              group-data-[sidebar-open=true]:translate-x-0
+              lg:static lg:translate-x-0 lg:z-auto lg:transition-none">
     <nav class="px-4 py-6 space-y-6">
         @foreach (var group in Groups)
         {

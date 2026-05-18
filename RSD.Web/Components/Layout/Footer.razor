@@ -9,9 +9,9 @@
                     We create innovative digital solutions that transform our clients' businesses.
                 </p>
                 <div class="flex gap-2 items-center">
-                    @foreach (var s in Socials)
+                    @foreach (var s in Socials.Where(x => !string.IsNullOrWhiteSpace(x.Href)))
                     {
-                        <a href="@(string.IsNullOrEmpty(s.Href) ? "#" : s.Href)"
+                        <a href="@s.Href"
                            class="bg-white rounded-lg w-10 h-10 flex items-center justify-center hover:bg-line-subtle transition-colors"
                            aria-label="@s.Label">
                             <img src="@s.IconPath" alt="" class="w-5 h-5" />
