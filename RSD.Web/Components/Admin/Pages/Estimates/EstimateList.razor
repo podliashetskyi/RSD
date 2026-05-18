@@ -145,9 +145,19 @@
                     <button type="button" @onclick="MarkHandledAsync"
                             class="rounded-md border border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300 px-3 py-1.5 text-sm">Mark handled</button>
                 }
-                <button type="button" @onclick="DeleteAsync"
+                <button type="button" @onclick="RequestDelete"
                         class="ml-auto rounded-md border border-red-300 dark:border-red-700 text-red-700 dark:text-red-300 px-3 py-1.5 text-sm">Delete</button>
             </footer>
         </aside>
     </div>
 }
+
+<ConfirmDialog IsOpen="DeleteDialogOpen"
+               Title="Delete this estimate permanently?"
+               Body="@DeleteDialogBody"
+               ConfirmLabel="Delete permanently"
+               CancelLabel="Cancel"
+               IsDestructive="true"
+               OnConfirm="ConfirmDeleteAsync"
+               OnCancel="CancelDelete"
+               IsOpenChanged="OnDeleteDialogOpenChanged" />

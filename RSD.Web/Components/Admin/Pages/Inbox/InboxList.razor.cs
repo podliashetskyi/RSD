@@ -24,7 +24,11 @@ public partial class InboxList(
     private string Search { get; set; } = "";
     private ContactSubmissionFilter Filter { get; set; } = ContactSubmissionFilter.Open;
     private ContactSubmission? Selected { get; set; }
+    private bool DeleteDialogOpen { get; set; }
     private string ReplyMailto => Selected is null ? "#" : BuildMailto(Selected);
+    private string DeleteDialogBody => Selected is null
+        ? ""
+        : $"This will permanently delete the submission from {Selected.Name} <{Selected.Email}>. This action cannot be undone.";
 
     private static readonly IReadOnlyList<FilterOption> FilterOptions =
     [
@@ -99,14 +103,24 @@ public partial class InboxList(
         await ReloadAsync();
     }
 
-    private async Task DeleteAsync()
+    private void RequestDelete()
+    {
+        if (Selected is not null) DeleteDialogOpen = true;
+    }
+
+    private async Task ConfirmDeleteAsync()
     {
         if (Selected is null) return;
         var result = await Service.DeleteAsync(Selected.Id, CancellationToken.None);
         ApplyOutcome(result, "Submission deleted.");
+        if (!result.Ok) return;
         Selected = null;
         await ReloadAsync();
     }
+
+    private void CancelDelete() => DeleteDialogOpen = false;
+
+    private void OnDeleteDialogOpenChanged(bool open) => DeleteDialogOpen = open;
 
     private async Task<string> ResolveUserIdAsync()
     {

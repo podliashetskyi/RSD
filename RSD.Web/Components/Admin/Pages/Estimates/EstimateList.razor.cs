@@ -25,7 +25,11 @@ public partial class EstimateList(
     private string Search { get; set; } = "";
     private ProjectEstimateFilter Filter { get; set; } = ProjectEstimateFilter.Open;
     private ProjectEstimate? Selected { get; set; }
+    private bool DeleteDialogOpen { get; set; }
     private string ReplyMailto => Selected is null ? "#" : BuildMailto(Selected);
+    private string DeleteDialogBody => Selected is null
+        ? ""
+        : $"This will permanently delete the estimate from {Selected.ContactName} <{Selected.ContactEmail}>. This action cannot be undone.";
 
     private static readonly IReadOnlyList<FilterOption> FilterOptions =
     [
@@ -100,14 +104,24 @@ public partial class EstimateList(
         await ReloadAsync();
     }
 
-    private async Task DeleteAsync()
+    private void RequestDelete()
+    {
+        if (Selected is not null) DeleteDialogOpen = true;
+    }
+
+    private async Task ConfirmDeleteAsync()
     {
         if (Selected is null) return;
         var result = await Service.DeleteAsync(Selected.Id, CancellationToken.None);
         ApplyOutcome(result, "Estimate deleted.");
+        if (!result.Ok) return;
         Selected = null;
         await ReloadAsync();
     }
+
+    private void CancelDelete() => DeleteDialogOpen = false;
+
+    private void OnDeleteDialogOpenChanged(bool open) => DeleteDialogOpen = open;
 
     private async Task<string> ResolveUserIdAsync()
     {
