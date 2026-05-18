@@ -10,7 +10,7 @@ public sealed class ContactPointSeeder(AppDbContext Db, ISlugger Slugger) : Seed
         IReadOnlyList<ContactPoint> items =
         [
             Build("Phone",   ["+1 (415) 555-1234"],                                       isLink: false, 1),
-            Build("Email",   ["hello@nexatech.io"],                                       isLink: false, 2),
+            Build("Email",   ["contactus@remsoft.dev"],                                  isLink: false, 2),
             Build("Address", ["San Francisco, CA 94102", "Business Center, Suite 100"],   isLink: true,  3),
         ];
         return Task.FromResult(items);

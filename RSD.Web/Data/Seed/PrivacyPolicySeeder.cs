@@ -52,7 +52,7 @@ public sealed class PrivacyPolicySeeder(AppDbContext Db, ISlugger Slugger) : See
         <h2>6. Contact Us</h2>
         <p>If you have any questions about this Privacy Policy, please contact us at:</p>
         <ul>
-          <li>Email: <a href="mailto:hello@remsoft.dev">hello@remsoft.dev</a></li>
+          <li>Email: <a href="mailto:contactus@remsoft.dev">contactus@remsoft.dev</a></li>
           <li>Address: San Francisco, CA 94102</li>
           <li>Phone: +1 (415) 555-1234</li>
         </ul>

@@ -50,7 +50,7 @@ public sealed class TermsOfServiceSeeder(AppDbContext Db, ISlugger Slugger) : Se
         <h2>8. Contact Information</h2>
         <p>For any questions regarding these Terms, please reach out to:</p>
         <ul>
-          <li>Email: <a href="mailto:hello@remsoft.dev">hello@remsoft.dev</a></li>
+          <li>Email: <a href="mailto:contactus@remsoft.dev">contactus@remsoft.dev</a></li>
           <li>Support: <a href="mailto:support@remsoft.dev">support@remsoft.dev</a></li>
         </ul>
         """;
