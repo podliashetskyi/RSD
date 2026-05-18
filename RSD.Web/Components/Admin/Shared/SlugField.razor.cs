@@ -9,7 +9,7 @@ namespace RSD.Web.Components.Admin.Shared;
 
 public partial class SlugField<TEntity>(ISlugger Slugger) : ComponentBase where TEntity : ContentEntity
 {
-    [Parameter] public string Label { get; set; } = "Slug";
+    [Parameter] public string Label { get; set; } = "URL path";
     [Parameter] public string Value { get; set; } = "";
     [Parameter] public string TitleSource { get; set; } = "";
     [Parameter] public Guid? CurrentEntityId { get; set; }
@@ -81,11 +81,11 @@ public partial class SlugField<TEntity>(ISlugger Slugger) : ComponentBase where 
     {
         if (string.IsNullOrWhiteSpace(slug))
         {
-            await ApplyAvailabilityAsync(false, "Slug is required.");
+            await ApplyAvailabilityAsync(false, "URL path is required.");
             return;
         }
         var available = await Slugger.IsAvailableAsync<TEntity>(slug, CurrentEntityId, CancellationToken.None);
-        await ApplyAvailabilityAsync(available, available ? "" : "This slug is already in use.");
+        await ApplyAvailabilityAsync(available, available ? "" : "This URL path is already in use.");
     }
 
     private async Task ApplyAvailabilityAsync(bool available, string message)

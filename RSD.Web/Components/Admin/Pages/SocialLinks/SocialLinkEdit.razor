@@ -17,7 +17,7 @@
     <EditForm Model="Input" OnValidSubmit="SaveAsync" FormName="social-edit" class="space-y-4">
         <DataAnnotationsValidator />
         <FormField Label="Label"><InputText @bind-Value="Input.Label" required aria-required="true" maxlength="@FieldLimits.SocialLink.Label" class="form-input" /></FormField>
-        <FormField Label="Scope">
+        <FormField Label="Where this appears">
             <InputSelect @bind-Value="Input.Scope" class="form-input">
                 <option value="@SocialLinkScope.Footer">Footer</option>
                 <option value="@SocialLinkScope.Contact">Contact page</option>
@@ -42,7 +42,7 @@
                     <option value="@ContentStatus.Archived">Archived</option>
                 </InputSelect>
             </FormField>
-            <FormField Label="Display order"><InputNumber @bind-Value="Input.DisplayOrder" class="form-input" /></FormField>
+            <FormField Label="Sort order"><InputNumber @bind-Value="Input.DisplayOrder" class="form-input" /></FormField>
         </div>
 
         <div class="flex items-center gap-2 pt-4">

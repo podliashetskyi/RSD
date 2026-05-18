@@ -42,7 +42,7 @@
             <FormField Label="Subtitle">
                 <InputText id="subtitle" @bind-Value="Input.Subtitle" maxlength="@FieldLimits.Product.Subtitle" class="form-input" />
             </FormField>
-            <FormField Label="Price (display string)" Hint="e.g. from $49/mo">
+            <FormField Label="Displayed price" Hint="e.g. from $49/mo">
                 <InputText id="price" @bind-Value="Input.Price" maxlength="@FieldLimits.Product.Price" class="form-input" />
             </FormField>
         </div>
@@ -59,10 +59,10 @@
                   Value="Input.BulletPoints" ValueChanged="OnBulletsChanged" />
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField Label="Try-for-free href" Hint="Where the primary CTA links.">
+            <FormField Label="Primary button link" Hint="Where the main product button goes.">
                 <InputText id="try" @bind-Value="Input.TryForFreeHref" placeholder="/contact" maxlength="@FieldLimits.Product.TryForFreeHref" class="form-input" />
             </FormField>
-            <FormField Label="Learn-more href" Hint="Where the secondary CTA links.">
+            <FormField Label="Secondary button link" Hint="Where the secondary product button goes.">
                 <InputText id="learn" @bind-Value="Input.LearnMoreHref" placeholder="#" maxlength="@FieldLimits.Product.LearnMoreHref" class="form-input" />
             </FormField>
         </div>

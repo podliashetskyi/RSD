@@ -50,7 +50,7 @@
                   Value="Input.BulletPoints" ValueChanged="OnBulletsChanged" />
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField Label="Details href" Hint="Public detail page route.">
+            <FormField Label="Detail page link" Hint="Public page route for the service.">
                 <InputText id="detailsHref" @bind-Value="Input.DetailsHref" placeholder="/services/foo" maxlength="@FieldLimits.Service.DetailsHref" class="form-input" />
             </FormField>
             <FormField Label="Status">
