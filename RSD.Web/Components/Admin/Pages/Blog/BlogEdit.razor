@@ -68,6 +68,29 @@
             </FormField>
         </div>
 
+        <FormField Label="Author" Hint="Choose a published team member, or leave as RSD Team.">
+            <InputSelect id="author" @bind-Value="Input.AuthorId" class="form-input">
+                <option value="">RSD Team</option>
+                @foreach (var author in AuthorOptions)
+                {
+                    <option value="@author.Id">@author.Name</option>
+                }
+            </InputSelect>
+        </FormField>
+
+        <div class="flex items-center gap-3 rounded-md border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 px-3 py-2">
+            <img src="/@(SelectedAuthor?.AvatarPath ?? DefaultAuthorAvatarSrc)"
+                 alt="@(SelectedAuthor?.Name ?? "RSD Team")"
+                 class="h-10 w-10 rounded-full object-cover border border-gray-200 dark:border-gray-800" />
+            <div class="min-w-0">
+                <p class="truncate text-sm font-medium text-gray-900 dark:text-white">@(SelectedAuthor?.Name ?? "RSD Team")</p>
+                @if (!string.IsNullOrWhiteSpace(SelectedAuthor?.Role))
+                {
+                    <p class="truncate text-xs text-gray-500 dark:text-gray-400">@SelectedAuthor.Role</p>
+                }
+            </div>
+        </div>
+
         <ConstrainedTagPicker Label="Tags"
                               Hint="Pick from admin-managed tags. Click to toggle."
                               EmptyOptionsText="No tags defined yet."

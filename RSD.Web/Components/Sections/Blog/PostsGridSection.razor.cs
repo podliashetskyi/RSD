@@ -54,6 +54,8 @@ public sealed record BlogPostRow(
     string PublishedDate,
     string ReadTime)
 {
+    private const string DefaultAuthorAvatarSrc = "images/logo.svg";
+
     public static BlogPostRow From(BlogPost post, IReadOnlyList<TeamMember> team)
     {
         var author = post.AuthorId is { } authorId ? team.FirstOrDefault(t => t.Id == authorId) : null;
@@ -65,8 +67,11 @@ public sealed record BlogPostRow(
             post.Tags,
             post.CoverImagePath,
             author?.Name ?? "RSD Team",
-            author?.AvatarPath ?? "images/avatars/avatar-default.png",
+            AvatarSrc(author?.AvatarPath),
             (post.PublishedAt ?? post.CreatedAt).ToString("MMM dd, yyyy"),
             post.ReadTimeMinutes > 0 ? $"{post.ReadTimeMinutes} min read" : "");
     }
+
+    private static string AvatarSrc(string? avatarPath) =>
+        string.IsNullOrWhiteSpace(avatarPath) ? DefaultAuthorAvatarSrc : avatarPath;
 }

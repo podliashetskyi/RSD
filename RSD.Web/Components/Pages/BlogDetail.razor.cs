@@ -16,6 +16,8 @@ public partial class BlogDetail(
     IPreviewContext PreviewCtx,
     PreviewLink Preview)
 {
+    private const string DefaultAuthorAvatarSrc = "images/logo.svg";
+
     [Parameter] public string Slug { get; set; } = "";
     [SupplyParameterFromQuery] public string? Token { get; set; }
 
@@ -30,7 +32,7 @@ public partial class BlogDetail(
     private string ReadTimeText => Post is { ReadTimeMinutes: > 0 } ? $"{Post.ReadTimeMinutes} min" : "";
     private string AuthorName => Author?.Name ?? "RSD Team";
     private string AuthorRole => Author?.Role ?? "";
-    private string AuthorAvatarSrc => Author?.AvatarPath ?? "images/avatars/avatar-default.png";
+    private string AuthorAvatarSrc => AvatarSrc(Author?.AvatarPath);
 
     protected override async Task OnInitializedAsync()
     {
@@ -56,6 +58,9 @@ public partial class BlogDetail(
 
     private bool IsPreviewRequest() =>
         Http.HttpContext?.Request.Path.StartsWithSegments("/preview") ?? false;
+
+    private static string AvatarSrc(string? avatarPath) =>
+        string.IsNullOrWhiteSpace(avatarPath) ? DefaultAuthorAvatarSrc : avatarPath;
 
     private void NotFound()
     {

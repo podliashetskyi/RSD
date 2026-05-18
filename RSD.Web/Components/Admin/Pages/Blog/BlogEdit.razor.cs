@@ -14,10 +14,13 @@ namespace RSD.Web.Components.Admin.Pages.Blog;
 public partial class BlogEdit(
     IBlogService Service,
     IFilterService Filters,
+    ITeamMemberService TeamMembers,
     NavigationManager Nav,
     IToastService Toasts,
     PreviewLink Preview) : ComponentBase
 {
+    private const string DefaultAuthorAvatarSrc = "images/logo.svg";
+
     [Parameter] public Guid? Id { get; set; }
 
     private BlogPostInput Input { get; set; } = new();
@@ -31,13 +34,17 @@ public partial class BlogEdit(
 
     private IReadOnlyList<string> CategoryOptions { get; set; } = [];
     private IReadOnlyList<string> TagOptions { get; set; } = [];
+    private IReadOnlyList<AuthorOption> AuthorOptions { get; set; } = [];
+    private AuthorOption? SelectedAuthor => AuthorOptions.FirstOrDefault(a => a.Id == Input.AuthorId);
 
     protected override async Task OnInitializedAsync()
     {
         var categories = await Filters.ListByTypeAsync(FilterType.BlogCategory, CancellationToken.None);
         var tags = await Filters.ListByTypeAsync(FilterType.BlogTag, CancellationToken.None);
+        var authors = await TeamMembers.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 200), CancellationToken.None);
         CategoryOptions = [.. categories.Select(f => f.Label)];
         TagOptions = [.. tags.Select(f => f.Label)];
+        AuthorOptions = [.. authors.OrderBy(a => a.DisplayOrder).ThenBy(a => a.Name).Select(AuthorOption.From)];
         if (Id is { } id) await LoadAsync(id);
     }
 
@@ -88,6 +95,18 @@ public partial class BlogEdit(
     private void OnCoverUploaded(UploadedFile? file) { if (file is not null) Input.CoverImagePath = file.Path; }
     private void OnCoverAltChanged(string alt) => Input.CoverImageAlt = alt;
     private void ClearCover() => Input.CoverImagePath = "";
+
+    private static string AvatarSrc(string avatarPath) =>
+        string.IsNullOrWhiteSpace(avatarPath) ? DefaultAuthorAvatarSrc : avatarPath;
+
+    private sealed record AuthorOption(Guid Id, string Name, string Role, string AvatarPath)
+    {
+        public static AuthorOption From(TeamMember member) => new(
+            member.Id,
+            member.Name,
+            member.Role,
+            AvatarSrc(member.AvatarPath));
+    }
 
     public sealed record class BlogPostInput
     {
