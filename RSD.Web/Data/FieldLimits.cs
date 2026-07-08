@@ -138,6 +138,8 @@ public static class FieldLimits
     public static class ContactPoint
     {
         public const int Label = 100;
+        public const int Href = 500;
+        public const int IconPath = 500;
     }
 
     public static class TermsOfService

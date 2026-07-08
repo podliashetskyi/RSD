@@ -2,6 +2,7 @@
 @page "/admin/contact-points/{Id:guid}"
 @attribute [Authorize(Roles = AdminRoles.Admin)]
 @layout AdminLayout
+@rendermode InteractiveServer
 
 <PageTitle>@(IsCreate ? "New contact point" : "Edit contact point") &middot; RSD Admin</PageTitle>
 
@@ -13,18 +14,22 @@
         <div role="alert" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">@ErrorMessage</div>
     }
 
-    <EditForm Model="Input" method="post" OnValidSubmit="SaveAsync" FormName="contact-point-edit" class="space-y-4">
+    <EditForm Model="Input" OnValidSubmit="SaveAsync" FormName="contact-point-edit" class="space-y-4">
         <DataAnnotationsValidator />
         <FormField Label="Label" Hint="e.g. Phone, Email, Address"><InputText @bind-Value="Input.Label" required aria-required="true" maxlength="@FieldLimits.ContactPoint.Label" class="form-input" /></FormField>
-        <FormField Label="Lines" Hint="One line per row. Joined with newlines on the public page.">
+        <FormField Label="Lines" Hint="One line per row. Joined on the public page.">
             <InputTextArea @bind-Value="Input.LinesText" rows="4" class="form-input" />
         </FormField>
-        <div class="flex items-center gap-2">
-            <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                <InputCheckbox @bind-Value="Input.IsLink" />
-                Render as a link (e.g. address with map link)
-            </label>
-        </div>
+        <FormField Label="Icon">
+            <ImageUploader Subfolder="contact-points" CurrentFileChanged="OnIconUploaded" />
+            <AdvancedPathField>
+                <InputText @bind-Value="Input.IconPath" maxlength="@FieldLimits.ContactPoint.IconPath" class="form-input" />
+            </AdvancedPathField>
+        </FormField>
+        <FormField Label="Link" Hint="Optional. Use mailto:, tel:, or a full https:// URL. Leave blank for plain text.">
+            <InputText @bind-Value="Input.Href" maxlength="@FieldLimits.ContactPoint.Href" class="form-input" />
+            <ValidationMessage For="() => Input.Href" class="form-error" />
+        </FormField>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField Label="Status">

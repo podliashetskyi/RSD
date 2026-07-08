@@ -11,9 +11,14 @@ namespace RSD.Web.Components.Admin.Pages.ContactPoints;
 public partial class ContactPointEdit(IContactPointService Service, NavigationManager Nav)
 {
     [Parameter] public Guid? Id { get; set; }
-    [SupplyParameterFromForm] private ContactInput Input { get; set; } = new();
+    private ContactInput Input { get; set; } = new();
     private string ErrorMessage { get; set; } = "";
     private bool IsCreate => Id is null;
+
+    private void OnIconUploaded(UploadedFile? file)
+    {
+        if (file is not null) Input.IconPath = file.Path;
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -34,12 +39,15 @@ public partial class ContactPointEdit(IContactPointService Service, NavigationMa
             var entity = Input.ToEntity(Id);
             var (ok, error) = await PersistAsync(entity);
             if (!ok) { ErrorMessage = error; return; }
-            Nav.NavigateTo("/admin/contact-points");
         }
         catch (Exception ex)
         {
             ErrorMessage = $"Save failed: {ex.Message}";
+            return;
         }
+        // Outside the try: in static SSR, NavigateTo signals the redirect by throwing
+        // NavigationException, which must reach the framework — never a catch block.
+        Nav.NavigateTo("/admin/contact-points");
     }
 
     private async Task<(bool Ok, string Error)> PersistAsync(ContactPoint entity)
@@ -53,13 +61,17 @@ public partial class ContactPointEdit(IContactPointService Service, NavigationMa
         return (updated.Ok, updated.Error);
     }
 
-    public sealed record class ContactInput
+    public sealed record class ContactInput : IValidatableObject
     {
         [Required]
         [StringLength(FieldLimits.ContactPoint.Label)]
         public string Label { get; set; } = "";
         public string LinesText { get; set; } = "";
-        public bool IsLink { get; set; }
+        [Display(Name = "Link")]
+        [StringLength(FieldLimits.ContactPoint.Href)]
+        public string Href { get; set; } = "";
+        [StringLength(FieldLimits.ContactPoint.IconPath)]
+        public string IconPath { get; set; } = "";
         public ContentStatus Status { get; set; } = ContentStatus.Published;
         public int DisplayOrder { get; set; }
         [StringLength(FieldLimits.Slug)]
@@ -69,16 +81,25 @@ public partial class ContactPointEdit(IContactPointService Service, NavigationMa
         {
             Label = c.Label,
             LinesText = string.Join("\n", c.Lines),
-            IsLink = c.IsLink,
+            Href = c.Href,
+            IconPath = c.IconPath,
             Status = c.Status, DisplayOrder = c.DisplayOrder, Slug = c.Slug,
         };
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (LinkHrefValidator.IsValidContactHref(Href)) yield break;
+            yield return new ValidationResult(LinkHrefValidator.ContactHrefMessage, [nameof(Href)]);
+        }
 
         public ContactPoint ToEntity(Guid? id) => new()
         {
             Id = id ?? Guid.NewGuid(), Slug = Slug,
             Label = Label,
             Lines = ParseLines(LinesText),
-            IsLink = IsLink,
+            Href = Href,
+            IconPath = IconPath,
+            IsLink = !string.IsNullOrWhiteSpace(Href),
             Status = Status, DisplayOrder = DisplayOrder,
         };
 
