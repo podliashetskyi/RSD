@@ -16,18 +16,13 @@
                     </p>
                 </div>
                 <div class="flex items-end gap-12">
-                    <div>
-                        <p class="text-white text-display-lg font-semibold leading-none">200<sup class="text-cyan-200 ml-0.5 align-super text-h4">+</sup></p>
-                        <p class="text-ink-muted text-caption font-medium uppercase mt-3">Projects</p>
-                    </div>
-                    <div>
-                        <p class="text-white text-display-lg font-semibold leading-none">60<sup class="text-cyan-200 ml-0.5 align-super text-h4">+</sup></p>
-                        <p class="text-ink-muted text-caption font-medium uppercase mt-3">Developers</p>
-                    </div>
-                    <div>
-                        <p class="text-white text-display-lg font-semibold leading-none">50<sup class="text-cyan-200 ml-0.5 align-super text-h4">+</sup></p>
-                        <p class="text-ink-muted text-caption font-medium uppercase mt-3">Partners</p>
-                    </div>
+                    @foreach (var s in Stats)
+                    {
+                        <div>
+                            <p class="text-white text-display-lg font-semibold leading-none">@s.Number<sup class="text-cyan-200 ml-0.5 align-super text-h4">@s.Symbol</sup></p>
+                            <p class="text-ink-muted text-caption font-medium uppercase mt-3">@s.Label</p>
+                        </div>
+                    }
                 </div>
             </div>
 
