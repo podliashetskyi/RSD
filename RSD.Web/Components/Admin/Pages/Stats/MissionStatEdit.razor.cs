@@ -11,7 +11,7 @@ namespace RSD.Web.Components.Admin.Pages.Stats;
 public partial class MissionStatEdit(IMissionStatService Service, NavigationManager Nav)
 {
     [Parameter] public Guid? Id { get; set; }
-    [SupplyParameterFromForm] private StatInput Input { get; set; } = new();
+    private StatInput Input { get; set; } = new();
     private string ErrorMessage { get; set; } = "";
     private bool IsCreate => Id is null;
 
@@ -34,12 +34,15 @@ public partial class MissionStatEdit(IMissionStatService Service, NavigationMana
             var entity = Input.ToEntity(Id);
             var (ok, error) = await PersistAsync(entity);
             if (!ok) { ErrorMessage = error; return; }
-            Nav.NavigateTo("/admin/stats");
         }
         catch (Exception ex)
         {
             ErrorMessage = $"Save failed: {ex.Message}";
+            return;
         }
+        // Outside the try: in static SSR, NavigateTo signals the redirect by throwing
+        // NavigationException, which must reach the framework — never a catch block.
+        Nav.NavigateTo("/admin/stats");
     }
 
     private async Task<(bool Ok, string Error)> PersistAsync(MissionStat entity)

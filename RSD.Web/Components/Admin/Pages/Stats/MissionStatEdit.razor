@@ -2,6 +2,7 @@
 @page "/admin/stats/{Id:guid}"
 @attribute [Authorize(Roles = AdminRoles.Admin)]
 @layout AdminLayout
+@rendermode InteractiveServer
 
 <PageTitle>@(IsCreate ? "New stat" : "Edit stat") &middot; RSD Admin</PageTitle>
 
@@ -13,7 +14,7 @@
         <div role="alert" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">@ErrorMessage</div>
     }
 
-    <EditForm Model="Input" method="post" OnValidSubmit="SaveAsync" FormName="stat-edit" class="space-y-4">
+    <EditForm Model="Input" OnValidSubmit="SaveAsync" FormName="stat-edit" class="space-y-4">
         <DataAnnotationsValidator />
         <FormField Label="Label"><InputText @bind-Value="Input.Label" required aria-required="true" maxlength="@FieldLimits.MissionStat.Label" class="form-input" /></FormField>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
