@@ -26,6 +26,14 @@
                               RightBody="@twoCol.Right" />
     }
 
+    @if (Case.DetailFields.Hurdles.Count > 0)
+    {
+        <ChallengeCard Heading="Key Challenges"
+                       MetaItems="Case.DetailFields.Meta"
+                       Body="The project faced several key challenges:"
+                       Hurdles="Case.DetailFields.Hurdles" />
+    }
+
     @if (Case.DetailFields.Results.Count > 0)
     {
         <BulletListCard Heading="Results"
@@ -42,6 +50,11 @@
     @if (Case.DetailFields.Metrics.Count > 0)
     {
         <StatCallouts Items="Case.DetailFields.Metrics" />
+    }
+
+    @if (Case.DetailFields.Testimonial is { } t)
+    {
+        <TestimonialCard Quote="@t.Quote" AuthorName="@t.AuthorName" AuthorRole="@t.AuthorRole" />
     }
 
     <CtaSection Heading="Want to Build Something Similar?"
