@@ -16,18 +16,35 @@
                             var p = Points[i];
                             <li class="flex flex-col gap-1 w-full">
                                 <p class="text-ink text-body font-medium leading-6">@p.Label</p>
-                                @if (p.IsLink)
+                                @if (!string.IsNullOrWhiteSpace(p.Href))
                                 {
-                                    <p class="text-[#136eb3] text-body-lg font-medium leading-5">
-                                        @foreach (var line in p.Lines)
+                                    <a href="@p.Href" class="flex items-center gap-2 text-[#136eb3] text-body-lg font-medium leading-5 hover:underline">
+                                        @if (!string.IsNullOrWhiteSpace(p.IconPath))
                                         {
-                                            <span class="block">@line</span>
+                                            <img src="@p.IconPath" alt="" class="w-5 h-5 shrink-0" />
                                         }
-                                    </p>
+                                        <span class="flex flex-col">
+                                            @foreach (var line in p.Lines)
+                                            {
+                                                <span class="block">@line</span>
+                                            }
+                                        </span>
+                                    </a>
                                 }
                                 else
                                 {
-                                    <p class="text-ink-soft text-body-lg font-medium leading-5">@p.Lines[0]</p>
+                                    <div class="flex items-center gap-2 text-ink-soft text-body-lg font-medium leading-5">
+                                        @if (!string.IsNullOrWhiteSpace(p.IconPath))
+                                        {
+                                            <img src="@p.IconPath" alt="" class="w-5 h-5 shrink-0" />
+                                        }
+                                        <span class="flex flex-col">
+                                            @foreach (var line in p.Lines)
+                                            {
+                                                <span class="block">@line</span>
+                                            }
+                                        </span>
+                                    </div>
                                 }
                             </li>
                             if (i < Points.Count - 1)
