@@ -43,22 +43,41 @@
                     <div class="flex flex-col gap-5">
                         <h3 class="text-white text-body font-medium">Contact</h3>
                         <ul class="flex flex-col gap-4">
-                            <li>
-                                <a href="mailto:contactus@remsoft.dev" class="flex items-center gap-3 text-white text-body hover:text-line-subtle transition-colors">
-                                    <img src="images/icon-email.svg" alt="" class="w-5 h-5" />
-                                    contactus@remsoft.dev
-                                </a>
-                            </li>
-                            <li>
-                                <a href="tel:+14155551234" class="flex items-center gap-3 text-white text-body hover:text-line-subtle transition-colors">
-                                    <img src="images/icon-phone.svg" alt="" class="w-5 h-5" />
-                                    +1 (415) 555-1234
-                                </a>
-                            </li>
-                            <li class="flex items-start gap-3 text-white text-body">
-                                <img src="images/icon-location.svg" alt="" class="w-5 h-5" />
-                                San Francisco, CA 94102
-                            </li>
+                            @foreach (var p in Points)
+                            {
+                                <li>
+                                    @if (!string.IsNullOrWhiteSpace(p.Href))
+                                    {
+                                        <a href="@p.Href" class="flex items-start gap-3 text-white text-body hover:text-line-subtle transition-colors">
+                                            @if (!string.IsNullOrWhiteSpace(p.IconPath))
+                                            {
+                                                <img src="@p.IconPath" alt="" class="w-5 h-5 shrink-0" />
+                                            }
+                                            <span class="flex flex-col">
+                                                @foreach (var line in p.Lines)
+                                                {
+                                                    <span>@line</span>
+                                                }
+                                            </span>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <div class="flex items-start gap-3 text-white text-body">
+                                            @if (!string.IsNullOrWhiteSpace(p.IconPath))
+                                            {
+                                                <img src="@p.IconPath" alt="" class="w-5 h-5 shrink-0" />
+                                            }
+                                            <span class="flex flex-col">
+                                                @foreach (var line in p.Lines)
+                                                {
+                                                    <span>@line</span>
+                                                }
+                                            </span>
+                                        </div>
+                                    }
+                                </li>
+                            }
                         </ul>
                     </div>
                     <a href="/estimate"

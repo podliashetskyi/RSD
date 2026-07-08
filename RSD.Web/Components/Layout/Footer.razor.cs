@@ -6,16 +6,20 @@ using RSD.Web.Services.Content;
 
 namespace RSD.Web.Components.Layout;
 
-public partial class Footer(ISocialLinkService Service) : ComponentBase
+public partial class Footer(ISocialLinkService SocialService, IContactPointService PointsService) : ComponentBase
 {
     private IReadOnlyList<SocialLink> Socials { get; set; } = [];
+    private IReadOnlyList<ContactPoint> Points { get; set; } = [];
 
     protected override async Task OnInitializedAsync()
     {
-        var list = await Service.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 100), CancellationToken.None);
-        Socials = list.Where(HasPublicFooterHref)
-                      .OrderBy(s => s.DisplayOrder)
-                      .ToList();
+        var socials = await SocialService.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 100), CancellationToken.None);
+        Socials = socials.Where(HasPublicFooterHref)
+                         .OrderBy(s => s.DisplayOrder)
+                         .ToList();
+
+        var pts = await PointsService.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 100), CancellationToken.None);
+        Points = pts.OrderBy(p => p.DisplayOrder).ToList();
     }
 
     private static bool HasPublicFooterHref(SocialLink link) =>
