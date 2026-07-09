@@ -18,16 +18,21 @@ public sealed class FooterTests
         var points = new List<ContactPoint>
         {
             new() { Slug = "email", Label = "Email", Lines = ["contactus@remsoft.dev"], Href = "mailto:contactus@remsoft.dev", IconPath = "images/icon-email.svg", DisplayOrder = 1 },
-            new() { Slug = "addr",  Label = "Address", Lines = ["San Francisco, CA 94102", "Suite 100"], Href = "", IconPath = "images/icon-location.svg", DisplayOrder = 2 },
+            new() { Slug = "addr",  Label = "Address", Lines = ["San Francisco, CA 94102", "Suite 100"], Href = "", IconPath = "", DisplayOrder = 2 },
         };
         ctx.Services.AddSingleton<ISocialLinkService>(new FakeSocialLinkService([]));
         ctx.Services.AddSingleton<IContactPointService>(new FakeContactPointService(points));
 
         var cut = ctx.Render<Footer>();
 
-        cut.Find("a[href='mailto:contactus@remsoft.dev']").TextContent.Should().Contain("contactus@remsoft.dev");
-        cut.Markup.Should().Contain("San Francisco, CA 94102").And.Contain("Suite 100"); // all lines render
-        cut.FindAll("a").Should().NotContain(a => a.GetAttribute("href") == "");          // address is not a link
+        var emailLink = cut.Find("a[href='mailto:contactus@remsoft.dev']");
+        emailLink.TextContent.Should().Contain("contactus@remsoft.dev");
+        emailLink.QuerySelector("img[src='images/icon-email.svg']").Should().NotBeNull();  // icon iff IconPath
+        cut.Markup.Should().Contain("San Francisco, CA 94102").And.Contain("Suite 100");   // all lines render
+
+        var addressItem = cut.FindAll("footer li").First(li => li.TextContent.Contains("San Francisco"));
+        addressItem.QuerySelector("a").Should().BeNull();     // no Href -> plain text, not a link
+        addressItem.QuerySelector("img").Should().BeNull();   // no IconPath -> no <img src="">
     }
 
     [Fact]

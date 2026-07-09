@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Cache;
+using RSD.Web.Services.Common;
 using RSD.Web.Services.Slugs;
 using RSD.Web.Services.Storage;
 
@@ -11,4 +12,6 @@ public sealed class ContactPointService(IDbContextFactory<AppDbContext> DbFactor
     : SimpleContentService<ContactPoint>(DbFactory, Slugger, Cache, RefCounts), IContactPointService
 {
     protected override string NaturalKeyOf(ContactPoint entity) => entity.Label;
+
+    protected override Result<Unit> Validate(ContactPoint entity) => LinkHrefValidator.ValidateContactHref(entity.Href);
 }

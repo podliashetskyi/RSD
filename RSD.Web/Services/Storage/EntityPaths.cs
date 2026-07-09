@@ -83,7 +83,7 @@ internal static class EntityPaths
     }
 
     public static IEnumerable<string> Of(MissionStat m) => [m.Seo.OgImagePath];
-    public static IEnumerable<string> Of(ContactPoint c) => [c.Seo.OgImagePath];
+    public static IEnumerable<string> Of(ContactPoint c) => [c.IconPath, c.Seo.OgImagePath];
 
     public static IEnumerable<string> OfAny(ContentEntity entity) => entity switch
     {
