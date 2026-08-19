@@ -36,6 +36,7 @@ public abstract class SimpleContentService<TEntity>(
 
     public async Task<Result<Guid>> CreateAsync(TEntity input, CancellationToken ct)
     {
+        input = Normalize(input);
         var validation = Validate(input);
         if (!validation.Ok) return Result.Fail<Guid>(validation.Error);
         await using var db = await DbFactory.CreateDbContextAsync(ct);
@@ -52,6 +53,7 @@ public abstract class SimpleContentService<TEntity>(
 
     public async Task<Result<Unit>> UpdateAsync(TEntity input, CancellationToken ct)
     {
+        input = Normalize(input);
         var validation = Validate(input);
         if (!validation.Ok) return Result.Fail(validation.Error);
         await using var db = await DbFactory.CreateDbContextAsync(ct);
@@ -127,6 +129,13 @@ public abstract class SimpleContentService<TEntity>(
 
     /// <summary>Per-entity hook for validating user-editable fields before saving.</summary>
     protected virtual Result<Unit> Validate(TEntity entity) => Result.Ok();
+
+    /// <summary>
+    /// Per-entity hook applied before validation on create and update — the single place
+    /// for invariants like HTML sanitization, so every writer (admin UI, seeders, MCP tools)
+    /// goes through them. Default: pass-through.
+    /// </summary>
+    protected virtual TEntity Normalize(TEntity input) => input;
 
     private static IQueryable<TEntity> BaseQuery(AppDbContext db, ContentQuery query)
     {

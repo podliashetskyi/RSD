@@ -18,7 +18,8 @@ public sealed class TrashService(
     ITechStackItemService TechStack,
     IContactPointService ContactPoints,
     IMessengerLinkService Messengers,
-    ISocialLinkService Socials) : ITrashService
+    ISocialLinkService Socials,
+    IFaqItemService FaqItems) : ITrashService
 {
     public async Task<IReadOnlyList<TrashItem>> ListAsync(CancellationToken ct)
     {
@@ -50,6 +51,8 @@ public sealed class TrashService(
             .Select(e => new TrashItem("messenger-links", "Messenger link", e.Id, e.Label, e.Slug, e.UpdatedAt)).ToListAsync(ct));
         items.AddRange(await db.SocialLinks.IgnoreQueryFilters().Where(e => e.IsDeleted)
             .Select(e => new TrashItem("social-links", "Social link", e.Id, e.Label, e.Slug, e.UpdatedAt)).ToListAsync(ct));
+        items.AddRange(await db.FaqItems.IgnoreQueryFilters().Where(e => e.IsDeleted)
+            .Select(e => new TrashItem("faq", "FAQ item", e.Id, e.Question, e.Slug, e.UpdatedAt)).ToListAsync(ct));
         return [.. items.OrderByDescending(i => i.DeletedAt)];
     }
 
@@ -74,6 +77,7 @@ public sealed class TrashService(
         "contact-points" => Apply(ContactPoints.RestoreAsync, ContactPoints.HardDeleteAsync, id, ct, restore),
         "messenger-links" => Apply(Messengers.RestoreAsync, Messengers.HardDeleteAsync, id, ct, restore),
         "social-links" => Apply(Socials.RestoreAsync, Socials.HardDeleteAsync, id, ct, restore),
+        "faq" => Apply(FaqItems.RestoreAsync, FaqItems.HardDeleteAsync, id, ct, restore),
         _ => Task.FromResult(Result.Fail($"Unknown entity type '{entityKey}'.")),
     };
 
