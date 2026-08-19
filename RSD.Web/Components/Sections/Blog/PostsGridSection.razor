@@ -56,7 +56,7 @@
                             <span class="inline-flex w-fit bg-[#f0faff] border border-[#b2e6ff] text-brand-900 text-[12px] font-medium leading-4 px-1.5 py-0.5 rounded-[12px]">@p.Category</span>
                             @if (href is not null)
                             {
-                                <a href="@href" class="text-ink text-[24px] font-semibold leading-[1.25] hover:text-brand-900">@p.Title</a>
+                                <h3 class="text-ink text-[24px] font-semibold leading-[1.25]"><a href="@href" class="hover:text-brand-900">@p.Title</a></h3>
                             }
                             else
                             {
@@ -67,7 +67,7 @@
                                 <ResponsiveImage FallbackSrc="@p.AuthorAvatarSrc" Alt="@p.AuthorName" CssClass="w-8 h-8 rounded-full object-cover" />
                                 <div class="flex flex-col">
                                     <span class="text-ink text-body font-medium leading-5">@p.AuthorName</span>
-                                    <span class="text-ink-soft text-body-sm leading-5">@p.PublishedDate · @p.ReadTime</span>
+                                    <span class="text-ink-soft text-body-sm leading-5"><time datetime="@p.PublishedOn.ToString("yyyy-MM-dd")">@p.PublishedDate</time> · @p.ReadTime</span>
                                 </div>
                             </div>
                             <div class="flex flex-wrap gap-3">

@@ -25,7 +25,8 @@ public partial class ServiceDetail(
 
     private string HeroImage => string.IsNullOrEmpty(Svc?.CoverImagePath) ? "images/services/cloud-solutions/hero.png" : Svc!.CoverImagePath;
     private string HeroAlt => string.IsNullOrEmpty(Svc?.CoverImageAlt) ? (Svc?.Title ?? "") : Svc!.CoverImageAlt;
-    private string DateText => (Svc?.PublishedAt ?? Svc?.CreatedAt ?? DateTime.UtcNow).ToString("MMMM dd, yyyy");
+    private DateTime PublishedOnValue => Svc?.PublishedAt ?? Svc?.CreatedAt ?? DateTime.UtcNow;
+    private string DateText => PublishedOnValue.ToString("MMMM dd, yyyy");
 
     private string SeoTitle => Svc is null ? "" : SeoFallbacks.Title(Svc.Seo, Svc.Title);
     private string SeoDescription => Svc is null ? "" : SeoFallbacks.Description(Svc.Seo, Svc.Summary, Svc.Description);

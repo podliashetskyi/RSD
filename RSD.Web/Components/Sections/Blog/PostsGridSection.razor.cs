@@ -51,6 +51,7 @@ public sealed record BlogPostRow(
     string CoverImagePath,
     string AuthorName,
     string AuthorAvatarSrc,
+    DateTime PublishedOn,
     string PublishedDate,
     string ReadTime)
 {
@@ -68,6 +69,7 @@ public sealed record BlogPostRow(
             post.CoverImagePath,
             author?.Name ?? "RSD Team",
             AvatarSrc(author?.AvatarPath),
+            post.PublishedAt ?? post.CreatedAt,
             (post.PublishedAt ?? post.CreatedAt).ToString("MMM dd, yyyy"),
             post.ReadTimeMinutes > 0 ? $"{post.ReadTimeMinutes} min read" : "");
     }

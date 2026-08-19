@@ -30,7 +30,8 @@ public partial class BlogDetail(
 
     private string HeroImage => string.IsNullOrEmpty(Post?.CoverImagePath) ? "images/services/cloud-solutions/hero.png" : Post!.CoverImagePath;
     private string HeroAlt => string.IsNullOrEmpty(Post?.CoverImageAlt) ? (Post?.Title ?? "") : Post!.CoverImageAlt;
-    private string DateText => (Post?.PublishedAt ?? Post?.CreatedAt ?? DateTime.UtcNow).ToString("MMMM dd, yyyy");
+    private DateTime PublishedOnValue => Post?.PublishedAt ?? Post?.CreatedAt ?? DateTime.UtcNow;
+    private string DateText => PublishedOnValue.ToString("MMMM dd, yyyy");
     private string ReadTimeText => Post is { ReadTimeMinutes: > 0 } ? $"{Post.ReadTimeMinutes} min" : "";
     private string AuthorName => Author?.Name ?? "RSD Team";
     private string AuthorRole => Author?.Role ?? "";

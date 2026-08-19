@@ -8,6 +8,9 @@ public partial class ArticleHeaderSection(NavigationManager Nav)
     [Parameter] public string BackHref { get; set; } = "/";
     [Parameter, EditorRequired] public string CategoryText { get; set; } = "";
     [Parameter, EditorRequired] public string DateText { get; set; } = "";
+    [Parameter] public DateTime PublishedOn { get; set; }
+
+    private string DateIso => PublishedOn.ToString("yyyy-MM-dd");
     [Parameter, EditorRequired] public string ReadTime { get; set; } = "";
     [Parameter, EditorRequired] public string Title { get; set; } = "";
     [Parameter, EditorRequired] public string Subtitle { get; set; } = "";

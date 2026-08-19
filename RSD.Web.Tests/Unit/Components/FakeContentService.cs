@@ -32,3 +32,6 @@ public sealed class FakeContactPointService(IReadOnlyList<ContactPoint> items)
 
 public sealed class FakeSocialLinkService(IReadOnlyList<SocialLink> items)
     : FakeContentService<SocialLink>(items), ISocialLinkService;
+
+public sealed class FakeTeamMemberService(IReadOnlyList<TeamMember> items)
+    : FakeContentService<TeamMember>(items), ITeamMemberService;
