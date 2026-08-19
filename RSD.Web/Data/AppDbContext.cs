@@ -16,6 +16,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<TeamMember> TeamMembers => Set<TeamMember>();
     public DbSet<Partner> Partners => Set<Partner>();
     public DbSet<Value> Values => Set<Value>();
+    public DbSet<FaqItem> FaqItems => Set<FaqItem>();
     public DbSet<MissionStat> MissionStats => Set<MissionStat>();
     public DbSet<TechStackItem> TechStackItems => Set<TechStackItem>();
     public DbSet<ContactPoint> ContactPoints => Set<ContactPoint>();

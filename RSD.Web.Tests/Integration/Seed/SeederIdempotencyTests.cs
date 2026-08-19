@@ -31,6 +31,25 @@ public sealed class SeederIdempotencyTests(PostgresFixture Postgres)
     }
 
     [Fact]
+    public async Task FaqItemSeeder_RunsOnEmptyTable_SkipsOnFull()
+    {
+        await using var factory = new AppDbContextFactory(Postgres.ConnectionString);
+        var db = await factory.CreateAsync();
+        db.FaqItems.RemoveRange(db.FaqItems.IgnoreQueryFilters());
+        await db.SaveChangesAsync();
+
+        var slugger = factory.Provider.GetRequiredService<ISlugger>();
+        var seeder = new FaqItemSeeder(db, slugger);
+
+        await seeder.SeedAsync(CancellationToken.None);
+        var firstCount = await db.FaqItems.AsNoTracking().CountAsync();
+        firstCount.Should().BeGreaterThan(0);
+
+        await seeder.SeedAsync(CancellationToken.None);
+        (await db.FaqItems.AsNoTracking().CountAsync()).Should().Be(firstCount);
+    }
+
+    [Fact]
     public async Task TeamMemberSeeder_HandlesDuplicateNames_WithSlugSuffixing()
     {
         await using var factory = new AppDbContextFactory(Postgres.ConnectionString);

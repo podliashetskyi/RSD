@@ -99,6 +99,13 @@ public static class FieldLimits
         public const int IconPath = 500;
     }
 
+    public static class FaqItem
+    {
+        public const int Question = 300;
+        public const int OwnerSlug = 200;
+        public const int Category = 100;
+    }
+
     public static class Filter
     {
         public const int Label = 200;

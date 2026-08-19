@@ -8,6 +8,7 @@ public static class SeedServiceCollectionExtensions
         services.AddScoped<ISeeder, TeamMemberSeeder>();
         services.AddScoped<ISeeder, PartnerSeeder>();
         services.AddScoped<ISeeder, ValueSeeder>();
+        services.AddScoped<ISeeder, FaqItemSeeder>();
         services.AddScoped<ISeeder, MissionStatSeeder>();
         services.AddScoped<ISeeder, TechStackItemSeeder>();
         services.AddScoped<ISeeder, ContactPointSeeder>();
