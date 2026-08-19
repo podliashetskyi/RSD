@@ -1,0 +1,22 @@
+<HeadContent>
+    <link rel="canonical" href="@CanonicalUrl" />
+    @if (HasDescription)
+    {
+        <meta name="description" content="@Description" />
+        <meta property="og:description" content="@Description" />
+    }
+    <meta property="og:title" content="@Title" />
+    <meta property="og:url" content="@CanonicalUrl" />
+    <meta property="og:type" content="@Type" />
+    <meta property="og:image" content="@OgImageUrl" />
+    @if (HasOgImageAlt)
+    {
+        <meta property="og:image:alt" content="@OgImageAlt" />
+    }
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="@OgImageUrl" />
+    @if (HasRobots)
+    {
+        <meta name="robots" content="@Robots" />
+    }
+</HeadContent>
