@@ -29,7 +29,7 @@
         <BulletListCard Heading="Features" Items="Product.DetailFields.Features" />
     }
 
-    @if (Product.DetailFields.Hurdles.Count > 0)
+    @if (Product.DetailFields.Hurdles.Count > 0 || Product.DetailFields.ChallengeMeta.Count > 0)
     {
         <ChallengeCard Heading="The Challenge"
                        MetaItems="Product.DetailFields.ChallengeMeta"

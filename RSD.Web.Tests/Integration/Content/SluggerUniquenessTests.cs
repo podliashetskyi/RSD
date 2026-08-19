@@ -27,7 +27,11 @@ public sealed class SluggerUniquenessTests(PostgresFixture Postgres)
         var candidate = await slugger.GenerateUniqueAsync<Testimonial>(unique, currentId: null, CancellationToken.None);
         candidate.Should().Be($"{unique}-2");
 
-        var second = await service.CreateAsync(new Testimonial { Slug = unique, Title = unique, Quote = "y", AuthorName = "Author B" }, CancellationToken.None);
+        var explicitCollision = await service.CreateAsync(new Testimonial { Slug = unique, Title = unique, Quote = "y", AuthorName = "Author B" }, CancellationToken.None);
+        explicitCollision.Ok.Should().BeFalse();
+        explicitCollision.Error.Should().Contain("already in use");
+
+        var second = await service.CreateAsync(new Testimonial { Slug = "", Title = unique, Quote = "y", AuthorName = "" }, CancellationToken.None);
         var secondSlug = (await db.Testimonials.AsNoTracking().FirstAsync(t => t.Id == second.Value)).Slug;
         secondSlug.Should().Be($"{unique}-2");
     }

@@ -11,6 +11,7 @@ using RSD.Web.Services.Cache;
 using RSD.Web.Services.Content;
 using RSD.Web.Services.Email;
 using RSD.Web.Services.Slugs;
+using RSD.Web.Services.Storage;
 
 namespace RSD.Web.Tests.Integration.Fixtures;
 
@@ -50,6 +51,7 @@ public sealed class AppDbContextFactory(string connectionString) : IAsyncDisposa
         services.AddScoped<AppDbContext>(sp =>
             sp.GetRequiredService<IDbContextFactory<AppDbContext>>().CreateDbContext());
         services.AddScoped<ISlugger, Slugger>();
+        services.AddScoped<IFileRefCountTracker, FileRefCountTracker>();
         services.AddSingleton<IPublicPageCache, NoopPublicPageCache>();
         services.AddSingleton<CapturingEmailSender>();
         services.AddSingleton<IEmailSender>(sp => sp.GetRequiredService<CapturingEmailSender>());

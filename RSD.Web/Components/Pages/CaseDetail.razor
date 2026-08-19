@@ -26,7 +26,7 @@
                               RightBody="@twoCol.Right" />
     }
 
-    @if (Case.DetailFields.Hurdles.Count > 0)
+    @if (Case.DetailFields.Hurdles.Count > 0 || Case.DetailFields.Meta.Count > 0)
     {
         <ChallengeCard Heading="Key Challenges"
                        MetaItems="Case.DetailFields.Meta"

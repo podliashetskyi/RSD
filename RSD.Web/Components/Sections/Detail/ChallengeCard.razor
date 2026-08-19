@@ -2,25 +2,31 @@
     <div class="max-w-screen-xl mx-auto">
         <article class="bg-white border border-line rounded-base shadow-sm p-6 lg:px-6 lg:py-8 flex flex-col gap-6">
             <h3 class="text-ink-soft text-[28px] lg:text-[36px] font-bold leading-9 tracking-[-0.4px] text-center">@Heading</h3>
-            <div class="border-b border-line flex flex-col lg:flex-row gap-2 lg:gap-8 pb-3 px-3">
-                @foreach (var m in MetaItems)
-                {
-                    <p class="text-ink-soft text-body leading-6">
-                        <span class="font-semibold">@m.Label: </span>@m.Value
-                    </p>
-                }
-            </div>
-            <div class="flex flex-col gap-4 px-0 lg:px-4">
-                <p class="text-ink-soft text-body leading-6">@Body</p>
-                <ul class="flex flex-col gap-4 list-disc pl-6">
-                    @foreach (var h in Hurdles)
+            @if (MetaItems.Count > 0)
+            {
+                <div class="@MetaRowClass">
+                    @foreach (var m in MetaItems)
                     {
-                        <li class="text-ink-soft text-body leading-6">
-                            <span class="font-semibold">@h.Heading: </span>@h.Body
-                        </li>
+                        <p class="text-ink-soft text-body leading-6">
+                            <span class="font-semibold">@m.Label: </span>@m.Value
+                        </p>
                     }
-                </ul>
-            </div>
+                </div>
+            }
+            @if (Hurdles.Count > 0)
+            {
+                <div class="flex flex-col gap-4 px-0 lg:px-4">
+                    <p class="text-ink-soft text-body leading-6">@Body</p>
+                    <ul class="flex flex-col gap-4 list-disc pl-6">
+                        @foreach (var h in Hurdles)
+                        {
+                            <li class="text-ink-soft text-body leading-6">
+                                <span class="font-semibold">@h.Heading: </span>@h.Body
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
         </article>
     </div>
 </section>
