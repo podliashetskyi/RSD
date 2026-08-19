@@ -15,7 +15,8 @@ public partial class BlogDetail(
     ITeamMemberService Team,
     IHttpContextAccessor Http,
     IPreviewContext PreviewCtx,
-    PreviewLink Preview)
+    PreviewLink Preview,
+    Microsoft.Extensions.Options.IOptions<SeoOptions> Seo)
 {
     private const string DefaultAuthorAvatarSrc = "images/logo.svg";
 
@@ -40,6 +41,10 @@ public partial class BlogDetail(
     private string SeoOgImage => Post is null ? "" : SeoFallbacks.OgImage(Post.Seo, Post.CoverImagePath);
     private string SeoOgImageAlt => Post is null ? "" : SeoFallbacks.OgImageAlt(Post.Seo, Post.CoverImageAlt, Post.Title);
     private string SeoRobots => PreviewCtx.IsPreview ? "noindex" : "";
+    private string PageJson => Post is null ? "" : PageJsonLdBuilder.BlogPosting(OriginValue, Post, Author);
+
+    private string OriginValue =>
+        Http.HttpContext is { } http ? RequestOrigin.Resolve(Seo.Value, http.Request) : new Origin(Seo.Value.BaseUrl).Value;
 
     protected override async Task OnInitializedAsync()
     {

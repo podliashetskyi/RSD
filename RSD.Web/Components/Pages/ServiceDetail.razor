@@ -8,6 +8,7 @@
 {
     <PageTitle>@SeoTitle — RSD</PageTitle>
     <SeoHead Title="@($"{SeoTitle} — RSD")" Description="@SeoDescription" OgImagePath="@SeoOgImage" OgImageAlt="@SeoOgImageAlt" Robots="@SeoRobots" />
+    <JsonLd Json="@PageJson" />
 
     <HeroSection ImageSrc="@HeroImage" Alt="@HeroAlt" />
     <ArticleHeaderSection BackHref="/services"

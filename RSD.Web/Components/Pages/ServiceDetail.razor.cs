@@ -13,7 +13,8 @@ public partial class ServiceDetail(
     IServiceService Services,
     IHttpContextAccessor Http,
     IPreviewContext PreviewCtx,
-    PreviewLink Preview)
+    PreviewLink Preview,
+    Microsoft.Extensions.Options.IOptions<SeoOptions> Seo)
 {
     [Parameter] public string Slug { get; set; } = "";
     [SupplyParameterFromQuery] public string? Token { get; set; }
@@ -31,6 +32,10 @@ public partial class ServiceDetail(
     private string SeoOgImage => Svc is null ? "" : SeoFallbacks.OgImage(Svc.Seo, Svc.CoverImagePath);
     private string SeoOgImageAlt => Svc is null ? "" : SeoFallbacks.OgImageAlt(Svc.Seo, Svc.CoverImageAlt, Svc.Title);
     private string SeoRobots => PreviewCtx.IsPreview ? "noindex" : "";
+    private string PageJson => Svc is null ? "" : PageJsonLdBuilder.ServiceNode(OriginValue, Svc);
+
+    private string OriginValue =>
+        Http.HttpContext is { } http ? RequestOrigin.Resolve(Seo.Value, http.Request) : new Origin(Seo.Value.BaseUrl).Value;
 
     protected override async Task OnInitializedAsync()
     {

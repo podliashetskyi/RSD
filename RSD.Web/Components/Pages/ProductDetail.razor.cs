@@ -13,7 +13,8 @@ public partial class ProductDetail(
     IProductService Products,
     IHttpContextAccessor Http,
     IPreviewContext PreviewCtx,
-    PreviewLink Preview)
+    PreviewLink Preview,
+    Microsoft.Extensions.Options.IOptions<SeoOptions> Seo)
 {
     [Parameter] public string Slug { get; set; } = "";
     [SupplyParameterFromQuery] public string? Token { get; set; }
@@ -28,6 +29,10 @@ public partial class ProductDetail(
     private string SeoOgImage => Product is null ? "" : SeoFallbacks.OgImage(Product.Seo, Product.CoverImagePath);
     private string SeoOgImageAlt => Product is null ? "" : SeoFallbacks.OgImageAlt(Product.Seo, Product.CoverImageAlt, Product.Name);
     private string SeoRobots => PreviewCtx.IsPreview ? "noindex" : "";
+    private string PageJson => Product is null ? "" : PageJsonLdBuilder.ProductNode(OriginValue, Product);
+
+    private string OriginValue =>
+        Http.HttpContext is { } http ? RequestOrigin.Resolve(Seo.Value, http.Request) : new Origin(Seo.Value.BaseUrl).Value;
 
     protected override async Task OnInitializedAsync()
     {
