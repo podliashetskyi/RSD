@@ -26,4 +26,12 @@ public sealed record class RobotsOptions
     /// Optional custom body. When set, replaces the default body entirely.
     /// </summary>
     public string CustomBody { get; set; } = "";
+
+    /// <summary>
+    /// When true, AI training crawlers (GPTBot, ClaudeBot, CCBot, Google-Extended, ...)
+    /// are disallowed. Retrieval/user-action bots stay allowed regardless — they are what
+    /// place pages inside AI answers. Default false: public marketing copy benefits from
+    /// corpus inclusion.
+    /// </summary>
+    public bool BlockAiTraining { get; set; }
 }
