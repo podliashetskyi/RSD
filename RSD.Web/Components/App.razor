@@ -5,9 +5,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet" />
+    <link rel="preload" href="fonts/co3BmWBnlCJ3U42vbbfdwMjZpFjmw07Arg.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="@Assets["css/fonts.css"]" />
     <link rel="stylesheet" href="@Assets["css/app.min.css"]" />
     <link rel="stylesheet" href="@Assets["RSD.Web.styles.css"]" />
     <script src="js/theme.js"></script>
@@ -17,7 +16,7 @@
 
 <body data-enhance-nav="false" class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-sans antialiased">
     <Routes />
-    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+    <script src="@Assets["js/vendor/flowbite.min.js"]" defer></script>
     <script src="js/article-scroll-spy.js" defer></script>
     <script src="_framework/blazor.web.js"></script>
 </body>
