@@ -16,12 +16,13 @@ public sealed class SitemapBuilder(IDbContextFactory<AppDbContext> DbFactory) : 
         var entries = new List<SitemapEntry>
         {
             new($"{root}/", FallbackLastMod),
-            new($"{root}/blog", FallbackLastMod),
-            new($"{root}/cases", FallbackLastMod),
+            new($"{root}/blog", await NewestPublishedAsync(db.BlogPosts, ct)),
+            new($"{root}/cases", await NewestPublishedAsync(db.Cases, ct)),
             new($"{root}/products", FallbackLastMod),
             new($"{root}/services", FallbackLastMod),
             new($"{root}/contact", FallbackLastMod),
             new($"{root}/about", FallbackLastMod),
+            new($"{root}/estimate", FallbackLastMod),
         };
 
         entries.AddRange(await db.TermsOfService.AsNoTracking()
@@ -51,5 +52,15 @@ public sealed class SitemapBuilder(IDbContextFactory<AppDbContext> DbFactory) : 
             .ToListAsync(ct));
 
         return entries;
+    }
+
+    // Listing roots advertise the freshness of their newest published child, not a frozen date.
+    private static async Task<DateTime> NewestPublishedAsync<TEntity>(IQueryable<TEntity> set, CancellationToken ct)
+        where TEntity : ContentEntity
+    {
+        var newest = await set.AsNoTracking()
+            .Where(e => e.Status == ContentStatus.Published)
+            .MaxAsync(e => (DateTime?)e.UpdatedAt, ct);
+        return newest ?? FallbackLastMod;
     }
 }

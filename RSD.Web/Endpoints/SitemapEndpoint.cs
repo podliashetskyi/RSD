@@ -1,6 +1,7 @@
 using System.Text;
 using System.Web;
 using Microsoft.AspNetCore.OutputCaching;
+using Microsoft.Extensions.Options;
 using RSD.Web.Services.Seo;
 
 namespace RSD.Web.Endpoints;
@@ -18,9 +19,9 @@ public static class SitemapEndpoint
         return app;
     }
 
-    internal static async Task<IResult> HandleAsync(HttpContext http, ISitemapBuilder Builder)
+    internal static async Task<IResult> HandleAsync(HttpContext http, ISitemapBuilder Builder, IOptions<SeoOptions> Seo)
     {
-        var baseUrl = $"{http.Request.Scheme}://{http.Request.Host}";
+        var baseUrl = RequestOrigin.Resolve(Seo.Value, http.Request);
         var entries = await Builder.BuildAsync(baseUrl, http.RequestAborted);
         return Results.Text(RenderXml(entries), "application/xml", Encoding.UTF8);
     }
