@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
 using RSD.Web.Services.Preview;
+using RSD.Web.Services.Seo;
 
 namespace RSD.Web.Components.Pages;
 
@@ -21,6 +22,12 @@ public partial class ProductDetail(
 
     private string HeroImage => string.IsNullOrEmpty(Product?.CoverImagePath) ? "images/products/nexacrm/hero-dashboard.png" : Product!.CoverImagePath;
     private string HeroAlt => string.IsNullOrEmpty(Product?.CoverImageAlt) ? (Product?.Name ?? "") : Product!.CoverImageAlt;
+
+    private string SeoTitle => Product is null ? "" : SeoFallbacks.Title(Product.Seo, Product.Name);
+    private string SeoDescription => Product is null ? "" : SeoFallbacks.Description(Product.Seo, Product.Summary, Product.Description);
+    private string SeoOgImage => Product is null ? "" : SeoFallbacks.OgImage(Product.Seo, Product.CoverImagePath);
+    private string SeoOgImageAlt => Product is null ? "" : SeoFallbacks.OgImageAlt(Product.Seo, Product.CoverImageAlt, Product.Name);
+    private string SeoRobots => PreviewCtx.IsPreview ? "noindex" : "";
 
     protected override async Task OnInitializedAsync()
     {

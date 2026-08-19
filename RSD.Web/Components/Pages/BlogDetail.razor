@@ -6,7 +6,8 @@
 
 @if (Post is not null)
 {
-    <PageTitle>@Post.Title — RSD</PageTitle>
+    <PageTitle>@SeoTitle — RSD</PageTitle>
+    <SeoHead Title="@($"{SeoTitle} — RSD")" Description="@SeoDescription" OgImagePath="@SeoOgImage" OgImageAlt="@SeoOgImageAlt" Type="article" Robots="@SeoRobots" />
 
     <HeroSection ImageSrc="@HeroImage" Alt="@HeroAlt" />
     <ArticleHeaderSection BackHref="/blog"

@@ -5,7 +5,8 @@
 
 @if (Product is not null)
 {
-    <PageTitle>@Product.Name — RSD</PageTitle>
+    <PageTitle>@SeoTitle — RSD</PageTitle>
+    <SeoHead Title="@($"{SeoTitle} — RSD")" Description="@SeoDescription" OgImagePath="@SeoOgImage" OgImageAlt="@SeoOgImageAlt" Robots="@SeoRobots" />
 
     <HeroSection ImageSrc="@HeroImage" Alt="@HeroAlt" />
     <IdentityBar BackHref="/products"

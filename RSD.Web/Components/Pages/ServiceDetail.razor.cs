@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using RSD.Web.Components.Sections.Article;
 using RSD.Web.Services.Content;
 using RSD.Web.Services.Preview;
+using RSD.Web.Services.Seo;
 
 namespace RSD.Web.Components.Pages;
 
@@ -24,6 +25,12 @@ public partial class ServiceDetail(
     private string HeroImage => string.IsNullOrEmpty(Svc?.CoverImagePath) ? "images/services/cloud-solutions/hero.png" : Svc!.CoverImagePath;
     private string HeroAlt => string.IsNullOrEmpty(Svc?.CoverImageAlt) ? (Svc?.Title ?? "") : Svc!.CoverImageAlt;
     private string DateText => (Svc?.PublishedAt ?? Svc?.CreatedAt ?? DateTime.UtcNow).ToString("MMMM dd, yyyy");
+
+    private string SeoTitle => Svc is null ? "" : SeoFallbacks.Title(Svc.Seo, Svc.Title);
+    private string SeoDescription => Svc is null ? "" : SeoFallbacks.Description(Svc.Seo, Svc.Summary, Svc.Description);
+    private string SeoOgImage => Svc is null ? "" : SeoFallbacks.OgImage(Svc.Seo, Svc.CoverImagePath);
+    private string SeoOgImageAlt => Svc is null ? "" : SeoFallbacks.OgImageAlt(Svc.Seo, Svc.CoverImageAlt, Svc.Title);
+    private string SeoRobots => PreviewCtx.IsPreview ? "noindex" : "";
 
     protected override async Task OnInitializedAsync()
     {

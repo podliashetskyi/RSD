@@ -6,6 +6,7 @@ using RSD.Web.Components.Sections.Article;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
 using RSD.Web.Services.Preview;
+using RSD.Web.Services.Seo;
 
 namespace RSD.Web.Components.Pages;
 
@@ -33,6 +34,12 @@ public partial class BlogDetail(
     private string AuthorName => Author?.Name ?? "RSD Team";
     private string AuthorRole => Author?.Role ?? "";
     private string AuthorAvatarSrc => AvatarSrc(Author?.AvatarPath);
+
+    private string SeoTitle => Post is null ? "" : SeoFallbacks.Title(Post.Seo, Post.Title);
+    private string SeoDescription => Post is null ? "" : SeoFallbacks.Description(Post.Seo, Post.Summary, Post.Description);
+    private string SeoOgImage => Post is null ? "" : SeoFallbacks.OgImage(Post.Seo, Post.CoverImagePath);
+    private string SeoOgImageAlt => Post is null ? "" : SeoFallbacks.OgImageAlt(Post.Seo, Post.CoverImageAlt, Post.Title);
+    private string SeoRobots => PreviewCtx.IsPreview ? "noindex" : "";
 
     protected override async Task OnInitializedAsync()
     {

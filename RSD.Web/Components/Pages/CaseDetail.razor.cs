@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
 using RSD.Web.Services.Preview;
+using RSD.Web.Services.Seo;
 
 namespace RSD.Web.Components.Pages;
 
@@ -21,6 +22,12 @@ public partial class CaseDetail(
 
     private string HeroImage => string.IsNullOrEmpty(Case?.CoverImagePath) ? "images/cases/healthcare-plus/hero.png" : Case!.CoverImagePath;
     private string HeroAlt => string.IsNullOrEmpty(Case?.CoverImageAlt) ? (Case?.Name ?? "") : Case!.CoverImageAlt;
+
+    private string SeoTitle => Case is null ? "" : SeoFallbacks.Title(Case.Seo, $"{Case.Name} Case Study");
+    private string SeoDescription => Case is null ? "" : SeoFallbacks.Description(Case.Seo, Case.Summary, Case.Description);
+    private string SeoOgImage => Case is null ? "" : SeoFallbacks.OgImage(Case.Seo, Case.CoverImagePath);
+    private string SeoOgImageAlt => Case is null ? "" : SeoFallbacks.OgImageAlt(Case.Seo, Case.CoverImageAlt, Case.Name);
+    private string SeoRobots => PreviewCtx.IsPreview ? "noindex" : "";
 
     protected override async Task OnInitializedAsync()
     {

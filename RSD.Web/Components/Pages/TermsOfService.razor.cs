@@ -3,12 +3,16 @@
 using Microsoft.AspNetCore.Components;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
+using RSD.Web.Services.Seo;
 
 namespace RSD.Web.Components.Pages;
 
 public partial class TermsOfService(ITermsOfServiceService Service) : ComponentBase
 {
     private Data.Entities.TermsOfService? Entity { get; set; }
+
+    private string SeoTitle => Entity is null ? "" : SeoFallbacks.Title(Entity.Seo, Entity.Title);
+    private string SeoDescription => Entity is null ? "" : SeoFallbacks.Description(Entity.Seo, "", "");
 
     protected override async Task OnInitializedAsync()
     {

@@ -5,7 +5,8 @@
 
 @if (Case is not null)
 {
-    <PageTitle>@(Case.Name) Case Study — RSD</PageTitle>
+    <PageTitle>@SeoTitle — RSD</PageTitle>
+    <SeoHead Title="@($"{SeoTitle} — RSD")" Description="@SeoDescription" OgImagePath="@SeoOgImage" OgImageAlt="@SeoOgImageAlt" Robots="@SeoRobots" />
 
     <HeroSection ImageSrc="@HeroImage" Alt="@HeroAlt" />
     <IdentityBar BackHref="/cases"

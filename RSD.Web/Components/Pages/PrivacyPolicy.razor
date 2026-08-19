@@ -4,7 +4,8 @@
 
 @if (Entity is not null)
 {
-    <PageTitle>@Entity.Title — RSD</PageTitle>
+    <PageTitle>@SeoTitle — RSD</PageTitle>
+    <SeoHead Title="@($"{SeoTitle} — RSD")" Description="@SeoDescription" />
 
     <section class="bg-surface-subtle">
         <div class="max-w-screen-xl mx-auto px-4 lg:px-6 py-16 lg:py-24">
