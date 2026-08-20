@@ -4,17 +4,14 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
-using RSD.Web.Data;
 using RSD.Web.Data.Entities;
 using RSD.Web.Services.Imaging;
 
 namespace RSD.Web.Components.Admin.Shared;
 
 public partial class ImageUploader(
-    IImageProcessor Processor,
-    AppDbContext Db,
+    IImageUploadService Uploads,
     AuthenticationStateProvider AuthState,
     IJSRuntime Js,
     ILogger<ImageUploader> Log) : ComponentBase, IAsyncDisposable
@@ -89,8 +86,8 @@ public partial class ImageUploader(
     {
         try
         {
-            var processed = await Processor.ProcessAsync(Subfolder, stream, name, contentType, CancellationToken.None);
-            return await PersistAsync(processed, name, contentType);
+            var uploader = await ResolveUploaderIdAsync();
+            return await Uploads.UploadAsync(Subfolder, stream, name, contentType, uploader, CancellationToken.None);
         }
         catch (Exception ex)
         {
@@ -98,23 +95,6 @@ public partial class ImageUploader(
             Error = "Could not process the file. Try a different image.";
             return null;
         }
-    }
-
-    private async Task<UploadedFile> PersistAsync(ProcessedUpload processed, string name, string contentType)
-    {
-        var uploader = await ResolveUploaderIdAsync();
-        var entity = new UploadedFile
-        {
-            Path = processed.OriginalFile.Path,
-            OriginalName = name,
-            ContentType = contentType,
-            Bytes = processed.OriginalFile.Bytes,
-            UploadedByUserId = uploader,
-            Variants = processed.Variants.ToList(),
-        };
-        Db.UploadedFiles.Add(entity);
-        await Db.SaveChangesAsync();
-        return entity;
     }
 
     private async Task<string> ResolveUploaderIdAsync()

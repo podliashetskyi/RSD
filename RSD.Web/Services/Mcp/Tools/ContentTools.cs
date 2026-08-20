@@ -66,6 +66,52 @@ public sealed class ContentTools(IServiceProvider Services)
         return new ContentListItem(entity.Id, entity.Slug, descriptor.TitleOf(entity), entity.Status.ToString(), entity.UpdatedAt);
     }
 
+    private static readonly Dictionary<string, string> ImageContentTypes = new(StringComparer.OrdinalIgnoreCase)
+    {
+        [".png"] = "image/png", [".jpg"] = "image/jpeg", [".jpeg"] = "image/jpeg",
+        [".webp"] = "image/webp", [".svg"] = "image/svg+xml",
+    };
+
+    private static readonly string[] PreviewableTypes = ["blog", "cases", "products", "services"];
+
+    [McpServerTool(Name = "upload_image")]
+    [Description("Upload a local image file (png, jpg, webp, svg; max 8 MB) through the real pipeline: WebP variants are generated and the file becomes reference-counted. Returns the stored path to use in content fields (CoverImagePath, image blocks, ...). Under Docker the file must be visible inside the container — put it in the shared ai-inbox folder.")]
+    public async Task<object> UploadImageAsync(
+        [Description("Upload subfolder matching the content area: blog, cases, products, services, seo, ...")] string subfolder,
+        [Description("Absolute path of the image file to upload.")] string filePath,
+        [Description("Alt text to suggest when referencing the image (informational).")] string alt,
+        CancellationToken ct)
+    {
+        if (!File.Exists(filePath)) throw new McpException($"File not found: '{filePath}'. Under Docker, place it in the shared ai-inbox folder.");
+        var extension = Path.GetExtension(filePath);
+        if (!ImageContentTypes.TryGetValue(extension, out var contentType))
+        {
+            throw new McpException($"Unsupported image type '{extension}'. Supported: png, jpg, jpeg, webp, svg.");
+        }
+        var uploaderId = Services.GetRequiredService<IHttpContextAccessor>().HttpContext?.User
+            .FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "";
+        await using var stream = File.OpenRead(filePath);
+        var uploaded = await Services.GetRequiredService<RSD.Web.Services.Imaging.IImageUploadService>()
+            .UploadAsync(subfolder, stream, Path.GetFileName(filePath), contentType, uploaderId, ct);
+        return new { path = uploaded.Path, bytes = uploaded.Bytes, variants = uploaded.Variants.Count, alt };
+    }
+
+    [McpServerTool(Name = "get_preview_link")]
+    [Description("Get a shareable, token-signed preview URL for a draft item (valid ~60 minutes). Only blog, cases, products, and services have preview pages.")]
+    public Task<string> GetPreviewLinkAsync(
+        [Description("Content type key: blog | cases | products | services")] string type,
+        [Description("The item's slug.")] string slug,
+        CancellationToken ct)
+    {
+        if (!PreviewableTypes.Contains(type, StringComparer.OrdinalIgnoreCase))
+        {
+            throw new McpException($"'{type}' has no preview page. Previewable types: {string.Join(", ", PreviewableTypes)}.");
+        }
+        var link = Services.GetRequiredService<RSD.Web.Services.Preview.PreviewLink>().Build(type.ToLowerInvariant(), slug);
+        var baseUrl = Services.GetRequiredService<Microsoft.Extensions.Options.IOptions<McpOptions>>().Value.PreviewBaseUrl.TrimEnd('/');
+        return Task.FromResult($"{baseUrl}{link}");
+    }
+
     [McpServerTool(Name = "list_filters")]
     [Description("List the published taxonomy option labels for one filter type: BlogCategory, BlogTag, CaseIndustry, or CaseTechTag. Content tagging fields only accept these exact labels.")]
     public async Task<IReadOnlyList<string>> ListFiltersAsync(

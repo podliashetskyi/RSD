@@ -7,6 +7,7 @@ public static class ImagingServiceCollectionExtensions
         services.Configure<ImagingOptions>(configuration.GetSection(ImagingOptions.SectionName));
         services.AddSingleton<SvgSanitizer>();
         services.AddSingleton<IImageProcessor, ImageSharpProcessor>();
+        services.AddScoped<IImageUploadService, ImageUploadService>();
         return services;
     }
 }
