@@ -63,6 +63,7 @@ public partial class FaqItemEdit(IFaqItemService Service, NavigationManager Nav)
         public string Category { get; set; } = "";
         [StringLength(FieldLimits.FaqItem.OwnerSlug)]
         public string OwnerSlug { get; set; } = "";
+        public bool ShowOnHome { get; set; }
         public ContentStatus Status { get; set; } = ContentStatus.Published;
         public int DisplayOrder { get; set; }
         [StringLength(FieldLimits.Slug)]
@@ -71,14 +72,14 @@ public partial class FaqItemEdit(IFaqItemService Service, NavigationManager Nav)
         public static FaqItemInput From(FaqItem f) => new()
         {
             Question = f.Question, AnswerHtml = f.AnswerHtml, Category = f.Category,
-            OwnerSlug = f.OwnerSlug, Status = f.Status, DisplayOrder = f.DisplayOrder, Slug = f.Slug,
+            OwnerSlug = f.OwnerSlug, ShowOnHome = f.ShowOnHome, Status = f.Status, DisplayOrder = f.DisplayOrder, Slug = f.Slug,
         };
 
         public FaqItem ToEntity(Guid? id) => new()
         {
             Id = id ?? Guid.NewGuid(), Slug = Slug,
             Question = Question, AnswerHtml = AnswerHtml, Category = Category,
-            OwnerSlug = OwnerSlug, Status = Status, DisplayOrder = DisplayOrder,
+            OwnerSlug = OwnerSlug, ShowOnHome = ShowOnHome, Status = Status, DisplayOrder = DisplayOrder,
         };
     }
 }

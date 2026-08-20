@@ -10,5 +10,6 @@ public sealed record class FaqItem : ContentEntity, IHasDisplayOrder
     public string AnswerHtml { get; set; } = "";
     public string OwnerSlug { get; set; } = "";
     public string Category { get; set; } = "";
+    public bool ShowOnHome { get; set; }
     public int DisplayOrder { get; set; }
 }

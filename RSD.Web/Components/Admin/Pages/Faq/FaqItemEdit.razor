@@ -28,6 +28,12 @@
                 <InputText @bind-Value="Input.OwnerSlug" maxlength="@FieldLimits.FaqItem.OwnerSlug" class="form-input" />
             </FormField>
         </div>
+        <FormField Label="Home page" Hint="The home page shows up to 4 checked questions (by sort order); on other pages checked ones pin to the top. Nothing checked = no FAQ on home.">
+            <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                <InputCheckbox @bind-Value="Input.ShowOnHome" class="rounded border-gray-300 dark:border-gray-700" />
+                Show on home
+            </label>
+        </FormField>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField Label="Status">
                 <InputSelect @bind-Value="Input.Status" class="form-input">

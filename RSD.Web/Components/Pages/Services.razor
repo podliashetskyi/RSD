@@ -1,6 +1,6 @@
 @page "/services"
 @using Microsoft.AspNetCore.OutputCaching
-@attribute [OutputCache(Tags = ["list:service", "list:techstackitem", "list:contactpoint", "list:sociallink"])]
+@attribute [OutputCache(Tags = ["list:service", "list:techstackitem", "list:contactpoint", "list:sociallink", "list:faqitem"])]
 @using RSD.Web.Components.Sections.Services
 @using RSD.Web.Components.Sections.Shared
 
@@ -11,6 +11,7 @@
 <HeroSection />
 <FeaturesSection />
 <TechStackSection />
+<FaqSection />
 <CtaSection
     Heading="Didn't Find the Right Service?"
     Description="Contact us and we'll find the optimal solution for your business"

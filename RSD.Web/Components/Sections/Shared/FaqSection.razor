@@ -1,0 +1,26 @@
+@if (Items.Count > 0)
+{
+    <section class="bg-surface-subtle py-14 lg:py-24 px-4 lg:px-section-x">
+        <div class="max-w-screen-xl mx-auto flex flex-col gap-10 lg:gap-16 items-center">
+            <div class="flex flex-col gap-4 items-center">
+                <h2 class="text-ink text-[30px] lg:text-[48px] font-bold tracking-[-0.8px] lg:tracking-[-0.9px] text-center leading-9 lg:leading-10">Frequently Asked Questions</h2>
+                <p class="text-ink-faint lg:text-ink-soft text-body-lg leading-7 text-center max-w-[672px]">Direct answers about how we work</p>
+            </div>
+            <div class="w-full max-w-[860px] flex flex-col gap-4">
+                @foreach (var f in Items)
+                {
+                    <details class="group bg-white border border-line rounded-base shadow-sm">
+                        <summary class="flex items-center justify-between gap-4 cursor-pointer select-none list-none p-6 lg:px-8 text-ink text-body-lg lg:text-[20px] font-semibold leading-6 [&::-webkit-details-marker]:hidden">
+                            @f.Question
+                            <svg class="w-5 h-5 shrink-0 text-ink-soft transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </summary>
+                        <div class="px-6 lg:px-8 pb-6 text-ink-soft text-body leading-6">@((MarkupString)f.AnswerHtml)</div>
+                    </details>
+                }
+            </div>
+        </div>
+    </section>
+    <JsonLd Json="@FaqJson" />
+}
