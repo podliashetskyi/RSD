@@ -12,8 +12,7 @@ namespace RSD.Web.Components.Admin.Pages.Legal;
 
 public partial class PrivacyPolicyEdit(
     IPrivacyPolicyService Service,
-    IContentHtmlSanitizer Sanitizer,
-    IToastService Toasts) : ComponentBase
+        IToastService Toasts) : ComponentBase
 {
     private PrivacyPolicyInput Input { get; set; } = new();
     private Guid EntityId { get; set; }
@@ -36,7 +35,7 @@ public partial class PrivacyPolicyEdit(
     {
         try
         {
-            var entity = Input.ToEntity(EntityId, EntitySlug, Sanitizer);
+            var entity = Input.ToEntity(EntityId, EntitySlug);
             var result = await Service.UpdateAsync(entity, CancellationToken.None);
             if (!result.Ok) { ErrorMessage = result.Error; return; }
             Toasts.Show("Privacy Policy saved.", ToastKind.Success);
@@ -70,13 +69,13 @@ public partial class PrivacyPolicyEdit(
             Seo = p.Seo,
         };
 
-        public PrivacyPolicy ToEntity(Guid id, string slug, IContentHtmlSanitizer sanitizer) => new()
+        public PrivacyPolicy ToEntity(Guid id, string slug) => new()
         {
             Id = id,
             Slug = slug,
             Title = Title,
             LastUpdatedAt = LastUpdatedAt,
-            BodyHtml = sanitizer.Sanitize(BodyHtml),
+            BodyHtml = BodyHtml,
             Status = Status,
             Seo = Seo,
         };
