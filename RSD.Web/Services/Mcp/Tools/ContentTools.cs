@@ -15,7 +15,7 @@ namespace RSD.Web.Services.Mcp.Tools;
 public sealed class ContentTools(IServiceProvider Services)
 {
     [McpServerTool(Name = "list_content")]
-    [Description("List content items of a type (drafts included). Types: blog, cases, products, services, testimonials, team, partners, values, stats, tech, contact-points, messenger-links, social-links, faq, terms-of-service, privacy-policy. Returns id, slug, title, status, updatedAt.")]
+    [Description("List content items of a type (drafts included). Types: blog, cases, products, services, testimonials, team, partners, values, stats, tech, contact-points, messenger-links, social-links, faq, terms-of-service, privacy-policy, filters. Returns id, slug, title, status, updatedAt.")]
     public Task<IReadOnlyList<ContentListItem>> ListContentAsync(
         [Description("Content type key, e.g. \"blog\".")] string type,
         CancellationToken ct) =>
@@ -33,7 +33,7 @@ public sealed class ContentTools(IServiceProvider Services)
     }
 
     [McpServerTool(Name = "create_content")]
-    [Description("Create a content item. It ALWAYS lands as a Draft regardless of any status in the payload — publishing happens only via publish_content after review. Payload is the type's full JSON shape (see get_content on an existing item for reference; article body blocks use $type discriminators: richtext, subsection, bullets, quote, image, gallery, stats — and every block requires an \"id\" string (reuse ids from get_content; generate a fresh GUID for new blocks)). Returns the created item's id, slug, and status.")]
+    [Description("Create a content item (including \"filters\" taxonomy options: type BlogCategory|BlogTag|CaseIndustry|CaseTechTag + label; filters appear in pickers only once published). It ALWAYS lands as a Draft regardless of any status in the payload — publishing happens only via publish_content after review. Payload is the type's full JSON shape (see get_content on an existing item for reference; article body blocks use $type discriminators: richtext, subsection, bullets, quote, image, gallery, stats — and every block requires an \"id\" string (reuse ids from get_content; generate a fresh GUID for new blocks)). Returns the created item's id, slug, and status.")]
     public async Task<ContentListItem> CreateContentAsync(
         [Description("Content type key, e.g. \"blog\".")] string type,
         [Description("Full item payload as JSON.")] System.Text.Json.JsonElement payload,

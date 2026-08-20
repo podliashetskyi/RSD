@@ -18,7 +18,7 @@ public sealed class ContentReadToolsTests
         "blog", "cases", "products", "services",
         "testimonials", "team", "partners", "values", "stats", "tech",
         "contact-points", "messenger-links", "social-links", "faq",
-        "terms-of-service", "privacy-policy",
+        "terms-of-service", "privacy-policy", "filters",
     ];
 
     [Fact]

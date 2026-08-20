@@ -40,6 +40,7 @@ internal static class ContentTypeRegistry
         ["faq"] = Simple<FaqItem, IFaqItemService>(f => f.Question),
         ["terms-of-service"] = Simple<TermsOfService, ITermsOfServiceService>(t => t.Title),
         ["privacy-policy"] = Simple<PrivacyPolicy, IPrivacyPolicyService>(p => p.Title),
+        ["filters"] = CreateOnly(Simple<Filter, IFilterService>(f => f.Label)),
     };
 
     internal static IReadOnlyCollection<string> Keys => Types.Keys;
@@ -123,6 +124,18 @@ internal static class ContentTypeRegistry
                 var result = await sp.GetRequiredService<TService>().SetStatusAsync(id, ContentStatus.Published, ct);
                 if (!result.Ok) throw new McpException(result.Error);
             });
+
+    /// <summary>
+    /// Filters: creatable (draft-first) and publishable, never updated through MCP —
+    /// renaming a filter orphans already-tagged content (string-copy linkage), so
+    /// renames/reorders stay deliberate actions in the /admin/filters UI.
+    /// </summary>
+    private static Descriptor CreateOnly(Descriptor basis) => basis with
+    {
+        UpdateAsync = (_, _, _, _, _) => throw new McpException(
+            "Filters cannot be edited through MCP: renaming a filter orphans already-tagged content. " +
+            "Rename or reorder deliberately in the admin UI at /admin/filters."),
+    };
 
     private static void GuardLiveEdit(ContentStatus status, bool allowLiveEdit)
     {
