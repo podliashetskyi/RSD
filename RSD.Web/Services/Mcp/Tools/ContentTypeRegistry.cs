@@ -89,8 +89,29 @@ internal static class ContentTypeRegistry
                 return all.FirstOrDefault(e => string.Equals(e.Slug, key, StringComparison.OrdinalIgnoreCase));
             },
             e => title((TEntity)e),
-            (_, _, _) => throw new McpException("Writes for this type arrive with the simple-type write surface."),
-            (_, _, _, _, _) => throw new McpException("Writes for this type arrive with the simple-type write surface."));
+            async (sp, payload, ct) =>
+            {
+                var entity = McpJson.Deserialize<TEntity>(payload, typeof(TEntity).Name);
+                entity.Status = ContentStatus.Draft;
+                var result = await sp.GetRequiredService<TService>().CreateAsync(entity, ct);
+                return result.Ok ? result.Value : throw new McpException(result.Error);
+            },
+            async (sp, id, payload, allowLiveEdit, ct) =>
+            {
+                var service = sp.GetRequiredService<TService>();
+                var existing = await service.GetByIdAsync(id, ct)
+                    ?? throw new McpException($"No item with id '{id}'.");
+                GuardLiveEdit(existing.Status, allowLiveEdit);
+                var entity = McpJson.Deserialize<TEntity>(payload, typeof(TEntity).Name);
+                if (entity.Id != id)
+                {
+                    throw new McpException(
+                        "The payload's id must equal the target id — echo the item from get_content and edit that (full replacement).");
+                }
+                entity.Status = existing.Status;
+                var result = await service.UpdateAsync(entity, ct);
+                if (!result.Ok) throw new McpException(result.Error);
+            });
 
     private static void GuardLiveEdit(ContentStatus status, bool allowLiveEdit)
     {

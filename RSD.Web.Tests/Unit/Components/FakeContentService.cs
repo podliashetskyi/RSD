@@ -13,10 +13,24 @@ namespace RSD.Web.Tests.Unit.Components;
 public class FakeContentService<T>(IReadOnlyList<T> items) : ISimpleContentService<T>
     where T : ContentEntity
 {
+    public T? LastCreate { get; private set; }
+    public T? LastUpdate { get; private set; }
+    private readonly List<T> Created = [];
+
     public Task<IReadOnlyList<T>> ListAsync(ContentQuery query, CancellationToken ct) => Task.FromResult(items);
-    public Task<T?> GetByIdAsync(Guid id, CancellationToken ct) => Task.FromResult(items.FirstOrDefault(i => i.Id == id));
-    public Task<Result<Guid>> CreateAsync(T input, CancellationToken ct) => Task.FromResult(Result.Ok(input.Id));
-    public Task<Result<CommonUnit>> UpdateAsync(T input, CancellationToken ct) => Task.FromResult(Result.Ok());
+    public Task<T?> GetByIdAsync(Guid id, CancellationToken ct) =>
+        Task.FromResult(items.Concat(Created).FirstOrDefault(i => i.Id == id));
+    public Task<Result<Guid>> CreateAsync(T input, CancellationToken ct)
+    {
+        LastCreate = input;
+        Created.Add(input);
+        return Task.FromResult(Result.Ok(input.Id));
+    }
+    public Task<Result<CommonUnit>> UpdateAsync(T input, CancellationToken ct)
+    {
+        LastUpdate = input;
+        return Task.FromResult(Result.Ok());
+    }
     public Task<Result<CommonUnit>> SetStatusAsync(Guid id, ContentStatus status, CancellationToken ct) => throw new NotImplementedException();
     public Task<Result<CommonUnit>> SoftDeleteAsync(Guid id, CancellationToken ct) => throw new NotImplementedException();
     public Task<Result<CommonUnit>> RestoreAsync(Guid id, CancellationToken ct) => throw new NotImplementedException();
