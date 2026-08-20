@@ -14,6 +14,7 @@ using RSD.Web.Services.Auth;
 using RSD.Web.Services.Cache;
 using RSD.Web.Services.Content;
 using RSD.Web.Services.Email;
+using RSD.Web.Services.Mcp;
 using RSD.Web.Services.Estimates;
 using RSD.Web.Services.Imaging;
 using RSD.Web.Services.Preview;
@@ -58,7 +59,8 @@ builder.Services
     .AddRsdContent()
     .AddRsdEstimates()
     .AddRsdSeo(builder.Configuration)
-    .AddRsdSeed();
+    .AddRsdSeed()
+    .AddRsdMcp(builder.Configuration);
 
 builder.Services.AddRateLimiter(options =>
 {
@@ -133,6 +135,24 @@ app.MapContactSubmit();
 app.MapEstimateSubmit();
 app.MapSitemap();
 app.MapRobots();
+
+var mcpEnabled = builder.Configuration.GetValue($"{McpOptions.SectionName}:Enabled", false);
+if (mcpEnabled)
+{
+    var mcpPort = builder.Configuration.GetValue($"{McpOptions.SectionName}:Port", 0);
+    app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/mcp"), branch => branch.Use(async (ctx, next) =>
+    {
+        if (!McpRequestGate.ShouldAllow(ctx.Connection.LocalPort, mcpPort, ctx.Connection.RemoteIpAddress))
+        {
+            // Write a body so the status-code re-execution pipeline leaves this response alone.
+            ctx.Response.StatusCode = StatusCodes.Status404NotFound;
+            await ctx.Response.WriteAsync("Not found");
+            return;
+        }
+        await next();
+    }));
+    app.MapMcp("/mcp");
+}
 app.MapPost("/admin/logout", async (HttpContext http, SignInManager<AdminUser> signIn) =>
 {
     await signIn.SignOutAsync();

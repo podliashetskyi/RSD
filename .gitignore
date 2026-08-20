@@ -15,6 +15,9 @@ RSD.Web/wwwroot/uploads/
 ## Local environment overrides (secrets, bootstrap creds)
 .env
 
+## Local MCP enablement (never deployed)
+docker-compose.override.yml
+
 ## IDE
 .vs/
 .vscode/
