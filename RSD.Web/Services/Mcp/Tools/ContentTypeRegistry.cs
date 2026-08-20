@@ -17,7 +17,8 @@ internal static class ContentTypeRegistry
         Func<IServiceProvider, string, CancellationToken, Task<object?>> GetAsync,
         Func<object, string> TitleOf,
         Func<IServiceProvider, JsonElement, CancellationToken, Task<Guid>> CreateAsync,
-        Func<IServiceProvider, Guid, JsonElement, bool, CancellationToken, Task> UpdateAsync);
+        Func<IServiceProvider, Guid, JsonElement, bool, CancellationToken, Task> UpdateAsync,
+        Func<IServiceProvider, Guid, CancellationToken, Task> PublishAsync);
 
     private static readonly ContentQuery ReadQuery = new(PageSize: 200);
 
@@ -74,6 +75,11 @@ internal static class ContentTypeRegistry
                 var upsert = finalize(McpJson.Deserialize<TUpsert>(payload, typeof(TEntity).Name), existing.Status);
                 var result = await service.UpdateAsync(id, upsert, ct);
                 if (!result.Ok) throw new McpException(result.Error);
+            },
+            async (sp, id, ct) =>
+            {
+                var result = await sp.GetRequiredService<TService>().PublishAsync(id, ct);
+                if (!result.Ok) throw new McpException(result.Error);
             });
 
     private static Descriptor Simple<TEntity, TService>(Func<TEntity, string> title)
@@ -110,6 +116,11 @@ internal static class ContentTypeRegistry
                 }
                 entity.Status = existing.Status;
                 var result = await service.UpdateAsync(entity, ct);
+                if (!result.Ok) throw new McpException(result.Error);
+            },
+            async (sp, id, ct) =>
+            {
+                var result = await sp.GetRequiredService<TService>().SetStatusAsync(id, ContentStatus.Published, ct);
                 if (!result.Ok) throw new McpException(result.Error);
             });
 

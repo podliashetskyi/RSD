@@ -149,6 +149,7 @@ if (mcpEnabled)
             await ctx.Response.WriteAsync("Not found");
             return;
         }
+        ctx.User = McpActor.BuildPrincipal();
         await next();
     }));
     app.MapMcp("/mcp");

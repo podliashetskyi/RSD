@@ -31,7 +31,12 @@ public class FakeContentService<T>(IReadOnlyList<T> items) : ISimpleContentServi
         LastUpdate = input;
         return Task.FromResult(Result.Ok());
     }
-    public Task<Result<CommonUnit>> SetStatusAsync(Guid id, ContentStatus status, CancellationToken ct) => throw new NotImplementedException();
+    public (Guid Id, ContentStatus Status)? LastSetStatus { get; private set; }
+    public Task<Result<CommonUnit>> SetStatusAsync(Guid id, ContentStatus status, CancellationToken ct)
+    {
+        LastSetStatus = (id, status);
+        return Task.FromResult(Result.Ok());
+    }
     public Task<Result<CommonUnit>> SoftDeleteAsync(Guid id, CancellationToken ct) => throw new NotImplementedException();
     public Task<Result<CommonUnit>> RestoreAsync(Guid id, CancellationToken ct) => throw new NotImplementedException();
     public Task<Result<CommonUnit>> HardDeleteAsync(Guid id, CancellationToken ct) => throw new NotImplementedException();

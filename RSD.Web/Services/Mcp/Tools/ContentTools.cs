@@ -66,6 +66,19 @@ public sealed class ContentTools(IServiceProvider Services)
         return new ContentListItem(entity.Id, entity.Slug, descriptor.TitleOf(entity), entity.Status.ToString(), entity.UpdatedAt);
     }
 
+    [McpServerTool(Name = "publish_content")]
+    [Description("Publish a content item — the ONLY way anything goes live. Invoke this solely when the user explicitly asks to publish the specific item, after they have reviewed it (get_preview_link). Cache eviction makes it visible on the public site immediately.")]
+    public async Task<ContentListItem> PublishContentAsync(
+        [Description("Content type key, e.g. \"blog\".")] string type,
+        [Description("The item's GUID id.")] string id,
+        CancellationToken ct)
+    {
+        if (!Guid.TryParse(id, out var itemId)) throw new McpException($"'{id}' is not a valid item id.");
+        var descriptor = ContentTypeRegistry.Resolve(type);
+        await descriptor.PublishAsync(Services, itemId, ct);
+        return await SlimOfAsync(descriptor, itemId, ct);
+    }
+
     private static readonly Dictionary<string, string> ImageContentTypes = new(StringComparer.OrdinalIgnoreCase)
     {
         [".png"] = "image/png", [".jpg"] = "image/jpeg", [".jpeg"] = "image/jpeg",
