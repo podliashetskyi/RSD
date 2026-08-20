@@ -150,8 +150,9 @@ public sealed class HeadingAndDateSemanticsTests
 internal sealed class FakeBlogService(IReadOnlyList<BlogPost> posts) : IBlogService
 {
     public Task<IReadOnlyList<BlogPost>> ListAsync(ContentQuery query, CancellationToken ct) => Task.FromResult(posts);
-    public Task<BlogPost?> GetByIdAsync(Guid id, CancellationToken ct) => throw new NotImplementedException();
-    public Task<BlogPost?> GetBySlugAsync(string slug, bool includeDrafts, CancellationToken ct) => throw new NotImplementedException();
+    public Task<BlogPost?> GetByIdAsync(Guid id, CancellationToken ct) => Task.FromResult(posts.FirstOrDefault(p => p.Id == id));
+    public Task<BlogPost?> GetBySlugAsync(string slug, bool includeDrafts, CancellationToken ct) =>
+        Task.FromResult(posts.FirstOrDefault(p => p.Slug == slug && (includeDrafts || p.Status == ContentStatus.Published)));
     public Task<Result<Guid>> CreateAsync(BlogPostUpsert input, CancellationToken ct) => throw new NotImplementedException();
     public Task<Result<CommonUnit>> UpdateAsync(Guid id, BlogPostUpsert input, CancellationToken ct) => throw new NotImplementedException();
     public Task<Result<CommonUnit>> PublishAsync(Guid id, CancellationToken ct) => throw new NotImplementedException();
@@ -162,8 +163,10 @@ internal sealed class FakeBlogService(IReadOnlyList<BlogPost> posts) : IBlogServ
     public Task<Result<CommonUnit>> HardDeleteAsync(Guid id, CancellationToken ct) => throw new NotImplementedException();
 }
 
-internal sealed class FakeFilterService() : FakeContentService<Filter>([]), IFilterService
+internal sealed class FakeFilterService(IReadOnlyList<Filter>? filters = null) : FakeContentService<Filter>(filters ?? []), IFilterService
 {
+    private readonly IReadOnlyList<Filter> All = filters ?? [];
+
     public Task<IReadOnlyList<Filter>> ListByTypeAsync(FilterType type, CancellationToken ct) =>
-        Task.FromResult<IReadOnlyList<Filter>>([]);
+        Task.FromResult<IReadOnlyList<Filter>>([.. All.Where(f => f.Type == type)]);
 }

@@ -70,8 +70,9 @@ public sealed class RelatedAndTechPillTests
 internal sealed class FakeCaseService(IReadOnlyList<Case> cases) : ICaseService
 {
     public Task<IReadOnlyList<Case>> ListAsync(ContentQuery query, CancellationToken ct) => Task.FromResult(cases);
-    public Task<Case?> GetByIdAsync(Guid id, CancellationToken ct) => throw new NotImplementedException();
-    public Task<Case?> GetBySlugAsync(string slug, bool includeDrafts, CancellationToken ct) => throw new NotImplementedException();
+    public Task<Case?> GetByIdAsync(Guid id, CancellationToken ct) => Task.FromResult(cases.FirstOrDefault(c => c.Id == id));
+    public Task<Case?> GetBySlugAsync(string slug, bool includeDrafts, CancellationToken ct) =>
+        Task.FromResult(cases.FirstOrDefault(c => c.Slug == slug && (includeDrafts || c.Status == ContentStatus.Published)));
     public Task<RSD.Web.Services.Common.Result<Guid>> CreateAsync(CaseUpsert input, CancellationToken ct) => throw new NotImplementedException();
     public Task<RSD.Web.Services.Common.Result<RSD.Web.Services.Common.Unit>> UpdateAsync(Guid id, CaseUpsert input, CancellationToken ct) => throw new NotImplementedException();
     public Task<RSD.Web.Services.Common.Result<RSD.Web.Services.Common.Unit>> PublishAsync(Guid id, CancellationToken ct) => throw new NotImplementedException();
