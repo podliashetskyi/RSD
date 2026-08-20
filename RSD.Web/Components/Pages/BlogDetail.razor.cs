@@ -43,6 +43,7 @@ public partial class BlogDetail(
     private string SeoOgImageAlt => Post is null ? "" : SeoFallbacks.OgImageAlt(Post.Seo, Post.CoverImageAlt, Post.Title);
     private string SeoRobots => PreviewCtx.IsPreview ? "noindex" : "";
     private string PageJson => Post is null ? "" : PageJsonLdBuilder.BlogPosting(OriginValue, Post, Author);
+    private string BreadcrumbJson => Post is null ? "" : BreadcrumbJsonLdBuilder.Build(OriginValue, "Blog", "/blog", Post.Title, $"/blog/{Post.Slug}");
 
     private string OriginValue =>
         Http.HttpContext is { } http ? RequestOrigin.Resolve(Seo.Value, http.Request) : new Origin(Seo.Value.BaseUrl).Value;

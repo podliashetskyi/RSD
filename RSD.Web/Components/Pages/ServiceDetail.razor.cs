@@ -34,6 +34,7 @@ public partial class ServiceDetail(
     private string SeoOgImageAlt => Svc is null ? "" : SeoFallbacks.OgImageAlt(Svc.Seo, Svc.CoverImageAlt, Svc.Title);
     private string SeoRobots => PreviewCtx.IsPreview ? "noindex" : "";
     private string PageJson => Svc is null ? "" : PageJsonLdBuilder.ServiceNode(OriginValue, Svc);
+    private string BreadcrumbJson => Svc is null ? "" : BreadcrumbJsonLdBuilder.Build(OriginValue, "Services", "/services", Svc.Title, $"/services/{Svc.Slug}");
 
     private string OriginValue =>
         Http.HttpContext is { } http ? RequestOrigin.Resolve(Seo.Value, http.Request) : new Origin(Seo.Value.BaseUrl).Value;

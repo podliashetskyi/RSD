@@ -13,7 +13,8 @@ public partial class CaseDetail(
     ICaseService Cases,
     IHttpContextAccessor Http,
     IPreviewContext PreviewCtx,
-    PreviewLink Preview)
+    PreviewLink Preview,
+    Microsoft.Extensions.Options.IOptions<SeoOptions> Seo)
 {
     [Parameter] public string Slug { get; set; } = "";
     [SupplyParameterFromQuery] public string? Token { get; set; }
@@ -28,6 +29,10 @@ public partial class CaseDetail(
     private string SeoOgImage => Case is null ? "" : SeoFallbacks.OgImage(Case.Seo, Case.CoverImagePath);
     private string SeoOgImageAlt => Case is null ? "" : SeoFallbacks.OgImageAlt(Case.Seo, Case.CoverImageAlt, Case.Name);
     private string SeoRobots => PreviewCtx.IsPreview ? "noindex" : "";
+    private string BreadcrumbJson => Case is null ? "" : BreadcrumbJsonLdBuilder.Build(OriginValue, "Cases", "/cases", Case.Name, $"/cases/{Case.Slug}");
+
+    private string OriginValue =>
+        Http.HttpContext is { } http ? RequestOrigin.Resolve(Seo.Value, http.Request) : new Origin(Seo.Value.BaseUrl).Value;
 
     protected override async Task OnInitializedAsync()
     {

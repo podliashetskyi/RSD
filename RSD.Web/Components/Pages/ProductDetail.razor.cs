@@ -30,6 +30,7 @@ public partial class ProductDetail(
     private string SeoOgImageAlt => Product is null ? "" : SeoFallbacks.OgImageAlt(Product.Seo, Product.CoverImageAlt, Product.Name);
     private string SeoRobots => PreviewCtx.IsPreview ? "noindex" : "";
     private string PageJson => Product is null ? "" : PageJsonLdBuilder.ProductNode(OriginValue, Product);
+    private string BreadcrumbJson => Product is null ? "" : BreadcrumbJsonLdBuilder.Build(OriginValue, "Products", "/products", Product.Name, $"/products/{Product.Slug}");
 
     private string OriginValue =>
         Http.HttpContext is { } http ? RequestOrigin.Resolve(Seo.Value, http.Request) : new Origin(Seo.Value.BaseUrl).Value;
