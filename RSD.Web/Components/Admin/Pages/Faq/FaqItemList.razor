@@ -15,11 +15,17 @@
             <input type="search" @bind-value="Search" @bind-value:event="oninput" @onkeyup="ReloadAsync" placeholder="Search slug…" aria-label="Search FAQ items" class="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-1.5 text-sm" />
         </ToolbarTemplate>
         <ColumnHeaderTemplate>
-            <th class="px-4 py-2">Question</th><th class="px-4 py-2">Category</th><th class="px-4 py-2">Status</th><th class="px-4 py-2">Order</th><th class="px-4 py-2 text-right">Actions</th>
+            <th class="px-4 py-2">Question</th><th class="px-4 py-2">Category</th><th class="px-4 py-2">Home</th><th class="px-4 py-2">Status</th><th class="px-4 py-2">Order</th><th class="px-4 py-2 text-right">Actions</th>
         </ColumnHeaderTemplate>
         <RowTemplate Context="f">
             <td class="px-4 py-2 text-gray-900 dark:text-white truncate max-w-md">@f.Question</td>
             <td class="px-4 py-2 text-gray-600 dark:text-gray-300">@f.Category</td>
+            <td class="px-4 py-2">
+                @if (f.ShowOnHome)
+                {
+                    <span aria-label="Shown on home page" title="Shown on home page" class="text-amber-500">&#9733;</span>
+                }
+            </td>
             <td class="px-4 py-2"><StatusBadge Status="f.Status" /></td>
             <td class="px-4 py-2 text-gray-500 dark:text-gray-400">@f.DisplayOrder</td>
             <td class="px-4 py-2 text-right">

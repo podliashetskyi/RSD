@@ -20,14 +20,14 @@
             <InputText @bind-Value="Input.Question" required aria-required="true" maxlength="@FieldLimits.FaqItem.Question" class="form-input" />
         </FormField>
         <RichTextEditor Label="Answer" Hint="Open with a direct, self-contained answer in the first sentence. Links and lists permitted." @bind-Value="Input.AnswerHtml" />
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField Label="Category" Hint="Groups questions on public pages, e.g. Process, Pricing.">
-                <InputText @bind-Value="Input.Category" maxlength="@FieldLimits.FaqItem.Category" class="form-input" />
-            </FormField>
-            <FormField Label="Page slug" Hint="Leave empty to show site-wide; set a detail-page slug to scope it.">
-                <InputText @bind-Value="Input.OwnerSlug" maxlength="@FieldLimits.FaqItem.OwnerSlug" class="form-input" />
-            </FormField>
-        </div>
+        <FormField Label="Category" Hint="Groups questions on public pages, e.g. Process, Pricing.">
+            <InputText @bind-Value="Input.Category" maxlength="@FieldLimits.FaqItem.Category" class="form-input" />
+        </FormField>
+        <AdvancedPathField Summary="Advanced: limit to a single page"
+                           Label="Detail-page slug"
+                           Hint="Normally leave this untouched — the question shows site-wide. Filling it restricts the question to ONE detail page (that page's URL slug) and removes it from the FAQ lists and the home page.">
+            <InputText @bind-Value="Input.OwnerSlug" maxlength="@FieldLimits.FaqItem.OwnerSlug" class="form-input" />
+        </AdvancedPathField>
         <FormField Label="Home page" Hint="The home page shows up to 4 checked questions (by sort order); on other pages checked ones pin to the top. Nothing checked = no FAQ on home.">
             <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                 <InputCheckbox @bind-Value="Input.ShowOnHome" class="rounded border-gray-300 dark:border-gray-700" />
