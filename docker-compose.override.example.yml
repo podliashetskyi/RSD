@@ -1,0 +1,26 @@
+# Content MCP server — LOCAL enablement template.
+#
+# The MCP endpoint ships disabled: no "Mcp" config exists in appsettings.json and the
+# committed docker-compose.yml knows nothing about it, so normal deploys never expose it.
+#
+# To enable it on a developer machine:
+#   1. cp docker-compose.override.example.yml docker-compose.override.yml   (gitignored)
+#   2. mkdir -p ~/rsd-ai-inbox        # images the AI may upload go here
+#   3. docker compose up -d           # compose merges the override automatically
+#   4. claude mcp add --transport http rsd-content http://localhost:8083/mcp
+#
+# Security model: the MCP listener (8081 in-container) is published ONLY on host
+# loopback (127.0.0.1:8083) — unreachable from the network. In-app defense-in-depth
+# additionally pins /mcp to that listener and to loopback/private remote addresses.
+services:
+  web:
+    environment:
+      ASPNETCORE_URLS: "http://+:8080;http://+:8081"
+      Mcp__Enabled: "true"
+      Mcp__Port: "8081"
+      Mcp__PreviewBaseUrl: "http://localhost:8082"
+    ports:
+      - "127.0.0.1:8083:8081"
+    volumes:
+      # Identical host/container path so upload_image can take host file paths verbatim.
+      - "${HOME}/rsd-ai-inbox:${HOME}/rsd-ai-inbox:ro"
