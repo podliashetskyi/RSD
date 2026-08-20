@@ -66,6 +66,61 @@ public sealed class HeadingAndDateSemanticsTests
     }
 
     [Fact]
+    public void ArticleHeader_TitleComesBeforeMetaRow_InsideAHeaderLandmark()
+    {
+        using var ctx = new BunitContext();
+
+        var cut = ctx.Render<ArticleHeaderSection>(ps => ps
+            .Add(p => p.CategoryText, "AI")
+            .Add(p => p.DateText, "May 01, 2026")
+            .Add(p => p.PublishedOn, new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc))
+            .Add(p => p.ReadTime, "5 min")
+            .Add(p => p.Title, "Answer First Title")
+            .Add(p => p.Subtitle, "One-sentence summary.")
+            .Add(p => p.AuthorName, "A")
+            .Add(p => p.AuthorRole, "R")
+            .Add(p => p.AuthorAvatarSrc, "images/logo.svg"));
+
+        cut.FindAll("header h1").Should().NotBeEmpty();
+        var markup = cut.Markup;
+        markup.IndexOf("<h1", StringComparison.Ordinal)
+            .Should().BeLessThan(markup.IndexOf("<time", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Navbar_IsWrappedInAHeaderLandmark()
+    {
+        using var ctx = new BunitContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+
+        var cut = ctx.Render<RSD.Web.Components.Layout.Navbar>();
+
+        cut.FindAll("header nav").Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public void BlogCards_UseEditorCoverAlt_WhenPresent()
+    {
+        using var ctx = new BunitContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+        var post = new BlogPost
+        {
+            Slug = "alt-post",
+            Title = "Alt Post",
+            CoverImagePath = "images/blog/x.png",
+            CoverImageAlt = "Editor-written description",
+            Status = ContentStatus.Published,
+        };
+        ctx.Services.AddSingleton<IBlogService>(new FakeBlogService([post]));
+        ctx.Services.AddSingleton<ITeamMemberService>(new FakeTeamMemberService([]));
+        ctx.Services.AddSingleton<IFilterService>(new FakeFilterService());
+
+        var cut = ctx.Render<PostsGridSection>();
+
+        cut.Markup.Should().Contain("Editor-written description");
+    }
+
+    [Fact]
     public void BlogCards_KeepHeadingAroundLinkedTitle_AndUseTimeForDates()
     {
         using var ctx = new BunitContext();
