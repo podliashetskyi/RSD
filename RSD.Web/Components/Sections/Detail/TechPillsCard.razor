@@ -5,7 +5,7 @@
             <div class="flex flex-wrap gap-10 items-start">
                 @foreach (var t in Pills)
                 {
-                    <span class="inline-flex items-center justify-center h-10 px-2 py-1 bg-surface-subtle border border-line rounded-[12px] text-ink-faint text-body-sm font-medium">@t</span>
+                    <a href="@($"/cases?tech={Uri.EscapeDataString(t)}")" class="inline-flex items-center justify-center h-10 px-2 py-1 bg-surface-subtle border border-line rounded-[12px] text-ink-faint text-body-sm font-medium hover:text-ink hover:border-ink-muted">@t</a>
                 }
             </div>
         </article>

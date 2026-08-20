@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using RSD.Web.Components.Sections.Article;
+using RSD.Web.Data.Entities;
 using RSD.Web.Services.Content;
 using RSD.Web.Services.Preview;
 using RSD.Web.Services.Seo;
@@ -11,6 +12,7 @@ namespace RSD.Web.Components.Pages;
 
 public partial class ServiceDetail(
     IServiceService Services,
+    ICaseService Cases,
     IHttpContextAccessor Http,
     IPreviewContext PreviewCtx,
     PreviewLink Preview,
@@ -49,8 +51,13 @@ public partial class ServiceDetail(
         PreviewCtx.IsPreview = IsPreviewRequest();
 
         Svc = await Services.GetBySlugAsync(Slug, includeDrafts: PreviewCtx.IsPreview, CancellationToken.None);
-        if (Svc is null) NotFound();
+        if (Svc is null) { NotFound(); return; }
+        var cases = await Cases.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 200), CancellationToken.None);
+        Related = [.. cases.OrderByDescending(c => c.PublishedAt ?? c.CreatedAt).Take(3)
+            .Select(c => new RSD.Web.Components.Sections.Shared.RelatedLink(c.Industry, c.Name, $"/cases/{c.Slug}"))];
     }
+
+    private IReadOnlyList<RSD.Web.Components.Sections.Shared.RelatedLink> Related { get; set; } = [];
 
     private bool IsPreviewRequest() =>
         Http.HttpContext?.Request.Path.StartsWithSegments("/preview") ?? false;

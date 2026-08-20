@@ -20,6 +20,7 @@ public partial class CaseDetail(
     [SupplyParameterFromQuery] public string? Token { get; set; }
 
     private Case? Case { get; set; }
+    private IReadOnlyList<RSD.Web.Components.Sections.Shared.RelatedLink> Related { get; set; } = [];
 
     private string HeroImage => string.IsNullOrEmpty(Case?.CoverImagePath) ? "images/cases/healthcare-plus/hero.png" : Case!.CoverImagePath;
     private string HeroAlt => string.IsNullOrEmpty(Case?.CoverImageAlt) ? (Case?.Name ?? "") : Case!.CoverImageAlt;
@@ -44,7 +45,10 @@ public partial class CaseDetail(
         PreviewCtx.IsPreview = IsPreviewRequest();
 
         Case = await Cases.GetBySlugAsync(Slug, includeDrafts: PreviewCtx.IsPreview, CancellationToken.None);
-        if (Case is null) NotFound();
+        if (Case is null) { NotFound(); return; }
+        var pool = await Cases.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 200), CancellationToken.None);
+        Related = [.. RelatedSelector.Cases(Case, pool)
+            .Select(c => new RSD.Web.Components.Sections.Shared.RelatedLink(c.Industry, c.Name, $"/cases/{c.Slug}"))];
     }
 
     private bool IsPreviewRequest() =>

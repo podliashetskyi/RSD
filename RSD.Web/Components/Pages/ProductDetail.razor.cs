@@ -11,6 +11,7 @@ namespace RSD.Web.Components.Pages;
 
 public partial class ProductDetail(
     IProductService Products,
+    ICaseService Cases,
     IHttpContextAccessor Http,
     IPreviewContext PreviewCtx,
     PreviewLink Preview,
@@ -45,8 +46,13 @@ public partial class ProductDetail(
         PreviewCtx.IsPreview = IsPreviewRequest();
 
         Product = await Products.GetBySlugAsync(Slug, includeDrafts: PreviewCtx.IsPreview, CancellationToken.None);
-        if (Product is null) NotFound();
+        if (Product is null) { NotFound(); return; }
+        var cases = await Cases.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 200), CancellationToken.None);
+        Related = [.. cases.OrderByDescending(c => c.PublishedAt ?? c.CreatedAt).Take(3)
+            .Select(c => new RSD.Web.Components.Sections.Shared.RelatedLink(c.Industry, c.Name, $"/cases/{c.Slug}"))];
     }
+
+    private IReadOnlyList<RSD.Web.Components.Sections.Shared.RelatedLink> Related { get; set; } = [];
 
     private bool IsPreviewRequest() =>
         Http.HttpContext?.Request.Path.StartsWithSegments("/preview") ?? false;

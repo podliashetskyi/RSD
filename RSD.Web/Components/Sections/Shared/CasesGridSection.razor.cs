@@ -11,6 +11,8 @@ public partial class CasesGridSection(ICaseService Cases, IFilterService Filters
     [Parameter] public bool ShowFilters       { get; set; }
     [Parameter] public bool ShowViewAllButton { get; set; } = true;
     [Parameter] public int  MaxItems          { get; set; }
+    [Parameter] public string? InitialTech     { get; set; }
+    [Parameter] public string? InitialIndustry { get; set; }
 
     private IReadOnlyList<Case> CaseList { get; set; } = [];
 
@@ -42,6 +44,8 @@ public partial class CasesGridSection(ICaseService Cases, IFilterService Filters
 
     protected override async Task OnInitializedAsync()
     {
+        Industry ??= NormalizeInitial(InitialIndustry);
+        TechStack ??= NormalizeInitial(InitialTech);
         var rows = await Cases.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 200), CancellationToken.None);
         CaseList = [.. rows.OrderByDescending(c => c.PublishedAt ?? c.CreatedAt)];
         if (ShowFilters)
@@ -66,6 +70,9 @@ public partial class CasesGridSection(ICaseService Cases, IFilterService Filters
         Year = null;
         OpenFilter = null;
     }
+
+    private static string? NormalizeInitial(string? value) =>
+        string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 
     private enum FilterKey { Industry, TechStack, Year }
 }

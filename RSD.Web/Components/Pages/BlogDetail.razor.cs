@@ -25,6 +25,7 @@ public partial class BlogDetail(
 
     private BlogPost? Post { get; set; }
     private TeamMember? Author { get; set; }
+    private IReadOnlyList<RSD.Web.Components.Sections.Shared.RelatedLink> Related { get; set; } = [];
 
     private static readonly IReadOnlyList<TocEntry> TocItems = [];
 
@@ -68,6 +69,9 @@ public partial class BlogDetail(
             var team = await Team.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 200), CancellationToken.None);
             Author = team.FirstOrDefault(t => t.Id == authorId);
         }
+        var pool = await Blog.ListAsync(new ContentQuery(Status: ContentStatus.Published, PageSize: 200), CancellationToken.None);
+        Related = [.. RelatedSelector.Posts(Post, pool)
+            .Select(p => new RSD.Web.Components.Sections.Shared.RelatedLink(p.Category, p.Title, $"/blog/{p.Slug}"))];
     }
 
     private bool IsPreviewRequest() =>

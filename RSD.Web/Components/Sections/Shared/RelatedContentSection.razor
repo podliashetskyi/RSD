@@ -1,0 +1,22 @@
+@if (Items.Count > 0)
+{
+    <section class="bg-surface-subtle py-14 lg:py-24 px-4 lg:px-section-x">
+        <div class="max-w-screen-xl mx-auto flex flex-col gap-8 lg:gap-12">
+            <h2 class="text-ink text-[30px] lg:text-[36px] font-bold tracking-[-0.8px] leading-9 text-center">@Heading</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
+                @foreach (var item in Items)
+                {
+                    <article class="bg-white border border-line rounded-base shadow-sm p-6 flex flex-col gap-3">
+                        @if (item.Label.Length > 0)
+                        {
+                            <span class="inline-flex w-fit bg-[#f0faff] border border-[#b2e6ff] text-[#093e8a] text-body-sm font-medium leading-4 px-1.5 py-0.5 rounded-[12px]">@item.Label</span>
+                        }
+                        <h3 class="text-ink text-body-lg lg:text-[20px] font-semibold leading-6">
+                            <a href="@item.Href" class="hover:text-brand-900">@item.Title</a>
+                        </h3>
+                    </article>
+                }
+            </div>
+        </div>
+    </section>
+}
