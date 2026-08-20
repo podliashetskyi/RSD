@@ -1,0 +1,35 @@
+@page "/admin/faq"
+@attribute [Authorize(Roles = AdminRoles.Admin)]
+@layout AdminLayout
+@rendermode InteractiveServer
+
+<PageTitle>FAQ &middot; RSD Admin</PageTitle>
+
+<section class="space-y-6">
+    <header class="flex items-center justify-between gap-4">
+        <div><h1 class="text-2xl font-semibold text-gray-900 dark:text-white">FAQ</h1><p class="mt-1 text-sm text-gray-500 dark:text-gray-400">@Items.Count entries.</p></div>
+        <a href="/admin/faq/new" class="inline-flex items-center rounded-md bg-gray-900 dark:bg-white px-3 py-1.5 text-sm font-medium text-white dark:text-gray-900 hover:bg-black dark:hover:bg-gray-100">+ New FAQ item</a>
+    </header>
+    <AdminDataTable TItem="FaqItem" Items="Items" EmptyText="No FAQ items yet.">
+        <ToolbarTemplate>
+            <input type="search" @bind-value="Search" @bind-value:event="oninput" @onkeyup="ReloadAsync" placeholder="Search slug…" aria-label="Search FAQ items" class="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-1.5 text-sm" />
+        </ToolbarTemplate>
+        <ColumnHeaderTemplate>
+            <th class="px-4 py-2">Question</th><th class="px-4 py-2">Category</th><th class="px-4 py-2">Status</th><th class="px-4 py-2">Order</th><th class="px-4 py-2 text-right">Actions</th>
+        </ColumnHeaderTemplate>
+        <RowTemplate Context="f">
+            <td class="px-4 py-2 text-gray-900 dark:text-white truncate max-w-md">@f.Question</td>
+            <td class="px-4 py-2 text-gray-600 dark:text-gray-300">@f.Category</td>
+            <td class="px-4 py-2"><StatusBadge Status="f.Status" /></td>
+            <td class="px-4 py-2 text-gray-500 dark:text-gray-400">@f.DisplayOrder</td>
+            <td class="px-4 py-2 text-right">
+                <div class="inline-flex items-center gap-1">
+                    <button type="button" @onclick="() => MoveUpAsync(f.Id)" aria-label="Move up" class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-1 text-xs hover:bg-gray-50 dark:hover:bg-gray-800">&uarr;</button>
+                    <button type="button" @onclick="() => MoveDownAsync(f.Id)" aria-label="Move down" class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-1 text-xs hover:bg-gray-50 dark:hover:bg-gray-800">&darr;</button>
+                    <a href="/admin/faq/@f.Id" class="rounded-md border border-gray-300 dark:border-gray-700 px-2 py-1 text-xs hover:bg-gray-50 dark:hover:bg-gray-800">Edit</a>
+                    <DeleteRowButton EntityLabel="@f.Question" OnConfirm="@(() => DeleteAsync(f.Id))" />
+                </div>
+            </td>
+        </RowTemplate>
+    </AdminDataTable>
+</section>

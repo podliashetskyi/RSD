@@ -17,6 +17,7 @@ public static class AdminNav
         new("Team",         "/admin/team",         ContentGroup),
         new("Partners",     "/admin/partners",     ContentGroup),
         new("Values",       "/admin/values",       ContentGroup),
+        new("FAQ",          "/admin/faq",          ContentGroup),
         new("Stats",        "/admin/stats",        ContentGroup),
         new("Tech stack",   "/admin/tech",         ContentGroup),
         new("Contact points", "/admin/contact-points", ContentGroup),

@@ -1,0 +1,47 @@
+@page "/admin/faq/new"
+@page "/admin/faq/{Id:guid}"
+@attribute [Authorize(Roles = AdminRoles.Admin)]
+@layout AdminLayout
+@rendermode InteractiveServer
+
+<PageTitle>@(IsCreate ? "New FAQ item" : "Edit FAQ item") &middot; RSD Admin</PageTitle>
+
+<section class="max-w-2xl space-y-6">
+    <header><h1 class="text-2xl font-semibold text-gray-900 dark:text-white">@(IsCreate ? "New FAQ item" : "Edit FAQ item")</h1></header>
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div role="alert" class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">@ErrorMessage</div>
+    }
+
+    <EditForm Model="Input" OnValidSubmit="SaveAsync" FormName="faq-edit" class="space-y-4">
+        <DataAnnotationsValidator />
+        <FormField Label="Question">
+            <InputText @bind-Value="Input.Question" required aria-required="true" maxlength="@FieldLimits.FaqItem.Question" class="form-input" />
+        </FormField>
+        <RichTextEditor Label="Answer" Hint="Open with a direct, self-contained answer in the first sentence. Links and lists permitted." @bind-Value="Input.AnswerHtml" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormField Label="Category" Hint="Groups questions on public pages, e.g. Process, Pricing.">
+                <InputText @bind-Value="Input.Category" maxlength="@FieldLimits.FaqItem.Category" class="form-input" />
+            </FormField>
+            <FormField Label="Page slug" Hint="Leave empty to show site-wide; set a detail-page slug to scope it.">
+                <InputText @bind-Value="Input.OwnerSlug" maxlength="@FieldLimits.FaqItem.OwnerSlug" class="form-input" />
+            </FormField>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormField Label="Status">
+                <InputSelect @bind-Value="Input.Status" class="form-input">
+                    <option value="@ContentStatus.Draft">Draft</option>
+                    <option value="@ContentStatus.Published">Published</option>
+                    <option value="@ContentStatus.Archived">Archived</option>
+                </InputSelect>
+            </FormField>
+            <FormField Label="Sort order"><InputNumber @bind-Value="Input.DisplayOrder" class="form-input" /></FormField>
+        </div>
+
+        <div class="flex items-center gap-2 pt-4">
+            <button type="submit" class="rounded-md bg-gray-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-gray-900 hover:bg-black dark:hover:bg-gray-100">@(IsCreate ? "Create" : "Save changes")</button>
+            <a href="/admin/faq" class="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Cancel</a>
+        </div>
+    </EditForm>
+</section>
